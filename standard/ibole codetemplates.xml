@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="false" context="newtype_context" deleted="false" description="Newly created files" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.newtype" name="newtype">${filecomment}
+${package_declaration}
+
+/*********************************************************************************************.
+ * 
+ * 
+ * &lt;p&gt;版权所有：(c)2016， 深圳市拓润计算机软件开发有限公司
+ * 
+ * &lt;p&gt;&lt;/p&gt;
+ *********************************************************************************************/
+
+
+${typecomment}
+${type_declaration}</template></templates>
