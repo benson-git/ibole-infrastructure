@@ -10,7 +10,7 @@ import javax.servlet.Filter;
  *    <filter>   
  *       <filter-name>ApplicationFilters</filter-name>
  *       <filter-class>
- *           org.toprank.infrastructure.web.servlet.filter.ExampleApplicationFilters
+ *           io.ibole.infrastructure.web.servlet.filter.ExampleApplicationFilters
  *       </filter-class>
  *    </filter>   
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
