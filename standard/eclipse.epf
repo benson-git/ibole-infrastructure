@@ -19,7 +19,7 @@
 @net.sf.eclipsecs.core=6.19.1.201607051943
 /instance/net.sf.eclipsecs.core/include.rule.names=false
 /instance/net.sf.eclipsecs.ui/ask.before.rebuild=prompt
-/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.importorder=cc.toprank;com;com.google;org;io;java;javax;
+/instance/org.eclipse.jdt.ui/org.eclipse.jdt.ui.importorder=io.ibole;com;com.google;org;io;java;javax;
 @org.eclipse.jdt.ui=3.11.2.v20151123-1510
 /instance/org.eclipse.jdt.ui/formatter_profile=_ToprankStyle
 /instance/org.eclipse.jdt.core/org.eclipse.jdt.core.compiler.compliance=1.8

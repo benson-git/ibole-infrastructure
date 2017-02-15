@@ -4,7 +4,7 @@
           "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <!--
-    Checkstyle configuration that checks the Toprank coding conventions.
+    Checkstyle configuration that checks the IBole coding conventions.
 
     Checkstyle is very configurable. Be sure to read the documentation at
     http://checkstyle.sf.net (or in your downloaded distribution).
