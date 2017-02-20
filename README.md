@@ -1,5 +1,13 @@
 # ibole-infrastructure
 
+
+Provided some out-of-box functionalities
+
+-Distribution session based on redis
+-Global lock
+-Jwt utility
+
+
 ================================================================
 Source Building
 ================================================================
