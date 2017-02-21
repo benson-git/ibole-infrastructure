@@ -1,5 +1,13 @@
 # ibole-infrastructure
 
+
+Provided some out-of-box functionalities
+
+- Distribution session based on redis
+- Global lock based on redis
+- Jwt utility
+
+
 ================================================================
 Source Building
 ================================================================
@@ -10,7 +18,7 @@ Source Building
     git clone https://github.com/benson-git/ibole-infrastructure.git ibole-infrastructure
 
     git checkout master
-    or: git checkout -b -0.0.1
+    or: git checkout -b -v1.0.9
 
 2. Import the ibole-infrastructure source code to eclipse project:
 
