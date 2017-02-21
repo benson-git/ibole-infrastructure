@@ -58,8 +58,8 @@
         <commons-lang3_version>3.4</commons-lang3_version>
         <commons-codec.version>1.9</commons-codec.version>
 		<log4j_version>1.2.17</log4j_version>
-		<protobuf_java_version>3.0.2</protobuf_java_version>
-		<guava_version>18.0</guava_version>
+		<protobuf_java_version>3.1.0</protobuf_java_version>
+		<guava_version>20.0</guava_version>
 		<google_zxing_version>3.2.1</google_zxing_version>
 		<gson_version>2.3</gson_version>
 		<plexus_interpolation_version>1.22</plexus_interpolation_version>
