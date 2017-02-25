@@ -7,6 +7,7 @@ Provided some out-of-box functionalities
 - Global lock based on redis
 - Jwt utility
 
+[![Build Status](https://travis-ci.org/benson-git/ibole-infrastructure.svg?branch=master)](https://travis-ci.org/benson-git/ibole-infrastructure)
 
 ================================================================
 Source Building
