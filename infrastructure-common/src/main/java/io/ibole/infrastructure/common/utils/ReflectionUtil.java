@@ -196,6 +196,26 @@ public class ReflectionUtil {
 
     }
   }
+  /**
+   * This method is used to find setter method.
+   * 
+   * @param clazz The class 
+   * @param fieldName the field name used to find the matching matching method.
+   * @return setter Method if found, otherwise return null.
+   */
+  public static Method findSetterMethod(Class<?> clazz, String fieldName) {
+    String expectedName =
+        "set" + new String(new char[] {fieldName.charAt(0)}).toUpperCase() + fieldName.substring(1);
+
+    for (Method method : clazz.getDeclaredMethods()) {
+      if (method.getName().equals(expectedName) && method.getParameterTypes().length == 1) {
+        if (method.getParameterTypes()[0].equals(fieldName.getClass())) {
+          return method;
+        }
+      }
+    }
+    return null;
+  }
 
   /**
    * This method is used to check method is getter or not.
