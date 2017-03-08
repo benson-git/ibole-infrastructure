@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.ibole</groupId>
+    <groupId>com.github.ibole</groupId>
     <artifactId>infrastructure-parent</artifactId>
     <version>1.0.9</version>
   </parent>
@@ -16,27 +16,27 @@
   </properties>
   <dependencies>
 		<dependency>
-			<groupId>io.ibole</groupId>
+			<groupId>com.github.ibole</groupId>
 			<artifactId>infrastructure-common</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.ibole</groupId>
+			<groupId>com.github.ibole</groupId>
 			<artifactId>infrastructure-support</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.ibole</groupId>
+			<groupId>com.github.ibole</groupId>
 			<artifactId>infrastructure-cache</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.ibole</groupId>
+			<groupId>com.github.ibole</groupId>
 			<artifactId>infrastructure-security</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.ibole</groupId>
+			<groupId>com.github.ibole</groupId>
 			<artifactId>infrastructure-web</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -90,11 +90,11 @@
 							<promoteTransitiveDependencies>true</promoteTransitiveDependencies>
 							<artifactSet>
 								<includes>
-								    <include>io.ibole:infrastructure-common</include>
-								    <include>io.ibole:infrastructure-support</include>
-								    <include>io.ibole:infrastructure-cache</include>
-								    <include>io.ibole:infrastructure-security</include>
-								    <include>io.ibole:infrastructure-web</include>
+								    <include>com.github.ibole:infrastructure-common</include>
+								    <include>com.github.ibole:infrastructure-support</include>
+								    <include>com.github.ibole:infrastructure-cache</include>
+								    <include>com.github.ibole:infrastructure-security</include>
+								    <include>com.github.ibole:infrastructure-web</include>
 								</includes>
 							</artifactSet>
 							<transformers>

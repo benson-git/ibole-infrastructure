@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>  
   <parent>
-    <groupId>io.ibole</groupId>
+    <groupId>com.github.ibole</groupId>
     <artifactId>infrastructure-parent</artifactId>
     <version>1.0.9</version>
   </parent>
@@ -15,12 +15,12 @@
   </properties>
   <dependencies>
 	    <dependency>
-	        <groupId>io.ibole</groupId>
+	        <groupId>com.github.ibole</groupId>
 	        <artifactId>infrastructure-common</artifactId>
 	        <version>${project.parent.version}</version>
 	    </dependency> 
 		<dependency>
-		    <groupId>io.ibole</groupId>
+		    <groupId>com.github.ibole</groupId>
 		    <artifactId>infrastructure-security</artifactId>
 		     <version>${project.parent.version}</version>
 		</dependency>
