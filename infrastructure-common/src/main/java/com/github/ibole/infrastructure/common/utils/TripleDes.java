@@ -180,6 +180,7 @@ public class TripleDes {
      * Set Secret Key.
      * 
      * @param secretKey the secretKey to set
+     * @return builder Builder
      */
     public Builder setSecretKey(String secretKey) {
       this.secretKey = secretKey;
@@ -190,6 +191,7 @@ public class TripleDes {
      * Set iv.
      * 
      * @param iv the iv to set
+     * @return builder instance Builder
      */
     public Builder setIv(String iv) {
       this.iv = iv;
@@ -204,6 +206,8 @@ public class TripleDes {
 
   /**
    * main function for test.
+   * @param args String[]
+   * @throws Exception exception
    */
   public static void main(String[] args) throws Exception {
     //testString();

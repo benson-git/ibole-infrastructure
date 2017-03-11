@@ -7,7 +7,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 /**
- * Cache工具类
+ * Cache工具类.
+ * 
  */
 public class EhCacheUtils {
 
@@ -15,43 +16,42 @@ public class EhCacheUtils {
       .getBean("cacheManager"));
 
   private static final String SYS_CACHE = "sysCache";
-
+  
   /**
-   * 获取SYS_CACHE缓存
+   * 获取SYS_CACHE缓存.
    * 
-   * @param key
-   * @return
+   * @param key String
+   * @return Object Object
    */
   public static Object get(String key) {
     return get(SYS_CACHE, key);
   }
 
   /**
-   * 写入SYS_CACHE缓存
+   * 写入SYS_CACHE缓存.
    * 
-   * @param key
-   * @return
+   * @param key String
+   * @param value Object
    */
   public static void put(String key, Object value) {
     put(SYS_CACHE, key, value);
   }
 
   /**
-   * 从SYS_CACHE缓存中移除
+   * 从SYS_CACHE缓存中移除.
    * 
-   * @param key
-   * @return
+   * @param key String
    */
   public static void remove(String key) {
     remove(SYS_CACHE, key);
   }
 
   /**
-   * 获取缓存
+   * 获取缓存.
    * 
-   * @param cacheName
-   * @param key
-   * @return
+   * @param cacheName String
+   * @param key String
+   * @return Object Object
    */
   public static Object get(String cacheName, String key) {
     Element element = getCache(cacheName).get(key);
@@ -59,11 +59,11 @@ public class EhCacheUtils {
   }
 
   /**
-   * 写入缓存
+   * 写入缓存.
    * 
-   * @param cacheName
-   * @param key
-   * @param value
+   * @param cacheName String
+   * @param key String
+   * @param value Object
    */
   public static void put(String cacheName, String key, Object value) {
     Element element = new Element(key, value);
@@ -71,20 +71,20 @@ public class EhCacheUtils {
   }
 
   /**
-   * 从缓存中移除
+   * 从缓存中移除.
    * 
-   * @param cacheName
-   * @param key
+   * @param cacheName String
+   * @param key String
    */
   public static void remove(String cacheName, String key) {
     getCache(cacheName).remove(key);
   }
 
   /**
-   * 获得一个Cache，没有则创建一个。
+   * 获得一个Cache，没有则创建一个.
    * 
-   * @param cacheName
-   * @return
+   * @param cacheName String
+   * @return Cache Cache
    */
   private static Cache getCache(String cacheName) {
     Cache cache = cacheManager.getCache(cacheName);

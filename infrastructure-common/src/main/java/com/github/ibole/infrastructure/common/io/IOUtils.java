@@ -28,8 +28,8 @@ public class IOUtils {
    * 
    * @param is InputStream instance.
    * @param os OutputStream instance.
-   * @return count.
-   * @throws IOException.
+   * @return count Long.
+   * @throws IOException if IO exception
    */
   public static long write(InputStream is, OutputStream os) throws IOException {
     return write(is, os, BUFFER_SIZE);
@@ -41,8 +41,8 @@ public class IOUtils {
    * @param is InputStream instance.
    * @param os OutputStream instance.
    * @param bufferSize buffer size.
-   * @return count.
-   * @throws IOException.
+   * @return count Long.
+   * @throws IOException if IO exception
    */
   public static long write(InputStream is, OutputStream os, int bufferSize) throws IOException {
     int read;
@@ -62,8 +62,8 @@ public class IOUtils {
    * read string.
    * 
    * @param reader Reader instance.
-   * @return String.
-   * @throws IOException
+   * @return file content String.
+   * @throws IOException if IO exception
    */
   public static String read(Reader reader) throws IOException {
     StringWriter writer = new StringWriter();
@@ -80,7 +80,8 @@ public class IOUtils {
    * 
    * @param writer Writer instance.
    * @param string String.
-   * @throws IOException
+   * @return count Long.
+   * @throws IOException if IO exception
    */
   public static long write(Writer writer, String string) throws IOException {
     Reader reader = new StringReader(string);
@@ -96,8 +97,8 @@ public class IOUtils {
    * 
    * @param reader Reader.
    * @param writer Writer.
-   * @return count.
-   * @throws IOException
+   * @return count long.
+   * @throws IOException IOException
    */
   public static long write(Reader reader, Writer writer) throws IOException {
     return write(reader, writer, BUFFER_SIZE);
@@ -109,8 +110,8 @@ public class IOUtils {
    * @param reader Reader.
    * @param writer Writer.
    * @param bufferSize buffer size.
-   * @return count.
-   * @throws IOException
+   * @return count Long.
+   * @throws IOException IOException
    */
   public static long write(Reader reader, Writer writer, int bufferSize) throws IOException {
     int read;
@@ -127,8 +128,8 @@ public class IOUtils {
    * read lines.
    * 
    * @param file file.
-   * @return lines.
-   * @throws IOException
+   * @return lines String[].
+   * @throws IOException IOException
    */
   public static String[] readLines(File file) throws IOException {
     if (file == null || !file.exists() || !file.canRead())
@@ -141,8 +142,8 @@ public class IOUtils {
    * read lines.
    * 
    * @param is input stream.
-   * @return lines.
-   * @throws IOException
+   * @return lines String[].
+   * @throws IOException IOException
    */
   public static String[] readLines(InputStream is) throws IOException {
     List<String> lines = new ArrayList<String>();
@@ -161,13 +162,15 @@ public class IOUtils {
    * read lines.
    * 
    * @param is input stream.
-   * @return lines.
-   * @throws IOException
-   * @throws ClassNotFoundException
+   * @param  <T> T Type parameter
+   * @param type Class
+   * @return object from inputstream.
+   * @throws IOException Exception
+   * @throws ClassNotFoundException Exception
    */
   @SuppressWarnings("unchecked")
-  public static <T> T readFils(InputStream is, Class<? extends T> type)
-      throws IOException, ClassNotFoundException {
+  public static <T> T readFils(InputStream is, Class<? extends T> type) throws IOException,
+      ClassNotFoundException {
     T t = null;
     ObjectInputStream objIn = null;
     try {
@@ -187,7 +190,7 @@ public class IOUtils {
    * 
    * @param os output stream.
    * @param lines lines.
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static void writeLines(OutputStream os, String[] lines) throws IOException {
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
@@ -205,7 +208,7 @@ public class IOUtils {
    * 
    * @param file file.
    * @param lines lines.
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static void writeLines(File file, String[] lines) throws IOException {
     if (file == null)
@@ -218,7 +221,7 @@ public class IOUtils {
    * 
    * @param file file.
    * @param lines lines.
-   * @throws IOException
+   * @throws IOException IOException
    */
   public static void appendLines(File file, String[] lines) throws IOException {
     if (file == null)

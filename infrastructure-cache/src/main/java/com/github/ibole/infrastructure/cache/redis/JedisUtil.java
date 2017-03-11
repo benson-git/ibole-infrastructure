@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
+ * <p>.
  * </p>
  *********************************************************************************************/
 
@@ -56,6 +56,10 @@ public class JedisUtil {
   
   /**
    * Get Jedis by specified ip and port.
+   * @param ip String
+   * @param port int
+   * @param password String
+   * @return Jedis instance
    */
   public Jedis getJedis(String ip, int port, String password) {
     Jedis jedis = null;
@@ -75,6 +79,10 @@ public class JedisUtil {
 
   /**
    * Close Jedis by specified ip and port.
+   * @param jedis Jedis
+   * @param ip String
+   * @param port int
+   * @param password String
    */
   public void closeJedis(Jedis jedis, String ip, int port, String password) {
     if (jedis != null) {
@@ -95,6 +103,8 @@ public class JedisUtil {
   
   /**
    * Destory JedisPool by specified ip and port.
+   * @param ip String
+   * @param port int
    */
   public void destory(String ip, int port) {
     maps.get(ip + ":" + port).destroy();

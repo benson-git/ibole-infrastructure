@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPubSub;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p></p>
+ * <p>.</p>
  *********************************************************************************************/
 
 

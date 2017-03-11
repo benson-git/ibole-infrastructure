@@ -23,6 +23,8 @@ public class Encodes {
 
   /**
    * Hex编码.
+   * @param input byte[]
+   * @return encoded Hex String
    */
   public static String encodeHex(byte[] input) {
     return new String(Hex.encodeHex(input));
@@ -30,6 +32,8 @@ public class Encodes {
 
   /**
    * Hex解码.
+   * @param input String
+   * @return decoded Hex String
    */
   public static byte[] decodeHex(String input) {
     try {
@@ -41,6 +45,8 @@ public class Encodes {
 
   /**
    * Base64编码.
+   * @param input byte[]
+   * @return encoded Base64 String
    */
   public static String encodeBase64(byte[] input) {
     return new String(Base64.encodeBase64(input));
@@ -48,6 +54,8 @@ public class Encodes {
 
   /**
    * Base64编码.
+   * @param input String
+   * @return encoded Base64 String
    */
   public static String encodeBase64(String input) {
     try {
@@ -66,6 +74,8 @@ public class Encodes {
 
   /**
    * Base64解码.
+   * @param input String
+   * @return decoded Base64 String
    */
   public static byte[] decodeBase64(String input) {
     return Base64.decodeBase64(input.getBytes());
@@ -73,6 +83,8 @@ public class Encodes {
 
   /**
    * Base64解码.
+   * @param input String
+   * @return decoded String
    */
   public static String decodeBase64String(String input) {
     try {
@@ -84,6 +96,8 @@ public class Encodes {
 
   /**
    * Base62编码。
+   * @param input byte[]
+   * @return encoded String
    */
   public static String encodeBase62(byte[] input) {
     char[] chars = new char[input.length];
@@ -95,6 +109,8 @@ public class Encodes {
 
   /**
    * Html 转码.
+   * @param html String
+   * @return escaped html String
    */
   public static String escapeHtml(String html) {
     return StringEscapeUtils.escapeHtml4(html);
@@ -102,6 +118,8 @@ public class Encodes {
 
   /**
    * Html 解码.
+   * @param htmlEscaped String
+   * @return unescaped html String
    */
   public static String unescapeHtml(String htmlEscaped) {
     return StringEscapeUtils.unescapeHtml4(htmlEscaped);
@@ -109,6 +127,8 @@ public class Encodes {
 
   /**
    * Xml 转码.
+   * @param xml String
+   * @return escaped xml String
    */
   public static String escapeXml(String xml) {
     return StringEscapeUtils.escapeXml10(xml);
@@ -116,6 +136,8 @@ public class Encodes {
 
   /**
    * Xml 解码.
+   * @param xmlEscaped String
+   * @return unescaped xml String
    */
   public static String unescapeXml(String xmlEscaped) {
     return StringEscapeUtils.unescapeXml(xmlEscaped);
@@ -123,6 +145,8 @@ public class Encodes {
 
   /**
    * URL 编码, Encode默认为UTF-8.
+    *@param part String
+   * @return encoded url String
    */
   public static String urlEncode(String part) {
     try {
@@ -134,6 +158,8 @@ public class Encodes {
 
   /**
    * URL 解码, Encode默认为UTF-8.
+   * @param part String
+   * @return decoded url String
    */
   public static String urlDecode(String part) {
 

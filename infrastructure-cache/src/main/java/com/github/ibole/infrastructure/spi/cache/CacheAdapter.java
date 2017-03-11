@@ -32,7 +32,6 @@ public abstract class CacheAdapter implements Cache {
    * <p>
    * Used to collect metrics.
    * 
-   * @hidden
    */
   public static enum CacheEvent {
     HIT, MISS, GET, SET, REMOVE;
@@ -40,7 +39,6 @@ public abstract class CacheAdapter implements Cache {
     /**
      * Close metric recording.
      * 
-     * @hidden
      */
     public interface Closeable extends AutoCloseable {
       @Override

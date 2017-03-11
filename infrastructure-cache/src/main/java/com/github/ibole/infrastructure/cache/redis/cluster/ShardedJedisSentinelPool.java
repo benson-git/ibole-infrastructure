@@ -39,14 +39,11 @@ import java.util.regex.Pattern;
  *********************************************************************************************/
 
 /**
- * 基于Redis Sentinel的Redis集群(主从&Sharding)高可用方案.
+ * 基于Redis Sentinel的Redis集群(主从 and Sharding)高可用方案.
  * 
- * <pre>
- * Jedis不能同时支持Shareded和Sentinel，只能自己封装。
- * 
- * 大部分代码copy至JedisSentinelPool和ShardedJedisPool，把单masterName改成多master，同时把Jedis改成ShardedJedis。
- * </pre>
- * 
+ * Jedis不能同时支持Shareded和Sentinel，只能自己封装.
+ * 大部分代码copy至JedisSentinelPool和ShardedJedisPool,把单masterName改成多master,同时把Jedis改成ShardedJedis.
+ *  
  *
  */
 public class ShardedJedisSentinelPool extends Pool<ShardedJedis> {

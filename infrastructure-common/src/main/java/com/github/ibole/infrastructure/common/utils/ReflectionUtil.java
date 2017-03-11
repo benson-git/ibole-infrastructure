@@ -17,7 +17,7 @@ import java.util.Set;
 
 /**
  * This class can be used for reflection purpose. Both class should match the getter and setter.
- *  supports collections list & set copy.
+ * supports collections list and set copy.
  */
 public class ReflectionUtil {
 
@@ -27,6 +27,8 @@ public class ReflectionUtil {
    * @param toClazz Class object of Destination bean, which will be used to create class instance to
    *        copy values from passed object
    * @param from Origin bean from where to copy values
+   * @param <T> T Type parameter
+   * @return object copied from
    * @throws IllegalArgumentException If passed bean is null.
    * @throws InvocationTargetException If method access is denied
    * @throws InstantiationException If not able to create an instance of an passed toClass
@@ -71,6 +73,8 @@ public class ReflectionUtil {
    * @param from Origin bean from where to copy values
    * @param strictCopy boolean value denoting that copy should be in strict manner or not. If this
    *        is true then null values will also copied to destination bean from origin bean
+   * @param <T> T Type parameter
+   * @return object copied from
    * @throws IllegalArgumentException If passed bean is null.
    * @throws InvocationTargetException If method access is denied
    * @throws InstantiationException If not able to create an instance of an passed toClass
@@ -95,10 +99,13 @@ public class ReflectionUtil {
    * @param from Origin bean from where to copy values
    * @param excludeClassesMap {@link Map} map of excluded classes key-value pair. eg. key will be
    *        class in "to" and value will be class in "from".
+   * @param <T> T Type parameter
+   * @return Object copied from
    * @throws IllegalArgumentException If passed bean is null.
    * @throws InvocationTargetException If method access is denied
    * @throws InstantiationException If not able to create an instance of an passed toClass
    * @throws IllegalAccessException If access denied to access given class
+   * 
    */
   @SuppressWarnings("unchecked")
   public static <T> T copy(Class<T> toClazz, Object from, Map<Class<?>, Class<?>> excludeClassesMap)
@@ -123,8 +130,8 @@ public class ReflectionUtil {
    * @throws InvocationTargetException If method access is denied
    */
   public static void copy(final Object to, final Object from,
-      final Map<Class<?>, Class<?>> excludeClassesMap)
-      throws IllegalArgumentException, InvocationTargetException {
+      final Map<Class<?>, Class<?>> excludeClassesMap) throws IllegalArgumentException,
+      InvocationTargetException {
     copy(to, from, false, excludeClassesMap);
   }
 
@@ -141,8 +148,8 @@ public class ReflectionUtil {
    * @throws InvocationTargetException If method access is denied
    */
   synchronized private static void copy(final Object to, final Object from, boolean strictCopy,
-      final Map<Class<?>, Class<?>> excludeClassesMap)
-      throws IllegalArgumentException, InvocationTargetException {
+      final Map<Class<?>, Class<?>> excludeClassesMap) throws IllegalArgumentException,
+      InvocationTargetException {
     if (to == null) {
       throw new IllegalArgumentException("No destination bean specified");
     }
@@ -196,10 +203,11 @@ public class ReflectionUtil {
 
     }
   }
+
   /**
    * This method is used to find setter method.
    * 
-   * @param clazz The class 
+   * @param clazz The class
    * @param fieldName the field name used to find the matching matching method.
    * @return setter Method if found, otherwise return null.
    */
@@ -266,8 +274,8 @@ public class ReflectionUtil {
    */
   private static void setValues(Class<?> returnType, Object value, final Method fromMethod,
       final Object to, Set<Method> toMethodsList, boolean isBoolean,
-      Map<Class<?>, Class<?>> excludeClassesMap)
-      throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+      Map<Class<?>, Class<?>> excludeClassesMap) throws IllegalArgumentException,
+      IllegalAccessException, InvocationTargetException {
     if (!returnType.isPrimitive()) {
       fromMethod.getReturnType().cast(value);
     }
@@ -293,19 +301,21 @@ public class ReflectionUtil {
               if (pTypeClazz.isInstance(to)) {
                 // Instance found for same class.
                 try {
-                  toMethod.invoke(to, toMethod.getDeclaringClass()
-                      .cast(copy(toMethod.getDeclaringClass(), value, excludeClassesMap)));
+                  toMethod.invoke(
+                      to,
+                      toMethod.getDeclaringClass().cast(
+                          copy(toMethod.getDeclaringClass(), value, excludeClassesMap)));
                 } catch (Exception e1) {
-                  System.err.println(
-                      e1.getMessage() + ": Not able to copy the same instance of given object");
+                  System.err.println(e1.getMessage()
+                      + ": Not able to copy the same instance of given object");
                   e1.printStackTrace();
                 }
               } else {
                 if (excludeClassesMap != null && excludeClassesMap.get(pTypeClazz) != null
                     && excludeClassesMap.get(pTypeClazz).equals(fromMethod.getReturnType())) {
                   try {
-                    toMethod.invoke(to,
-                        pTypeClazz.cast(copy(pTypeClazz, value, excludeClassesMap)));
+                    toMethod
+                        .invoke(to, pTypeClazz.cast(copy(pTypeClazz, value, excludeClassesMap)));
                   } catch (Exception e2) {
                     e2.printStackTrace();
                   }
@@ -376,6 +386,7 @@ public class ReflectionUtil {
    * @param clazz - class of passed object
    * @param fieldName - {@link String} field(variable) name
    * @param value - value which has to be set
+   * @param <T> Type parameter
    */
   public static <T> void findPut(Object obj, Class<T> clazz, String fieldName, Object value) {
     if (clazz.isInstance(obj)) {
@@ -415,13 +426,13 @@ public class ReflectionUtil {
           try {
             field = clazz.getDeclaredField(variable);
           } catch (Exception e) {
-            System.err.println(
-                variable + " : field not found in this class hence finding in its super class.");
+            System.err.println(variable
+                + " : field not found in this class hence finding in its super class.");
             try {
               field = clazz.getSuperclass().getDeclaredField(variable);
             } catch (Exception e1) {
-              System.err
-                  .println(variable + " : field also not found in super class, hence skipping it.");
+              System.err.println(variable
+                  + " : field also not found in super class, hence skipping it.");
               continue;
             }
           }
@@ -437,8 +448,8 @@ public class ReflectionUtil {
               try {
                 setter = clazz.getSuperclass().getDeclaredMethod(methodName, field.getType());
               } catch (Exception e1) {
-                System.err.println(
-                    methodName + " : method also not found in super class, hence skipping it.");
+                System.err.println(methodName
+                    + " : method also not found in super class, hence skipping it.");
                 continue;
               }
             }
@@ -456,8 +467,8 @@ public class ReflectionUtil {
         System.err.println("Cannot cast passed object " + obj + " to given " + clazz + " Class.");
       }
     } else {
-      System.err
-          .println("Sent Object " + obj + " is not an instance of passed " + clazz + " Class.");
+      System.err.println("Sent Object " + obj + " is not an instance of passed " + clazz
+          + " Class.");
     }
   }
 
@@ -470,8 +481,7 @@ public class ReflectionUtil {
    * @return true if both are collections else if both are not collections then false otherwise
    *         throw {@link IllegalArgumentException}
    */
-  private static boolean checkForCollection(Object to, Object from)
-      throws IllegalArgumentException {
+  private static boolean checkForCollection(Object to, Object from) throws IllegalArgumentException {
     if (to instanceof Collection) {
       if (from instanceof Collection) {
         return true;
@@ -517,8 +527,7 @@ public class ReflectionUtil {
       if (obj != null) {
         Class<?> fromListParametrizedClass = obj.getClass();
         try {
-          if (excludeClassesMap != null
-              && excludeClassesMap.get(fromListParametrizedClass) != null) {
+          if (excludeClassesMap != null && excludeClassesMap.get(fromListParametrizedClass) != null) {
             Object convertedObj =
                 ReflectionUtil.copy(excludeClassesMap.get(fromListParametrizedClass), obj);
             to.add(convertedObj);
@@ -549,8 +558,7 @@ public class ReflectionUtil {
         if (fromListParametrizedClass != null)
           fromListParametrizedClass = obj.getClass();
         try {
-          if (excludeClassesMap != null
-              && excludeClassesMap.get(fromListParametrizedClass) != null) {
+          if (excludeClassesMap != null && excludeClassesMap.get(fromListParametrizedClass) != null) {
             Object convertedObj =
                 ReflectionUtil.copy(excludeClassesMap.get(fromListParametrizedClass), obj);
             to.add(convertedObj);

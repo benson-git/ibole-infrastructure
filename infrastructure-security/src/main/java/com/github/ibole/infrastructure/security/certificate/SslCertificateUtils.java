@@ -489,21 +489,21 @@ public class SslCertificateUtils {
   
   public static void main(String[] args) throws Exception{
     
-    String keyStorePath = "D:/work/tfs/Toprank BasePlatform Solution/toprank-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/keys.keystore";
-    String clientCertPath = "D:/work/tfs/Toprank BasePlatform Solution/toprank-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/client.crt";
-    String clientKeyPath = "D:/work/tfs/Toprank BasePlatform Solution/toprank-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/client.key";
+    String keyStorePath = "E:/dev/repository/Personnel/ibole-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/keys.keystore";
+    String clientCertPath = "E:/dev/repository/Personnel/ibole-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/client.crt";
+    String clientKeyPath = "E:/dev/repository/Personnel/ibole-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/client.key";
 
-    CertificateDetailsInfo rootInfo = new CertificateDetailsInfo("Alias test", "Toprank Root CA", "Toprank Root CA", "BYD Root CA",
+    CertificateDetailsInfo rootInfo = new CertificateDetailsInfo("iBole", "iBole Root CA", "iBole Root CA", "iBole Root CA",
         Integer.toHexString(System.getProperty("user.name").hashCode()) 
         + Integer.toHexString(System.getProperty("user.home").hashCode()), "CN", "gd", "10", "", null);
     
-    CertificateDetailsInfo userInfo = new CertificateDetailsInfo("Alias test", "192.168.1.1", "Toprank", "BYD",
+    CertificateDetailsInfo userInfo = new CertificateDetailsInfo("iBole", "192.168.1.1", "iBole", "OSS",
         Integer.toHexString(System.getProperty("user.name").hashCode()) 
-        + Integer.toHexString(System.getProperty("user.home").hashCode()), "CN", "gd", "10", "wangzj@toprank.cc", null);
+        + Integer.toHexString(System.getProperty("user.home").hashCode()), "CN", "gd", "10", "chikaiwang@hotmail.com", null);
     
     KeyStore keystore = SslCertificateUtils.createRootCA(keyStorePath, rootInfo);
     
-    KeyStore userkeystore = SslCertificateUtils.createCertForHost(keystore, userInfo, "toprank.cc");
+    KeyStore userkeystore = SslCertificateUtils.createCertForHost(keystore, userInfo, "ibole.com");
     //save Keystore instance into keystore file
     File keyStoreFile = new File(keyStorePath);
     KeyStoreUtils.writeKeyStore(userkeystore, PASSPHRASE, keyStoreFile);

@@ -20,8 +20,6 @@ import java.util.Properties;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
- * </p>
  *********************************************************************************************/
 
 
@@ -75,6 +73,11 @@ public class ConfigurationBuilder {
 
   /**
    * @since 3.0
+   * @param clazz Class
+   * @param resource String
+   * @param required boolean
+   * @return the instance of ConfigurationBuilder
+   * @throws IOException IOException
    */
   public ConfigurationBuilder properties(final Class<?> clazz, final String resource,
       final boolean required) throws IOException {
@@ -90,6 +93,10 @@ public class ConfigurationBuilder {
 
   /**
    * Add all properties from external File.
+   * @param resource File
+   * @param required boolean
+   * @return the instance of ConfigurationBuilder
+   * @throws IOException IOException
    */
   public ConfigurationBuilder properties(final File resource, final boolean required)
       throws IOException {
@@ -150,7 +157,8 @@ public class ConfigurationBuilder {
 
   /**
    * Override any existing properties with values from the given set of overrides.
-   * 
+   * @param overrides Map
+   * @return ConfigurationBuilder
    */
   public ConfigurationBuilder override(final Map<String, String> overrides) {
     if (overrides == null) {
@@ -170,7 +178,8 @@ public class ConfigurationBuilder {
   /**
    * Override existing properties by the specified properties.
    * @see #override(Map)
-   *
+   * @param overrides Properties
+   * @return ConfigurationBuilder
    */
   public ConfigurationBuilder override(final Properties overrides) {
     return override(new PropertyMap(overrides));
@@ -179,6 +188,7 @@ public class ConfigurationBuilder {
   /**
    * Load external property file and override the existed properties. Normally the external file can
    * be specified in system environment or JVM properties setting.
+   * @param name String
    */
   private void loadExternalProperties(final String name) throws IOException {
     String value = properties.get(name);

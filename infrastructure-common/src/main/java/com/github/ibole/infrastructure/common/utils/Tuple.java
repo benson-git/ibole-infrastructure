@@ -6,7 +6,7 @@ package com.github.ibole.infrastructure.common.utils;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
+ * <p>.
  * </p>
  *********************************************************************************************/
 

@@ -166,7 +166,7 @@ public final class ProtobufUtils {
    * 判断如果bean字段是原生类型包装类型，并且它的值是空值， 就为其设置一个默认值，默认值的设置按照java原生类型默认值规范。 Check if bean properties are
    * null, if the property is null, it will be set to a default value following the specification of
    * the default of primitive.
-   * 
+   * @param <T> T the type of bean
    * @param bean the populated bean
    * @return Object the bean to check and set default value for its properties
    */
@@ -290,7 +290,7 @@ public final class ProtobufUtils {
   /**
    * Create a new protobuf message based on the provide message type, and copy the property value of
    * POJO to the new protobuf message.
-   * 
+   * @param <T> T the type of bean
    * @param msgClazz the target type of protobuf message
    * @param srcObject the source object
    * @return a new protobuf message object
@@ -312,7 +312,7 @@ public final class ProtobufUtils {
 
   /**
    * Copy the property value from the provided list of POJO to the list of new protobuf message.
-   * 
+   * @param <T> T the type of class
    * @param msgClazz the target type of protobuf message
    * @param srcObjList the list of source object
    * @return a new protobuf message object
@@ -334,7 +334,7 @@ public final class ProtobufUtils {
   /**
    * Copy the property value from the provided list of Protobuf message object to the list of new
    * POJO.
-   * 
+   * @param <T> T the type of bean
    * @param srcMessageList source message object list to be copied
    * @param targetPojo target pojo be copy
    * @return the list POJO
@@ -354,7 +354,7 @@ public final class ProtobufUtils {
 
   /**
    * Copy the value of properties from protobuf message object to a POJO bean.
-   * 
+   * @param <T> T the type of bean
    * @param messageObj the protobuf message object
    * @param targetObject the POJO
    * @return the pojo bean
@@ -453,7 +453,9 @@ public final class ProtobufUtils {
 
   /**
    * Convert proto message to compact json string.
-   * @throws IOException
+   * @param message Message
+   * @return json string
+   * @throws IOException exception
    */
   public String toCompactJsonString(Message message) throws IOException {
     return JsonFormat.printer().omittingInsignificantWhitespace().print(message);
@@ -498,7 +500,9 @@ public final class ProtobufUtils {
   }
 
   /**
-   * main.
+   * Main.
+   * @param args args
+   * @throws Exception exception
    */
   public static void main(String[] args) throws Exception {
     

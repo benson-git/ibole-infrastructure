@@ -7,7 +7,7 @@ package com.github.ibole.infrastructure.common.utils.os;
  * <p>
  * Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
+ * <p>.
  * </p>
  *********************************************************************************************/
 
@@ -137,7 +137,7 @@ public class OSinfo {
   }
 
   /**
-   * @param args
+   * @param args args
    */
   public static void main(String[] args) {
     System.out.println(OSinfo.getOSname());

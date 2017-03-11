@@ -7,14 +7,15 @@ import org.apache.commons.lang3.RandomStringUtils;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p></p>
+ * <p>.</p>
  *********************************************************************************************/
 
 
 public class PubSubTestMain {
 
   /**
-   * @param args
+   * @param args String[]
+   * @throws Exception Exception
    */
   public static void main(String[] args) throws Exception{
       PPubClient pubClient = new PPubClient("139.219.236.163", 6379, "TOPrank123");

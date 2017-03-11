@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p></p>
+ * <p>.</p>
  *********************************************************************************************/
 
 
@@ -25,7 +25,7 @@ public class PPubClient {
   
   /**
    * 发布的每条消息，都需要在“订阅者消息队列”中持久
-   * @param message
+   * @param message String
    */
   private void put(String message){
       //期望这个集合不要太大

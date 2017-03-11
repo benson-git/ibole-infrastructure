@@ -7,16 +7,17 @@ import org.apache.commons.lang3.RandomStringUtils;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p></p>
+ * <p>.</p>
  *********************************************************************************************/
 
 
 public class PPubSubTestMain {
 
   /**
-   * @param args
+   * @param args String[]
+   * @throws InterruptedException Exception
    */
-  public static void main(String[] args) throws Exception{
+  public static void main(String[] args) throws InterruptedException {
       PPubClient pubClient = new PPubClient("139.219.236.163", 6379, "TOPrank123");
       final String channel = "pubsub-channel-p";
       final PPSubClient subClient = new PPSubClient("139.219.236.163", 6379, "TOPrank123", "subClient-1");

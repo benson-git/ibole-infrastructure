@@ -22,8 +22,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
   /**
    * 转换为字节数组
    * 
-   * @param str
-   * @return
+   * @param str String
+   * @return byte array
    */
   public static byte[] getBytes(String str) {
     if (str != null) {
@@ -40,8 +40,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
   /**
    * 转换为字节数组
    * 
-   * @param str
-   * @return
+   * @param bytes byte[]
+   * @return string String
    */
   public static String toString(byte[] bytes) {
     try {
@@ -71,6 +71,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   /**
    * 替换掉HTML标签方法
+   * @param html String
+   * @return replaced html string
    */
   public static String replaceHtml(String html) {
     if (isBlank(html)) {
@@ -86,8 +88,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
   /**
    * 替换为手机识别的HTML，去掉样式及属性，保留回车。
    * 
-   * @param html
-   * @return
+   * @param html String
+   * @return replaced html string
    */
   public static String replaceMobileHtml(String html) {
     if (html == null) {
@@ -99,8 +101,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
   /**
    * 替换为手机识别的HTML，去掉样式及属性，保留回车。
    * 
-   * @param txt
-   * @return
+   * @param txt String
+   * @return replaced html string
    */
   public static String toHtml(String txt) {
     if (txt == null) {
@@ -114,7 +116,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
    * 
    * @param str 目标字符串
    * @param length 截取长度
-   * @return
+   * @return trimmed string
    */
   public static String abbr(String str, int length) {
     if (str == null) {
@@ -203,6 +205,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   /**
    * 转换为Double类型
+   * @param val Object
+   * @return double Double
+   * 
    */
   public static Double toDouble(Object val) {
     if (val == null) {
@@ -215,38 +220,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
   }
 
-  /**
-   * 转换为Float类型
-   */
   public static Float toFloat(Object val) {
     return toDouble(val).floatValue();
   }
 
-  /**
-   * 转换为Long类型
-   */
   public static Long toLong(Object val) {
     return toDouble(val).longValue();
   }
 
-  /**
-   * 转换为Integer类型
-   */
   public static Integer toInteger(Object val) {
     return toLong(val).intValue();
   }
 
-  /**
-   * 获得i18n字符串
-   */
-  public static String getMessage(String code, Object[] args) {
-
-    return "TODO";
-  }
-
-  /**
-   * 获得用户远程地址
-   */
   public static String getRemoteAddr(HttpServletRequest request) {
     String remoteAddr = request.getHeader("X-Real-IP");
     if (isNotBlank(remoteAddr)) {
@@ -261,7 +246,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   /**
    * 驼峰命名法工具
-   * 
+   * @param s String
    * @return toCamelCase("hello_world") == "helloWorld" toCapitalizeCamelCase("hello_world") ==
    *         "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
    */
@@ -292,7 +277,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   /**
    * 驼峰命名法工具
-   * 
+   * @param s String
    * @return toCamelCase("hello_world") == "helloWorld" toCapitalizeCamelCase("hello_world") ==
    *         "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
    */
@@ -306,7 +291,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   /**
    * 驼峰命名法工具
-   * 
+   * @param s String
    * @return toCamelCase("hello_world") == "helloWorld" toCapitalizeCamelCase("hello_world") ==
    *         "HelloWorld" toUnderScoreCase("helloWorld") = "hello_world"
    */
@@ -345,6 +330,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
    * 转换为JS获取对象值，生成三目运算返回结果
    * 
    * @param objectString 对象串 例如：row.user.id 返回：!row?'':!row.user?'':!row.user.id?'':row.user.id
+   * @return js value
    */
   public static String jsGetVal(String objectString) {
     StringBuilder result = new StringBuilder();

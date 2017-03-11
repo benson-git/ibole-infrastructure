@@ -30,6 +30,8 @@ public class Servlets {
 
   /**
    * 设置客户端缓存过期时间 的Header.
+   * @param response HttpServletResponse
+   * @param expiresSeconds long
    */
   public static void setExpiresHeader(HttpServletResponse response, long expiresSeconds) {
     // Http 1.0 header, set a fix expires date.
@@ -40,6 +42,7 @@ public class Servlets {
 
   /**
    * 设置禁止客户端缓存的Header.
+   * @param response HttpServletResponse
    */
   public static void setNoCacheHeader(HttpServletResponse response) {
     // Http 1.0 header
@@ -51,6 +54,8 @@ public class Servlets {
 
   /**
    * 设置LastModified Header.
+   * @param response HttpServletResponse
+   * @param lastModifiedDate long
    */
   public static void setLastModifiedHeader(HttpServletResponse response, long lastModifiedDate) {
     response.setDateHeader(HttpHeaders.LAST_MODIFIED, lastModifiedDate);
@@ -58,6 +63,8 @@ public class Servlets {
 
   /**
    * 设置Etag Header.
+   * @param response HttpServletResponse
+   * @param etag String
    */
   public static void setEtag(HttpServletResponse response, String etag) {
     response.setHeader(HttpHeaders.ETAG, etag);
@@ -67,8 +74,10 @@ public class Servlets {
    * 根据浏览器If-Modified-Since Header, 计算文件是否已被修改.
    * 
    * 如果无修改, checkIfModify返回false ,设置304 not modify status.
-   * 
+   * @param request HttpServletRequest
+   * @param response HttpServletResponse
    * @param lastModified 内容的最后修改时间.
+   * @return true if has modified, otherwise return false.
    */
   public static boolean checkIfModifiedSince(HttpServletRequest request,
       HttpServletResponse response, long lastModified) {
@@ -86,6 +95,9 @@ public class Servlets {
    * 如果Etag有效, checkIfNoneMatch返回false, 设置304 not modify status.
    * 
    * @param etag 内容的ETag.
+   * @param request HttpServletRequest
+   * @param response HttpServletResponse
+   * @return true if etag is matched, otherwise return false
    */
   public static boolean checkIfNoneMatchEtag(HttpServletRequest request,
       HttpServletResponse response, String etag) {
@@ -118,6 +130,8 @@ public class Servlets {
    * 设置让浏览器弹出下载对话框的Header.
    * 
    * @param fileName 下载后的文件名.
+   * @param response HttpServletResponse
+   * @param fileName String
    */
   public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
     try {
@@ -134,6 +148,9 @@ public class Servlets {
    * 取得带相同前缀的Request Parameters, copy from spring WebUtils.
    * 
    * 返回的结果的Parameter名已去除前缀.
+   * @param request ServletRequest
+   * @param prefix String
+   * @return parameter map
    */
   @SuppressWarnings("rawtypes")
   public static Map<String, Object> getParametersStartingWith(ServletRequest request, String prefix) {
@@ -163,8 +180,10 @@ public class Servlets {
   }
 
   /**
-   * 组合Parameters生成Query String的Parameter部分,并在paramter name上加上prefix.
-   * 
+   * 组合Parameters生成Query String的Parameter部分,并在parameter name上加上prefix.
+   * @param params Map
+   * @param prefix String
+   * @return encoded parameter string
    */
   public static String encodeParameterStringWithPrefix(Map<String, Object> params, String prefix) {
     StringBuilder queryStringBuilder = new StringBuilder();
@@ -186,6 +205,10 @@ public class Servlets {
 
   /**
    * 客户端对Http Basic验证的 Header进行编码.
+   * @param userName String
+   * @param password String
+   * @return encoded username and password
+   * 
    */
   public static String encodeHttpBasic(String userName, String password) {
     String encode = userName + ":" + password;
@@ -195,7 +218,8 @@ public class Servlets {
   /**
    * 是否是Ajax异步请求
    * 
-   * @param request
+   * @param request HttpServletRequest
+   * @return true if it is a ajax request.
    */
   public static boolean isAjaxRequest(HttpServletRequest request) {
 
@@ -214,7 +238,7 @@ public class Servlets {
   /**
    * 获取当前请求对象
    * 
-   * @return
+   * @return HttpServletRequest HttpServletRequest
    */
   public static HttpServletRequest getRequest() {
     try {

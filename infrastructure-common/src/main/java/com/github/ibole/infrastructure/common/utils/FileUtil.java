@@ -29,8 +29,6 @@ import java.util.StringTokenizer;
  * <p>
  * Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
- * </p>
  *********************************************************************************************/
 
 
@@ -64,7 +62,7 @@ public class FileUtil {
    * @param fromDir Source directory.
    * @param toDir Target directory.
    * 
-   * @param IOException if I/O occurs
+   * @throws IOException if I/O occurs
    */
   public static void copyDir(File fromDir, File toDir) throws IOException {
     if ((fromDir != null) && fromDir.isDirectory() && fromDir.canRead() && (toDir != null)
@@ -119,6 +117,7 @@ public class FileUtil {
    * 
    * @param source - the absolute path of the source file.
    * @param target - the absolute path of the target file.
+   * @throws IOException if I/O occurs
    */
   public static void copyFile(File source, File target) throws IOException {
     copyFile(source.getAbsolutePath(), target.getAbsolutePath());
@@ -287,7 +286,7 @@ public class FileUtil {
    * 
    * @param root The root File, it can be a directory
    * @return The size of the file in bytes
-   * @throws IOException
+   * @throws IOException if I/O occurs
    */
   public static int getFileSize(File root) throws IOException {
     int size = 0;
@@ -360,7 +359,7 @@ public class FileUtil {
    *        the homeFile
    * @return the relative filename that describes the location of the targetFile referenced from the
    *         homeFile dir
-   * @throws IOException
+   * @throws IOException if I/O occurs
    */
   public static String getRelativeFilename(File homeDir, File targetFile) throws IOException {
     StringBuffer relativePath = new StringBuffer();
@@ -579,7 +578,7 @@ public class FileUtil {
    * 
    * @param filename The file name
    * @return The file contents as a string array
-   * @throws IOException
+   * @throws IOException if I/O occurs
    */
   public static String[] readFileAsArray(String filename) throws IOException {
     LinkedList<String> file = new LinkedList<String>();
@@ -702,7 +701,7 @@ public class FileUtil {
   /**
    * Unpack a tar file.
    * 
-   * @param file the file
+   * @param artifactFile the file
    * @param destination the destination path or null to unpack at the same directory of file
    * @return true if unpacked, false otherwise
    */
@@ -764,9 +763,9 @@ public class FileUtil {
   /**
    * Copy the input stream to the output stream
    * 
-   * @param inputStream
-   * @param outputStream
-   * @throws IOException
+   * @param inputStream InputStream
+   * @param outputStream OutputStream
+   * @throws IOException if I/O exception
    */
   public static void copyStreams(InputStream inputStream, OutputStream outputStream)
       throws IOException {
@@ -810,7 +809,6 @@ public class FileUtil {
    * returned unchanged.
    * 
    * @param path to be escaped.
-   * @param operatingSystem the target operation system that the path will be used.
    * @return path with special characters escaped.
    */
   public static String getEscapedPath(String path) {
@@ -951,9 +949,9 @@ public class FileUtil {
   /**
    * This method is responsible to copy informed source file to informed target.
    * 
-   * @param sourceFile
-   * @param targetFile
-   * @throws IOException
+   * @param sourceFile File
+   * @param targetFile File
+   * @throws IOException if I/O exception
    */
   public static void copy(File sourceFile, File targetFile) throws IOException {
     OutputStream outputStream = new FileOutputStream(targetFile);
@@ -1013,7 +1011,7 @@ public class FileUtil {
    * This method creates the specified directory.
    * 
    * @param directory The directory to create.
-   * @throws IOException
+   * @throws IOException if I/O exception
    */
   public static void mkdir(String directory) throws IOException {
     File f = new File(directory);

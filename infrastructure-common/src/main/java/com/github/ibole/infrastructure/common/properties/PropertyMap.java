@@ -39,6 +39,7 @@ public class PropertyMap extends HashMap<String, String> {
 
   /**
    * Constructor with parma type Properties.
+   * @param properties Properties
    */
   public PropertyMap(final Properties properties) {
     putAll(properties);
@@ -94,7 +95,8 @@ public class PropertyMap extends HashMap<String, String> {
   }
 
   /**
-   * Returns list of sorted keys.
+   * List of sorted keys.
+   * @return list of sorted keys
    */
   public List<String> keys() {
     List<String> keys = new ArrayList<>(keySet());

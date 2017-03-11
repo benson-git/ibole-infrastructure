@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
+ * <p>.
  * </p>
  *********************************************************************************************/
 
@@ -59,7 +59,9 @@ public class RedisSessionFilter implements Filter {
   }
 
   /**
-   * @see javax.servlet.doFilter.
+   * 
+   * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+   * 
    */
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
       FilterChain filterChain) throws IOException, ServletException {

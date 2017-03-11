@@ -4,15 +4,20 @@ import javax.servlet.Filter;
 
 /**
  * <code>ExampleFilters</code> Builds a filter chain of all specified filters.
- *
- * @ !!!!!!!!!!!!!!!!!!!!!!!  NO XDOCLET TAG !!!!!!!!!!!!!!!!!!!!!!!!!!
+ * <p>
+ * !!!!!!!!!!!!!!!!!!!!!!!  NO XDOCLET TAG !!!!!!!!!!!!!!!!!!!!!!!!!!
+ * <p>
  *  This Listener MUST be declared explicitly in web.xml
- *    <filter>   
- *       <filter-name>ApplicationFilters</filter-name>
- *       <filter-class>
+ *  <p>
+ * <code>   
+ *   &lt;filter&gt;   
+ *       &lt;filter-name&gt;ApplicationFilters&lt;/filter-name&gt;
+ *       &lt;filter-class&gt;
  *           com.github.ibole.infrastructure.web.servlet.filter.ExampleApplicationFilters
- *       </filter-class>
- *    </filter>   
+ *       &lt;/filter-class&gt;
+ *    &lt;/filter&gt;
+ *  </code>  
+ *  <p>
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
  * 
  */

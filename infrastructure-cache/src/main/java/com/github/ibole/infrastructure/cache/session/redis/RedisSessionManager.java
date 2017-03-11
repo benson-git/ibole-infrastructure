@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
+ * <p>.
  * </p>
  *********************************************************************************************/
 
@@ -47,6 +47,10 @@ public class RedisSessionManager {
 
   /**
    * Constructor.
+   * @param host String
+   * @param port String
+   * @param password String
+   * @param sessionTimeOut int
    */
   public RedisSessionManager(String host, String port, String password, int sessionTimeOut) {
     this.expirationUpdateInterval = 300;
@@ -71,6 +75,11 @@ public class RedisSessionManager {
 
   /**
    * 每次请求取得最新Session.
+   * @param request RedisHttpServletRequestWrapper
+   * @param response HttpServletResponse
+   * @param requestEventSubject RequestEventSubject
+   * @param create boolean
+   * @return RedisHttpSession RedisHttpSession
    * 
    */
   public RedisHttpSession createSession(RedisHttpServletRequestWrapper request,
@@ -183,7 +192,7 @@ public class RedisSessionManager {
    * 
    * @param request RedisHttpServletRequestWrapper
    * @param response HttpServletResponse
-   * @return RedisHttpSession
+   * @return RedisHttpSession RedisHttpSession
    */
   private RedisHttpSession createEmptySession(RedisHttpServletRequestWrapper request,
       HttpServletResponse response) {
@@ -221,7 +230,7 @@ public class RedisSessionManager {
    * 从Redis中重新加载Session.
    * 
    * @param sessionId String
-   * @return RedisHttpSession
+   * @return RedisHttpSession RedisHttpSession
    */
   private RedisHttpSession loadSession(String sessionId) {
     RedisHttpSession session = null;

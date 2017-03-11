@@ -171,7 +171,7 @@ public final class KryoSerializationUtil {
 
   /**
    * Deserialize the array of byte data to object.
-   * 
+   * @param <V> V  the type of the deserialize object
    * @param objectData the array of byte
    * @return the deserialized object
    */
@@ -192,6 +192,7 @@ public final class KryoSerializationUtil {
    * Deep Copy from a specified object.
    * 
    * @param obj the source object to be copied
+   * @param <V> V  the type of the object copied
    * @return the target object copied from the original object
    */
   public <V> V deepCopy(final V obj) {

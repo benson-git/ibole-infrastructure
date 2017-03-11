@@ -132,7 +132,7 @@ public abstract class NLS {
    *   org/eclipse/example/nls/messages_en.properties
    *   org/eclipse/example/nls/messages.properties
    * </pre>
-   * </p>
+   * 
    * 
    * @param baseName the base name of a fully qualified message properties file.
    * @param clazz the class where the constants will exist

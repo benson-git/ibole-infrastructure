@@ -29,10 +29,10 @@ public class ZxingHandler {
   /**
    * 条形码编码.
    * 
-   * @param contents
-   * @param width
-   * @param height
-   * @param imgPath
+   * @param contents String
+   * @param width int
+   * @param height int
+   * @param imgPath String
    */
   public static void encode(String contents, int width, int height, String imgPath) {
     int codeWidth = 3 + // start guard
@@ -55,8 +55,8 @@ public class ZxingHandler {
   /**
    * 条形码解码.
    * 
-   * @param imgPath
-   * @return String
+   * @param imgPath String
+   * @return decoded string String
    */
   public static String decode(String imgPath) {
     BufferedImage image = null;
@@ -80,10 +80,10 @@ public class ZxingHandler {
   /**
    * 二维码编码.
    * 
-   * @param contents
-   * @param width
-   * @param height
-   * @param imgPath
+   * @param contents String
+   * @param width int
+   * @param height int
+   * @param imgPath String
    */
   public static void encode2(String contents, int width, int height, String imgPath) {
     Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
@@ -105,8 +105,8 @@ public class ZxingHandler {
   /**
    * 二维码解码.
    * 
-   * @param imgPath
-   * @return String
+   * @param imgPath String
+   * @return decoded string String 
    */
   public static String decode2(String imgPath) {
     BufferedImage image = null;
@@ -131,7 +131,8 @@ public class ZxingHandler {
   }
 
   /**
-   * @param args
+   * main.
+   * @param args args
    */
   public static void main(String[] args) {
 

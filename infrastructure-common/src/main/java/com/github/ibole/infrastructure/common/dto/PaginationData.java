@@ -47,9 +47,9 @@ public class PaginationData implements Serializable {
    * @return the page number
    */
   public int getPageNumber() {
-    if (offset < pageSize || pageSize == 0)
+    if (offset < pageSize || pageSize == 0) {
       return 1;
-
+    }
     return (offset / pageSize) + 1;
   }
 

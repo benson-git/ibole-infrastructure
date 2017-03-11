@@ -77,6 +77,8 @@ public class ErrorReporter {
   /**
    * Create a derived instance of {@link ErrorReporter} with the given cause.
    * However, the cause is not transmitted from server to client.
+   * @param cause the cause of throwable
+   * @return the instance of ErrorReporter
    */
   public ErrorReporter withCause(Throwable cause) {
     if (Objects.equal(this.cause, cause)) {
@@ -87,6 +89,8 @@ public class ErrorReporter {
 
   /**
    * Create a derived instance of {@link ErrorReporter} with the given specific error massage.  
+   * @param specificErrorMsg the cause of throwable
+   * @return the instance of ErrorReporter
    */
   public ErrorReporter withSpecificErrorMsg(String specificErrorMsg) {
     if (Objects.equal(this.specificErrorMsg, specificErrorMsg)) {
@@ -99,6 +103,9 @@ public class ErrorReporter {
    * Create a derived instance of {@link ErrorReporter} with the given specific error massage.  
    * <code>includingErrorCode = true</code> means the error message content is prefixed with error code,
    *  Example: ERROR_FUNCTION=ERROR_FUNCTION:Unsupport business operation.
+   * @param specificErrorMsg the cause of throwable
+   * @param includingErrorCode if include error code
+   * @return the instance of ErrorReporter
    */
   public ErrorReporter withSpecificErrorMsg(String specificErrorMsg, boolean includingErrorCode) {
 
@@ -112,6 +119,8 @@ public class ErrorReporter {
   
   /**
    * Create a derived instance of {@link ErrorReporter} with the given specific error code.
+   * @param specificErrorCode the error code
+   * @return the instance of ErrorReporter
    * 
    */
   public ErrorReporter withSpecificErrorCode(String specificErrorCode) {
@@ -122,7 +131,7 @@ public class ErrorReporter {
     
     return new ErrorReporter(this.code, specificErrorCode, this.specificErrorMsg, this.cause);
   }
-
+  
   public GeneralErrorCode getGeneralCode() {
     return this.code;
   }
@@ -259,6 +268,7 @@ public class ErrorReporter {
 
     /**
      * The value of the status.
+     * @return the enum value
      */
     public String value() {
       return value;

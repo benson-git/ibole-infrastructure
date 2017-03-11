@@ -19,7 +19,7 @@ import redis.clients.jedis.Pipeline;
  * <p>
  * Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p>
+ * <p>.
  * </p>
  *********************************************************************************************/
 
@@ -106,6 +106,8 @@ public class RedisSimpleTempalte extends RedisTemplate {
     }, key, seconds);
   }
   /**
+   * @param key String
+   * @return value String
    */
   public String get(String key) {
     return execute(new RedisCallback<String>() {
@@ -529,6 +531,7 @@ public class RedisSimpleTempalte extends RedisTemplate {
    * 
    * @param key the key to store data
    * @param value the array of byte
+   * @param seconds the time to live
    */
   public void setSafety(String key, byte[] value, int seconds) {
     execute(new RedisCallback<String>() {

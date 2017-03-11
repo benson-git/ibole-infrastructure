@@ -37,9 +37,9 @@ public abstract class AbstractController {
   protected Logger logger = LoggerFactory.getLogger(getClass());
   /**
    * 验证Bean实例对象.
-   * 
-   * <!-- 配置 JSR303 Bean Validator 定义 --> <bean id="validator"
-   * class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+   * <pre>
+   * 配置 JSR303 Bean Validator定义:  <code>&lt;bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" /&gt;</code>
+   * </pre>
    */
   @Autowired
   protected Validator validator;
@@ -47,8 +47,9 @@ public abstract class AbstractController {
   /**
    * Method which will help to retrieving values from Session based on the key being passed to the
    * method.
-   * 
-   * @param key
+   * @param <T> T
+   * @param key String
+   * @param request HttpServletRequest
    * @return value stored in session corresponding to the key
    */
   @SuppressWarnings("unchecked")
@@ -102,6 +103,7 @@ public abstract class AbstractController {
    * 
    * @param object 验证的实体对象
    * @param groups 验证组
+   * @param model Model
    * @return 验证成功：返回true；严重失败：将错误信息添加到 message 中
    */
   protected boolean beanValidator(Model model, Object object, Class<?>... groups) {
@@ -121,6 +123,7 @@ public abstract class AbstractController {
    * 
    * @param object 验证的实体对象
    * @param groups 验证组
+   * @param redirectAttributes RedirectAttributes
    * @return 验证成功：返回true；严重失败：将错误信息添加到 flash message 中
    */
   protected boolean beanValidator(RedirectAttributes redirectAttributes, Object object,
@@ -141,7 +144,6 @@ public abstract class AbstractController {
    * 
    * @param object 验证的实体对象
    * @param groups 验证组，不传入此参数时，同@Valid注解验证
-   * @return 验证成功：继续执行；验证失败：抛出异常跳转400页面。
    */
   protected void beanValidator(Object object, Class<?>... groups) {
     BeanValidators.validateWithException(validator, object, groups);
@@ -149,8 +151,8 @@ public abstract class AbstractController {
 
   /**
    * 添加Model消息
-   * 
-   * @param message
+   * @param model Model
+   * @param messages String Array
    */
   protected void addMessage(Model model, String... messages) {
     StringBuilder sb = new StringBuilder();
@@ -162,8 +164,8 @@ public abstract class AbstractController {
 
   /**
    * 添加Flash消息
-   * 
-   * @param message
+   * @param redirectAttributes RedirectAttributes
+   * @param messages String
    */
   protected void addMessage(RedirectAttributes redirectAttributes, String... messages) {
     StringBuilder sb = new StringBuilder();
@@ -176,9 +178,9 @@ public abstract class AbstractController {
   /**
    * 客户端返回JSON字符串.
    * 
-   * @param response
-   * @param object
-   * @return
+   * @param response HttpServletResponse
+   * @param object Object
+   * @return rendered string
    */
   protected String renderString(HttpServletResponse response, Object object) {
     return renderString(response, JsonMapper.toJsonString(object), "application/json");
@@ -187,9 +189,10 @@ public abstract class AbstractController {
   /**
    * 客户端返回字符串.
    * 
-   * @param response
-   * @param string
-   * @return 
+   * @param response HttpServletResponse
+   * @param string String
+   * @param type String
+   * @return rendered string
    */
   protected String renderString(HttpServletResponse response, String string, String type) {
     try {
@@ -205,6 +208,7 @@ public abstract class AbstractController {
 
   /**
    * 参数绑定异常
+   * @return error/404
    */
   @ExceptionHandler({BindException.class, ConstraintViolationException.class,
       ValidationException.class})
@@ -214,6 +218,7 @@ public abstract class AbstractController {
 
   /**
    * 授权登录异常
+   * @return error/403
    */
   @ExceptionHandler({AuthenticationException.class})
   public String authenticationException() {
@@ -224,6 +229,7 @@ public abstract class AbstractController {
    * 初始化数据绑定.
    *  1. 将所有传递进来的String进行HTML编码，防止XSS攻击 
    *  2. 将字段中Date类型转换为String类型
+   *  @param binder WebDataBinder
    */
   @InitBinder
   protected void initBinder(WebDataBinder binder) {
