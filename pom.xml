@@ -600,7 +600,6 @@
 		        </execution>
 		      </executions>
 		      <configuration> 
-		        <aggregate>true</aggregate>
 		        <sourceFileExcludes>
 		          <exclude>**/codegen/**/*.java</exclude>
 		          <exclude>**/security/**/*.java</exclude>
