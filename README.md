@@ -9,9 +9,25 @@ Provided some out-of-box functionalities
 
 [![Build Status](https://travis-ci.org/benson-git/ibole-infrastructure.svg?branch=master)](https://travis-ci.org/benson-git/ibole-infrastructure)
 
-================================================================
+Download
+--------
+
+Download [the JARs](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22infrastructure-all%22). Or for Maven, add to your `pom.xml`:
+```xml
+<dependency>
+    <groupId>com.github.ibole</groupId>
+    <artifactId>infrastructure-all</artifactId>
+    <version>1.0.9</version>
+</dependency>
+```
+
+Or for Gradle with non-Android, add to your dependencies:
+```gradle
+compile 'com.github.ibole:infrastructure-all:1.0.9'
+```
+
 Source Building
-================================================================
+--------
 
 1. Checkout the ibole-infrastructure source code:
 
