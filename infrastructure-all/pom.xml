@@ -8,6 +8,7 @@
     <version>1.0.9</version>
   </parent>
   <artifactId>infrastructure-all</artifactId>
+  <packaging>jar</packaging>
   <name>${project.artifactId}</name>
   <description>The all in one project of ibole infrastructure</description>
   <url>http://maven.apache.org</url>
@@ -59,28 +60,33 @@
 		   <plugin>
 		      <groupId>org.apache.maven.plugins</groupId>
 		      <artifactId>maven-javadoc-plugin</artifactId>
-		      <executions>
-		        <execution>
-		          <id>attach-javadocs</id>
-		          <goals>
-		            <goal>jar</goal>
-		          </goals>
-		        </execution>
-		      </executions>
+			  <executions>
+				<execution>
+					<id>attach-javadoc</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			  </executions>
 		      <configuration> 
-		        <sourceFileExcludes>
-		          <exclude>**/codegen/**/*.java</exclude>
-		          <exclude>**/security/**/*.java</exclude>
-			      <exclude>**/*Proto.java</exclude>
-                </sourceFileExcludes>
-				<show>public</show>
-				<charset>UTF-8</charset>
-				<encoding>UTF-8</encoding>
-				<docencoding>UTF-8</docencoding>
-				<links>
+			     <includeDependencySources>true</includeDependencySources> 
+		         <includeTransitiveDependencySources>false</includeTransitiveDependencySources> 
+                 <dependencySourceIncludes> 
+			         <dependencySourceInclude>com.github.ibole:*</dependencySourceInclude> 
+                 </dependencySourceIncludes> 
+		         <sourceFileExcludes>
+					<exclude>**/codegen/**/*.java</exclude>
+					<exclude>**/security/**/*.java</exclude>
+					<exclude>**/*Proto.java</exclude>
+				 </sourceFileExcludes>
+				 <show>public</show>
+				 <charset>UTF-8</charset>
+				 <encoding>UTF-8</encoding>
+				 <docencoding>UTF-8</docencoding>
+				 <links>
 					<link>http://docs.oracle.com/javase/8/docs/api</link>
-				</links>               
-              </configuration>
+				 </links>               
+               </configuration>
 		    </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -93,7 +99,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<createSourcesJar>false</createSourcesJar>
+							<createSourcesJar>true</createSourcesJar>
 							<promoteTransitiveDependencies>true</promoteTransitiveDependencies>
 							<artifactSet>
 								<includes>
