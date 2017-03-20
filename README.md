@@ -8,6 +8,7 @@ Provided some out-of-box functionalities
 - Jwt utility
 
 [![Build Status](https://travis-ci.org/benson-git/ibole-infrastructure.svg?branch=master)](https://travis-ci.org/benson-git/ibole-infrastructure)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ibole/infrastructure-all/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ibole/infrastructure-all)
 
 Download
 --------
