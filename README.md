@@ -18,13 +18,13 @@ Download [the JARs](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22infrastruc
 <dependency>
     <groupId>com.github.ibole</groupId>
     <artifactId>infrastructure-all</artifactId>
-    <version>1.0.9</version>
+    <version>1.10.0</version>
 </dependency>
 ```
 
 Or for Gradle with non-Android, add to your dependencies:
 ```gradle
-compile 'com.github.ibole:infrastructure-all:1.0.9'
+compile 'com.github.ibole:infrastructure-all:1.10.0'
 ```
 
 Source Building
@@ -36,7 +36,7 @@ Source Building
   git clone https://github.com/benson-git/ibole-infrastructure.git ibole-infrastructure  
 
   git checkout master  
-  or: git checkout -b -v1.0.9  
+  or: git checkout -b -v1.10.0  
   ```
 2. Import the ibole-infrastructure source code to eclipse project:
   ```
