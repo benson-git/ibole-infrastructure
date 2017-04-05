@@ -4,7 +4,7 @@
 
   <groupId>com.github.ibole</groupId>
   <artifactId>infrastructure-parent</artifactId>
-  <version>1.0.9</version>
+  <version>1.10.0</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>The parent project of ibole infrastructure</description>
