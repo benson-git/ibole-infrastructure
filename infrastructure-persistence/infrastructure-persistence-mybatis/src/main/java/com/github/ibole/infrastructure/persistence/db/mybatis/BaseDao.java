@@ -16,8 +16,8 @@
 
 package com.github.ibole.infrastructure.persistence.db.mybatis;
 
-import com.github.ibole.infrastructure.persistence.db.Page;
-import com.github.ibole.infrastructure.persistence.db.exception.DataBaseAccessException;
+import com.github.ibole.infrastructure.persistence.api.Page;
+import com.github.ibole.infrastructure.persistence.api.db.exception.DataBaseAccessException;
 import com.sun.rowset.CachedRowSetImpl;
 
 import org.apache.ibatis.session.RowBounds;
@@ -412,7 +412,7 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
       }
   }
   
-  public void callBack(Connection conn) throws DataBaseAccessException
+  public void rollback(Connection conn) throws DataBaseAccessException
   {
       try {
           if(conn!=null)

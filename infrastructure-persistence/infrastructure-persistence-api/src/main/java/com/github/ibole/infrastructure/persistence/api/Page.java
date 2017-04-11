@@ -1,4 +1,4 @@
-package com.github.ibole.infrastructure.persistence.db;
+package com.github.ibole.infrastructure.persistence.api;
 
 import java.io.Serializable;
 import java.util.ArrayList;
