@@ -17,5 +17,14 @@
 			<artifactId>infrastructure-persistence-api</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- mybatis lib -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
 	</dependencies>
 </project>

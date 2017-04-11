@@ -7,4 +7,6 @@
   </parent>
   <artifactId>infrastructure-persistence-api</artifactId>
   <name>${project.artifactId}</name>
+  
+  
 </project>
