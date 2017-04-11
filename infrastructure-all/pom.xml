@@ -108,6 +108,7 @@
 								    <include>com.github.ibole:infrastructure-cache</include>
 								    <include>com.github.ibole:infrastructure-security</include>
 								    <include>com.github.ibole:infrastructure-web</include>
+								    <include>com.github.iboleinfrastructure-persistence</include>
 								</includes>
 							</artifactSet>
 							<transformers>

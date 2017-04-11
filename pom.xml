@@ -47,6 +47,7 @@
   	<module>infrastructure-cache</module>
   	<module>infrastructure-security</module>
   	<module>infrastructure-web</module>
+  	<module>infrastructure-persistence</module>
   	<module>infrastructure-all</module>
   </modules>
 	<profiles>
