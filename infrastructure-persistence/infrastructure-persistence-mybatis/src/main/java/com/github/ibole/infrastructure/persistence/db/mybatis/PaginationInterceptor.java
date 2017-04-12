@@ -50,14 +50,14 @@ import java.util.Properties;
  */
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
         RowBounds.class, ResultHandler.class }) })
-public class MysqlPagePluging implements Interceptor {
+public class PaginationInterceptor implements Interceptor {
 
-    private final static Logger logger = LoggerFactory.getLogger(MysqlPagePluging.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(PaginationInterceptor.class.getName());
     private final static int MAPPED_STATEMENT_INDEX = 0;
     private final static int PARAMETER_INDEX = 1;
     private final static int ROWBOUNDS_INDEX = 2;
 
-    MySQLDialect dialect;
+    Dialect dialect;
 
     public Object intercept(Invocation invocation) throws Throwable {
         processIntercept(invocation.getArgs());
@@ -130,11 +130,11 @@ public class MysqlPagePluging implements Interceptor {
     public void setProperties(Properties properties) {
         String dialectClass = properties.getProperty("dialectClass");
         try {
-            dialect = (MySQLDialect) Class.forName(dialectClass).newInstance();
+            dialect = (Dialect) Class.forName(dialectClass).newInstance();
         } catch (Exception e) {
             throw new RuntimeException("cannot create dialect instance by dialectClass:" + dialectClass, e);
         }
-        logger.info(MysqlPagePluging.class.getSimpleName() + ".dialect=" + dialectClass);
+        logger.info(PaginationInterceptor.class.getSimpleName() + ".dialect=" + dialectClass);
     }
 
     public static class BoundSqlSqlSource implements SqlSource {

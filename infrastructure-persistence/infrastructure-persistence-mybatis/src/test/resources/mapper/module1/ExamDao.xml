@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="examDao">
+
+	<sql id="markColumns">
+		a.id AS id,
+		a.classroom_id AS classroomId,
+		a.paper_id AS paperId,
+		a.score AS score,
+		a.remark AS remark,
+		a.marking_time AS markingTime
+	</sql>
+ 
+	<sql id="examColumns">
+		a.id AS id,
+		a.classroom_id AS classroomId,
+		a.paper_id AS paperId,
+		a.student_name AS studentName,
+		a.student_id AS studentId,
+		a.student_no AS studentNo,
+		a.create_time AS createTime,
+		a.option_result optionResult,
+		a.question_id questionId,
+		a.answer answer
+	</sql>
+	 <!-- 批量增加学生作答 -->
+	 <insert id="batchInsert"  parameterType="java.util.List">  
+	    insert into examination_user_result (id,classroom_id,question_id,option_result,answer,paper_id,student_id,student_no,student_name,create_time)   
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >  
+	        (#{item.id},#{item.classroomId},#{item.questionId},#{item.optionResult},#{item.answer},#{item.paperId},#{item.studentId},#{item.studentNo},#{item.studentName},#{item.createTime})  
+	    </foreach>  
+	</insert>  
+	 <!-- 添加老师评分 -->
+	 <insert id="marking" parameterType="com.gta.edu.modules.teach.entity.ExamMarkingVo">  
+	    insert into examination_marking (id,classroom_id,paper_id,score,remark,marking_time,student_id)   
+	    values (#{id},#{classroomId},#{paperId},#{score},#{remark},#{markingTime},#{studentId})  
+	</insert>  
+	 <!-- 获取试卷名称 -->
+	<select id="getExamInfo" resultType="com.gta.edu.modules.teach.entity.ExamInfoVo"
+		 parameterType="java.util.Map" >
+		SELECT 
+		  ex.resource_id AS resourceId,
+		  ex.resource_name AS resourceName,
+		  ex.resource_type AS resourceType 
+		FROM
+		  exam_info ex 
+		WHERE ex.resource_id = #{paperId}
+		 <choose>
+        <when test="type ==0">
+        	AND ex.classroom_id =#{id} AND type=0
+        </when>
+        <otherwise>
+            AND ex.course_id =#{id} AND type=1
+        </otherwise>
+    	</choose>
+    	limit 0,1;
+	</select>
+	<!-- 获取需要批改的学生 -->
+	<select id="listStudent" parameterType="java.util.Map" resultType="com.gta.edu.modules.teach.entity.ExamStudentVo" >
+		select * from (
+		SELECT
+			t.student_id studentId,
+			t.student_name studentName, 
+			(
+				SELECT
+					a.score
+				FROM
+					examination_marking a
+				WHERE
+					a.classroom_id = #{classroomId}
+				AND a.paper_id = #{paperId}
+				AND a.student_id = t.student_id
+				LIMIT 0,
+				1
+			) score,
+			(
+				SELECT
+					<!-- count(*) -->
+					IF(COUNT(*) > 0, 2, 1)
+				FROM
+					examination_marking a
+				WHERE
+					a.classroom_id = #{classroomId}
+				AND a.paper_id = #{paperId}
+				AND a.student_id = t.student_id
+				LIMIT 0,
+				1
+			) status,
+			t.create_time createTime
+		FROM
+			examination_user_result t
+		WHERE
+			t.classroom_id = #{classroomId}
+		AND t.paper_id = #{paperId}
+		
+		<!-- 学生名字模糊查询 -->
+		<if test="studentName != null and studentName != ''">
+			<![CDATA[  
+			AND a.student_name like  %${studentName}%
+			]]> 
+		</if>
+		group by student_id  
+		) t1 order by  t1.status asc ,t1.score asc ,t1.studentName asc 
+		
+	</select>
+	
+	
+	<!-- 获取老师评分数据-->
+	<select id="findMarking" resultType="com.gta.edu.modules.teach.entity.ExamMarkingVo" parameterType="java.util.Map">
+		 SELECT
+		<include refid="markColumns"></include>
+		FROM
+			examination_marking a
+		WHERE
+		a.classroom_id = #{classroomId}
+		AND a.paper_id = #{paperId} 
+		AND a.student_id = #{studentId}
+		LIMIT 0,
+		1
+	</select>
+	<!-- 学生作答 -->
+	<select id="getResultList" resultType="com.gta.edu.modules.teach.entity.ExamUserResultVo" parameterType="java.util.Map">
+		SELECT
+			<include refid="examColumns"></include>
+		FROM
+			examination_user_result a
+		WHERE
+			a.classroom_id = #{classroomId}
+		AND a.paper_id = #{paperId}
+		AND a.student_id = #{studentId}
+		order by a.create_time desc
+	</select>
+	
+	<!-- 教师课程，课堂列表 -->
+	<select id="getTeacherTutorList" resultType="com.gta.edu.modules.teach.rsp.TeacherTutorListResult" parameterType="com.gta.edu.modules.teach.req.TeacherTutorListReq">	
+		SELECT 
+		  * 
+		FROM
+		  (SELECT 
+		    c.create_time,
+		    ex.course_id AS courseId,
+		    ex.course_name AS courseName,
+		    NULL AS classroomId,
+		    NULL AS classroomName,
+		    ex.resource_name AS examName,
+		    ex.resource_id AS recourseId,
+		    ex.type,
+		    ex.teacher_id,
+		    ex.resource_type AS resourceType,
+		    IF(
+		      (SELECT 
+		        COUNT(DISTINCT t2.student_id) - 
+		        (SELECT 
+		          COUNT(t1.student_id) 
+		        FROM
+		          examination_marking t1 
+		        WHERE t1.paper_id = t2.paper_id
+		        AND t1.`classroom_id` = t2.`classroom_id` 
+        		AND t1.`student_id` IS NOT NULL 
+        		AND t1.`student_id` != ' ') = 0 
+		      FROM
+		        examination_user_result t2 
+		      WHERE t2.paper_id = ex.resource_id 
+		        AND t2.classroom_id = ex.course_id 
+		      GROUP BY t2.paper_id),
+		      "Y",
+		      "N"
+		    ) AS STATUS 
+		  FROM
+		    exam_info ex,
+    		course_info c
+ 		  WHERE 1 = 1 
+   			AND c.id = ex.course_id
+		    AND ex.type = 1 
+		    AND ex.is_delete != 1 
+		    AND ex.resource_type = 6
+		    AND EXISTS 
+			    (SELECT 
+			      1 
+			    FROM
+			      examination_user_result t3 
+			    WHERE t3.paper_id = ex.resource_id 
+			      AND t3.classroom_id = ex.course_id) 
+		  UNION
+		  ALL 
+		  SELECT 
+		    ci.create_time,
+		    ci.id AS courseId,
+    		ci.course_name AS courseName,
+		    ex.classroom_id AS classroomId,
+		    ex.classroom_name AS classroomName,
+		    ex.resource_name AS examName,
+		    ex.resource_id AS recourseId,
+		    ex.type,
+		    ex.teacher_id,
+		    ex.resource_type AS resourceType,
+		    IF(
+		      (SELECT 
+		        COUNT(DISTINCT t2.student_id) - 
+		        (SELECT 
+		          COUNT(t1.student_id) 
+		        FROM
+		          examination_marking t1 
+		        WHERE t1.paper_id = t2.paper_id
+		        AND t1.`classroom_id` = t2.`classroom_id` 
+        		AND t1.`student_id` IS NOT NULL 
+        		AND t1.`student_id` != ' ') = 0 
+		      FROM
+		        examination_user_result t2 
+		      WHERE t2.paper_id = ex.resource_id 
+		        AND t2.classroom_id = ex.classroom_id 
+		      GROUP BY t2.paper_id),
+		      "Y",
+		      "N"
+		    ) AS STATUS 
+		  FROM
+		    exam_info ex,
+    		classroom_info ci
+  		  WHERE 1 = 1 
+		  	AND ex.classroom_id = ci.id
+		  	AND ci.status in (7,8,9)
+		    AND ex.type = 0 
+		    AND ex.resource_type = 6
+		    AND ex.is_delete != 1
+		    AND EXISTS 
+			      (SELECT 
+			        1 
+			      FROM
+			        examination_user_result t3 
+			      WHERE t3.paper_id = ex.resource_id 
+			        AND t3.classroom_id = ex.classroom_id)
+        ) abc 
+		WHERE 1 = 1 
+		  
+		  <if test="status != null and status != ''">
+				<![CDATA[  
+				 AND abc.status = #{status}
+				]]>
+		  </if>
+		  <if test="teacherId != null and teacherId != ''">
+				<![CDATA[  
+				 AND abc.teacher_id=#{teacherId}
+				]]>
+		  </if>
+		ORDER BY abc.create_time DESC
+	</select>
+	
+	<!-- 获取课程列表分页 -->
+	<select id="getTeacherTutorList_Count" resultType="java.lang.Integer"
+		parameterType="com.gta.edu.modules.teach.req.TeacherTutorListReq">		
+		SELECT 
+		  COUNT(1)
+		FROM
+		  (SELECT 
+		    c.create_time,
+		    ex.teacher_id,
+		    IF(
+		      (SELECT 
+		        COUNT(DISTINCT t2.student_id) - 
+		        (SELECT 
+		          COUNT(t1.student_id) 
+		        FROM
+		          examination_marking t1 
+		        WHERE t1.paper_id = t2.paper_id
+		        AND t1.`classroom_id` = t2.`classroom_id` 
+        		AND t1.`student_id` IS NOT NULL 
+        		AND t1.`student_id` != ' ') = 0 
+		      FROM
+		        examination_user_result t2 
+		      WHERE t2.paper_id = ex.resource_id 
+		        AND t2.classroom_id = ex.course_id 
+		      GROUP BY t2.paper_id),
+		      "Y",
+		      "N"
+		    ) AS STATUS 
+		  FROM
+		    exam_info ex,
+    		course_info c
+ 		  WHERE 1 = 1 
+   			AND c.id = ex.course_id
+		    AND ex.type = 1 
+		    AND ex.is_delete != 1 
+		     AND ex.resource_type = 6
+		     AND EXISTS 
+			    (SELECT 
+			      1 
+			    FROM
+			      examination_user_result t3 
+			    WHERE t3.paper_id = ex.resource_id 
+			      AND t3.classroom_id = ex.course_id) 
+		  UNION
+		  ALL 
+		  SELECT 
+		 	ci.create_time,
+		    ex.teacher_id,
+		    IF(
+		      (SELECT 
+		        COUNT(DISTINCT t2.student_id) - 
+		        (SELECT 
+		          COUNT(t1.student_id) 
+		        FROM
+		          examination_marking t1 
+		        WHERE t1.paper_id = t2.paper_id
+		        AND t1.`classroom_id` = t2.`classroom_id` 
+        		AND t1.`student_id` IS NOT NULL 
+        		AND t1.`student_id` != ' ') = 0 
+		      FROM
+		        examination_user_result t2 
+		      WHERE t2.paper_id = ex.resource_id 
+		        AND t2.classroom_id = ex.classroom_id 
+		      GROUP BY t2.paper_id),
+		      "Y",
+		      "N"
+		    ) AS STATUS 
+		  FROM
+		    exam_info ex,
+		    classroom_info ci
+		  WHERE 1 = 1 
+		  	AND ex.classroom_id = ci.id
+		  	AND ci.status in (7,8,9)
+		    AND ex.type = 0 
+		     AND ex.resource_type = 6
+		    AND ex.is_delete != 1
+			AND EXISTS 
+			      (SELECT 
+			        1 
+			      FROM
+			        examination_user_result t3 
+			      WHERE t3.paper_id = ex.resource_id 
+			        AND t3.classroom_id = ex.classroom_id)
+        ) abc 
+		WHERE 1 = 1  
+		  <if test="status != null and status != ''">
+			<![CDATA[  
+			 AND abc.status = #{status}
+			]]>
+		  </if>
+		  <if test="teacherId != null and teacherId != ''">
+				<![CDATA[  
+				 AND abc.teacher_id=#{teacherId}
+				]]>
+		  </if>
+	</select>
+	
+	
+	<!-- 学生辅助 -->
+	<select id="getStudentTutorList" resultType="com.gta.edu.modules.teach.rsp.StudentCoachListResult" parameterType="com.gta.edu.modules.teach.req.StudentCoachListReq">	
+		SELECT
+			(
+		    CASE
+		   	  WHEN abc.count > 0 
+		      AND abc.score IS NULL 
+		      THEN 1 
+		      WHEN abc.count IS NULL 
+		      OR abc.count = 0 
+		      THEN 0 
+		      WHEN abc.count > 0 
+		      AND abc.score IS NOT NULL 
+		      THEN 2 
+		    END
+		  ) AS STATUS ,
+		  abc.*
+		FROM
+			(
+				 
+					SELECT
+					    c.create_time,
+						t.id id,
+						t.course_id courseId,
+						t.course_name courseName,
+						t.classroom_id classroomId,
+						t.classroom_name classroomName,
+						t.resource_id resourceId,
+						t.resource_name resourceName,
+						t.teacher_id teacherId,
+						t.teacher_name teacherName,
+						t.type type,
+						t.resource_type AS resourceType,
+						(	CASE WHEN t.type = 0 then (
+								SELECT
+									a.score
+								FROM
+									examination_marking a
+								WHERE
+									a.classroom_id = t.classroom_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id = #{studentId}
+							) else (
+								SELECT
+									a.score
+								FROM
+									examination_marking a
+								WHERE
+									a.classroom_id = t.course_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id = #{studentId}
+							)
+							end
+						) AS score,
+						(
+							CASE WHEN t.type = 0 then (
+								SELECT
+									count(*)
+								FROM
+									examination_user_result a
+								WHERE
+									a.classroom_id = t.classroom_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id =  #{studentId}
+							) else (
+								SELECT
+									count(*)
+								FROM
+									examination_user_result a
+								WHERE
+									a.classroom_id = t.course_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id = #{studentId}
+							)
+							end
+						) count
+					FROM
+						`exam_info` t,
+    					course_info c
+ 		  			WHERE 1 = 1 
+   						AND c.id = t.course_id
+						<if test="courseIds != null and courseIds.size()>0">
+						and (1!=1
+						or t.course_id in  
+							<foreach item="item" index="index" collection="courseIds"
+								open="(" separator="," close=")">
+								#{item}
+							</foreach>
+							)
+						and (t.classroom_id is null or t.classroom_id in (
+						
+							select room.id from classroom_info room where room.course_id in
+							<foreach item="item" index="index" collection="courseIds"
+								open="(" separator="," close=")">
+								#{item}
+							</foreach>
+							and room.isDelete = 0 and room.status in (7,8,9)
+						)
+						)	
+						</if>
+						
+						<if test="courseIds == null or courseIds.size() == 0">
+						and 1!=1
+						</if>
+						 
+						AND t.resource_type = 6
+			) abc   where 1=1 
+			<if test="type != null and type != ''">
+				and abc.type = #{type}
+			</if>
+			<!-- 0-待答题  1-待批改  2-已批改 -->
+			<if test="status != null">
+				<if test="status != null and status==0">
+				and (abc.count is null or abc.count = 0) 
+				</if>
+				<if test="status != null and status==1">
+				and abc.count > 0 and abc.score is null
+				</if>
+				<if test="status != null and status==2">
+				and abc.count > 0 and abc.score is not null
+				</if>
+			</if>
+			ORDER BY abc.create_time DESC
+	</select>
+	
+	<!-- 获取课程列表分页 -->
+	<select id="getStudentTutorList_Count" resultType="java.lang.Integer"
+		parameterType="com.gta.edu.modules.teach.req.StudentCoachListReq">
+		SELECT
+			count(1)
+		FROM
+			(
+				 
+					SELECT
+					    c.create_time,
+						t.id id,
+						t.course_id courseId,
+						t.course_name courseName,
+						t.classroom_id classroomId,
+						t.classroom_name classroomName,
+						t.resource_id resourceId,
+						t.resource_name resourceName,
+						t.teacher_id teacherId,
+						t.teacher_name teacherName,
+						t.type type,
+						t.resource_type AS resourceType,
+						(	CASE WHEN t.type = 0 then (
+								SELECT
+									a.score
+								FROM
+									examination_marking a
+								WHERE
+									a.classroom_id = t.classroom_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id = #{studentId}
+							) else (
+								SELECT
+									a.score
+								FROM
+									examination_marking a
+								WHERE
+									a.classroom_id = t.course_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id = #{studentId}
+							)
+							end
+						) AS score,
+						(
+							CASE WHEN t.type = 0 then (
+								SELECT
+									count(*)
+								FROM
+									examination_user_result a
+								WHERE
+									a.classroom_id = t.classroom_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id =  #{studentId}
+							) else (
+								SELECT
+									count(*)
+								FROM
+									examination_user_result a
+								WHERE
+									a.classroom_id = t.course_id
+								AND a.paper_id = t.resource_id
+								AND a.student_id =  #{studentId}
+							)
+							end
+						) count
+					FROM
+						`exam_info` t,
+    					course_info c
+ 		  			WHERE 1 = 1 
+   						AND c.id = t.course_id
+						<if test="courseIds != null and courseIds.size()>0">
+						and (1!=1
+						or t.course_id in  
+							<foreach item="item" index="index" collection="courseIds"
+								open="(" separator="," close=")">
+								#{item}
+							</foreach>
+							
+							)
+							and (t.classroom_id is null or t.classroom_id in (
+						
+							select room.id from classroom_info room where room.course_id in
+							<foreach item="item" index="index" collection="courseIds"
+								open="(" separator="," close=")">
+								#{item}
+							</foreach>
+							and room.isDelete = 0 and room.status in (7,8,9)
+						)
+						)	
+						</if>
+						<if test="courseIds == null or courseIds.size() == 0">
+							and 1!=1
+						</if>
+					 AND t.resource_type = 6
+			) abc   where 1=1 
+			<if test="type != null and type != ''">
+				and abc.type = #{type}
+			</if>
+			<!-- 0-待答题  1-待批改  2-已批改 -->
+			<if test="status != null">
+				<if test="status != null and status==0">
+				and (abc.count is null or abc.count = 0) 
+				</if>
+				<if test="status != null and status==1">
+				and abc.count > 0 and abc.score is null
+				</if>
+				<if test="status != null and status==2">
+				and abc.count > 0 and abc.score is not null
+				</if>
+			</if>
+	</select>
+</mapper>
