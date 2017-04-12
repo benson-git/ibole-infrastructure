@@ -1,11 +1,11 @@
-package com.github.ibole.infrastructure.persistence.db.mybatis;
+package com.github.ibole.infrastructure.persistence.db.mybatis.dialect;
 
 
 /**
  * Mysql方言.
  * 
  */
-public class MySQLDialect implements Dialect {
+public class MySQLDialect extends Dialect {
 
 	public boolean supportsLimitOffset() {
 		return true;
@@ -41,5 +41,16 @@ public class MySQLDialect implements Dialect {
 			return sql + " limit " + limitPlaceholder;
 		}
 	}
+   /**
+	* 将sql转换为总记录数SQL
+	* 
+	* @param querySqlString SQL语句
+    * @return 总记录数的sql
+	*/
+    @Override
+    public String getCountString(String querySqlString) {
+        String sql = getNonOrderByPart(querySqlString);
+        return "select count(1) from (" + sql + ") as tmp_count";
+    }
 
 }

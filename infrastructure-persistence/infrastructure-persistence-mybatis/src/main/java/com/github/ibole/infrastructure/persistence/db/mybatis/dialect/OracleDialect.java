@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.persistence.db.mybatis;
+package com.github.ibole.infrastructure.persistence.db.mybatis.dialect;
 
 /*********************************************************************************************
  * .
@@ -30,7 +30,7 @@ package com.github.ibole.infrastructure.persistence.db.mybatis;
  * Oracle方言.
  *
  */
-public class OracleDialect implements Dialect {
+public class OracleDialect extends Dialect {
 
   public boolean supportsLimit() {
     return true;
@@ -76,4 +76,10 @@ public class OracleDialect implements Dialect {
     return pagingSelect.toString();
   }
 
+  @Override
+  public String getCountString(String querySqlString) {
+      String sql = getNonOrderByPart(querySqlString);
+
+      return "select count(1) from (" + sql + ") tmp_count";
+  }
 }

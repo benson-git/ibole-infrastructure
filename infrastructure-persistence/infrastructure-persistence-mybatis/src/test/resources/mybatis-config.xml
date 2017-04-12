@@ -8,8 +8,9 @@
 	</settings>
 	<plugins>
 		<!-- 指定数据库分页方言Dialect -->
-		<plugin interceptor="com.github.ibole.infrastructure.persistence.api.mybatis.PaginationInterceptor">
-			<property name="dialectClass" value="com.github.ibole.infrastructure.persistence.api.mybatis.MySQLDialect" />
+		<plugin interceptor="com.github.ibole.infrastructure.persistence.db.mybatis.pagination.PaginationInterceptor">
+			<property name="dialectClass" value="com.github.ibole.infrastructure.persistence.db.mybatis.dialect.MySQLDialect" />
+		    <property name="sqlRegex" value="*.selectPaging"/>
 		</plugin>
 	</plugins>
 	<mappers>

@@ -16,8 +16,8 @@
 
 package com.github.ibole.infrastructure.persistence.db.mybatis;
 
-import com.github.ibole.infrastructure.persistence.api.Page;
-import com.github.ibole.infrastructure.persistence.api.db.exception.DataBaseAccessException;
+import com.github.ibole.infrastructure.persistence.db.exception.DataBaseAccessException;
+import com.github.ibole.infrastructure.persistence.pagination.model.Page;
 import com.sun.rowset.CachedRowSetImpl;
 
 import org.apache.ibatis.session.RowBounds;
@@ -53,6 +53,10 @@ import javax.sql.RowSet;
 public class BaseDao<T> extends SqlSessionDaoSupport {
 
   private static final String COUNT = "_Count";
+  
+  //从spring注入原有的sqlSessionTemplate
+  //@Autowired
+  //private SqlSessionTemplate sqlSessionTemplate;
 
   public int save(String key, T entity) throws DataBaseAccessException {
       try {
@@ -132,6 +136,10 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
       }
   }
 
+  public <K, V> Map<K, V> getMap(String statement, Object parameter, String mapKey) {
+    return getSqlSession().selectMap(statement, parameter, mapKey);
+  }
+
   public Object getObject(String key, Object params) {
       try {
           return getSqlSession().selectOne(key, params);
@@ -173,9 +181,9 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
       try {
           Integer totalCounts = count(key + COUNT, params);
           // add 最大页数判断
-          int pageM = maxPage(totalCounts, page.getPageSize(), page.getPageNo());
+          int pageM = maxPage(totalCounts, page.getPageSize(), page.getPageNumber());
           if (pageM > 0) {
-              page.setPageNo(pageM);
+              page.setPageNumber(pageM);
           } // end
           if (totalCounts != null && totalCounts.longValue() > 0) {
               List<T> list = getSqlSession().selectList(key, params,
@@ -285,8 +293,12 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
           stmt = conn.prepareStatement(sql);
           fillParams(stmt, params);
           rs = stmt.executeQuery();
+          //CachedRowSetImpl:
+          //1. CachedRowSet 对象是可序列化的
+          //2. 保存在其中的数据不会随着数据库和ResultSet的连接的关闭而丢失，可以传递.
           crs = new CachedRowSetImpl();
-          crs.populate(new ResultSetWrapper(rs));
+          //crs.populate(new ResultSetWrapper(rs));
+          crs.populate(rs);
       } catch (Exception e) {
           logger.error(sql, e);
           throw new DataBaseAccessException("query error", e);

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.persistence.api.db.exception;
+package com.github.ibole.infrastructure.persistence.db.exception;
 
 import java.sql.SQLException;
 

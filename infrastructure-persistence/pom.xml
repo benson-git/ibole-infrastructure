@@ -37,6 +37,11 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+	        <dependency>
+	            <groupId>com.github.ibole</groupId>
+	            <artifactId>infrastructure-common</artifactId>
+	            <version>${project.parent.version}</version>
+	        </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>

@@ -1,13 +1,12 @@
-package com.github.ibole.infrastructure.persistence.api;
+package com.github.ibole.infrastructure.persistence.pagination.model;
+
+import org.apache.commons.collections.IteratorUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -18,15 +17,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class Page<T> implements Serializable {
   private static final long serialVersionUID = 1L;
-  // -- 公共变量 --//
-  public static final String ASC = "asc";
-  public static final String DESC = "desc";
 
   // -- 分页参数 --//
-  protected int pageNo = 1;
+  protected int pageNumber = 1;
   protected int pageSize = 10; // 默认为每页20条记录
-  protected String orderBy = null; // 排序字段
-  protected String order = null; // 排序方式
   protected List<T> result = Collections.emptyList(); // 用于封装结果集
   protected long totalCount = 0; // 总记录数
   protected long totalPages = 0;// 总页数
@@ -45,8 +39,6 @@ public class Page<T> implements Serializable {
     return count;
   }
 
-
-
   // -- 构造函数 --//
   public Page() {}
 
@@ -55,25 +47,38 @@ public class Page<T> implements Serializable {
   }
 
   public Page(int pageNo, int pageSize) {
-    setPageNo(pageNo);
+    setPageNumber(pageNo);
     setPageSize(pageSize);
+  }
+  
+  public Page(int pageNo, int pageSize, int totalCount) {
+    setPageNumber(pageNo);
+    setPageSize(pageSize);
+    setTotalCount(totalCount);
+  }
+  
+  public Page(int pageNo, int pageSize, int totalCount, List<T> result) {
+    setPageNumber(pageNo);
+    setPageSize(pageSize);
+    setTotalCount(totalCount);
+    setResult(result);
   }
 
   // -- 访问查询参数函数 --//
   /**
    * 获得当前页的页号,序号从1开始,默认为1.
    */
-  public int getPageNo() {
-    return pageNo;
+  public int getPageNumber() {
+    return pageNumber;
   }
 
   /**
    * 设置当前页的页号,序号从1开始,低于1时自动调整为1.
    */
-  public void setPageNo(final int pageNo) {
-    this.pageNo = pageNo;
+  public void setPageNumber(final int pageNo) {
+    this.pageNumber = pageNo;
     if (pageNo < 1) {
-      this.pageNo = 1;
+      this.pageNumber = 1;
     }
   }
 
@@ -98,69 +103,14 @@ public class Page<T> implements Serializable {
    * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始
    */
   public int getFirst() {
-    return ((pageNo - 1) * pageSize) + 1;
-  }
-
-  /**
-   * 获得排序字段,无默认值.多个排序字段时用','分隔
-   */
-  public String getOrderBy() {
-    return orderBy;
-  }
-
-  /**
-   * 设置排序字段,多个排序字段时用','分隔.
-   */
-  public void setOrderBy(final String orderBy) {
-    this.orderBy = orderBy;
-  }
-
-  public Page<T> orderBy(final String theOrderBy) {
-    setOrderBy(theOrderBy);
-    return this;
-  }
-
-  /**
-   * 获得排序方向.
-   */
-  public String getOrder() {
-    return order;
-  }
-
-  /**
-   * 设置排序方式向.
-   * 
-   * @param order 可选值为desc或asc,多个排序字段时用','分隔.
-   */
-  public void setOrder(final String order) {
-    String lowcaseOrder = StringUtils.lowerCase(order);
-    // 检查order字符串的合法值
-    String[] orders = StringUtils.split(lowcaseOrder, ',');
-    for (String orderStr : orders) {
-      if (!StringUtils.equals(DESC, orderStr) && !StringUtils.equals(ASC, orderStr)) {
-        throw new IllegalArgumentException("排序方向" + orderStr + "不是合法值");
-      }
-    }
-    this.order = lowcaseOrder;
-  }
-
-  public Page<T> order(final String theOrder) {
-    setOrder(theOrder);
-    return this;
-  }
-
-  /**
-   * 是否已设置排序字段,无默认值
-   */
-  public boolean isOrderBySetted() {
-    return (StringUtils.isNotBlank(orderBy) && StringUtils.isNotBlank(order));
+    return ((pageNumber - 1) * pageSize) + 1;
   }
 
   /**
    * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从0开始 用于Mysql
    */
   public int getOffset() {
-    return ((pageNo - 1) * pageSize);
+    return ((pageNumber - 1) * pageSize);
   }
 
   /**
@@ -205,28 +155,28 @@ public class Page<T> implements Serializable {
    * 是否第一页.
    */
   public boolean getFirstPage() {
-    return pageNo == 1;
+    return pageNumber == 1;
   }
 
   /**
    * 是否还有上一页
    */
   public boolean getHasPrePage() {
-    return (pageNo - 1 >= 1);
+    return (pageNumber - 1 >= 1);
   }
 
   /**
    * 是否还有下一页.
    */
   public boolean getHasNextPage() {
-    return (pageNo + 1 <= getTotalPages());
+    return (pageNumber + 1 <= getTotalPages());
   }
 
   /**
    * 是否最后一页.
    */
   public boolean getLastPage() {
-    return pageNo == getTotalPages();
+    return pageNumber == getTotalPages();
   }
 
   /**
@@ -234,9 +184,9 @@ public class Page<T> implements Serializable {
    */
   public int getNextPage() {
     if (getHasNextPage()) {
-      return pageNo + 1;
+      return pageNumber + 1;
     } else {
-      return pageNo;
+      return pageNumber;
     }
   }
 
@@ -245,19 +195,19 @@ public class Page<T> implements Serializable {
    */
   public int getPrePage() {
     if (getHasPrePage()) {
-      return pageNo - 1;
+      return pageNumber - 1;
     } else {
-      return pageNo;
+      return pageNumber;
     }
   }
 
 
 
-  public List<Integer> getPageNos() {
-    return getPageNos(getTotalPages(), this.pageNo);
+  public List<Integer> getPageNumbers() {
+    return getPageNumbers(getTotalPages(), this.pageNumber);
   }
 
-  public static List<Integer> getPageNos(long totalNo, int pageNo) {
+  public static List<Integer> getPageNumbers(long totalNo, int pageNo) {
     List<Integer> r = new ArrayList<Integer>();
     // long totalNo=getTotalPages();
     int startNo = 1;
