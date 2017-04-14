@@ -52,7 +52,9 @@ public class SqlStringHelper {
     public static boolean containOrder(String sql) {
         return containRegex(sql, ORDER_REGEX);
     }
+    
     /*-------------------------------------------------*/
+    
     /** The empty String {@code ""}. */
     public static final String EMPTY = "";
     /** The dot String {@code ","}. */
@@ -67,7 +69,9 @@ public class SqlStringHelper {
     public static final String LIKE_CHAR = " like ";
     private static final String INJECTION_SQL = ".*([';]+|(--)+).*";
     private static String LIKE_FORMATE = "'%%s%'";
+    
     /*-------------------------------------------------*/
+    
     public static final String SQL_ORDER = " order by ";
     public static final String OR_JOINER = " or ";
     public static final String OR_SQL_FORMAT = "%s or (%s) %s";
@@ -75,6 +79,7 @@ public class SqlStringHelper {
     public static final String SQL_FORMAT = "%s, %s";
     public static final String ORDER_SQL_FORMAT = "%s order by %s";
     /*-------------------------------------------------*/
+    
 
     public static boolean containWhere(String sql) {
         return containRegex(sql, WHERE_REGEX);
