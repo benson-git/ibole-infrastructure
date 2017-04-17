@@ -85,8 +85,7 @@ public class PaginationInterceptor implements Interceptor {
     // the need for paging intercept.
     boolean interceptor = ms.getId().matches(sqlRegex);
 
-    if (oldRow.getOffset() == RowBounds.NO_ROW_OFFSET
-        && oldRow.getLimit() == RowBounds.NO_ROW_LIMIT && !interceptor) {
+    if (!interceptor) {
       return invocation.proceed();
     }
     

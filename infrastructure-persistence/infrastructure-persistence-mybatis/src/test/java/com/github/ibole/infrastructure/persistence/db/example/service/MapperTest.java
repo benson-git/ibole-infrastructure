@@ -28,7 +28,7 @@ import javax.annotation.Resource;
  * @version 1.0 2013-09-09 2:15 PM
  * @since JDK 1.5
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:spring-test-context.xml")
 public class MapperTest {
 

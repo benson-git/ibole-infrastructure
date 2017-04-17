@@ -40,6 +40,8 @@
         <property name="annotationClass" value="com.github.ibole.infrastructure.persistence.db.mybatis.annotation.MyBatisDao"/>
     </bean>
     
+    <!-- 扫描basePackage下所有接口: 适合于手动写Dao的实现类的情况 -->
+    <context:component-scan base-package="com.github.ibole.infrastructure.persistence.db.examplenon.dao"/> 
       
     <!-- 定义事务 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
