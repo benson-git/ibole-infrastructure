@@ -107,7 +107,7 @@ public enum PagingParametersFinder {
       return findCriteriaFromMap(map);
     }
 
-    searchMap.put(object, SqlStringHelper.EMPTY);
+    searchMap.put(object, SqlHelper.EMPTY);
     return pc;
   }
 
@@ -128,11 +128,11 @@ public enum PagingParametersFinder {
       object = Array.get(array, i);
       pc = findCriteriaFromObject(object);
       if (pc != null) {
-        searchMap.put(array, SqlStringHelper.EMPTY);
+        searchMap.put(array, SqlHelper.EMPTY);
         return pc;
       }
     }
-    searchMap.put(array, SqlStringHelper.EMPTY);
+    searchMap.put(array, SqlHelper.EMPTY);
     return null;
   }
 
@@ -152,12 +152,12 @@ public enum PagingParametersFinder {
     for (Object e : collection) {
       pc = findCriteriaFromObject(e);
       if (pc != null) {
-        searchMap.put(collection, SqlStringHelper.EMPTY);
+        searchMap.put(collection, SqlHelper.EMPTY);
         return pc;
       }
     }
 
-    searchMap.put(collection, SqlStringHelper.EMPTY);
+    searchMap.put(collection, SqlHelper.EMPTY);
     return null;
   }
 
@@ -177,12 +177,12 @@ public enum PagingParametersFinder {
     for (Object value : map.values()) {
       pc = findCriteriaFromObject(value);
       if (pc != null) {
-        searchMap.put(map, SqlStringHelper.EMPTY);
+        searchMap.put(map, SqlHelper.EMPTY);
         return pc;
       }
     }
 
-    searchMap.put(map, SqlStringHelper.EMPTY);
+    searchMap.put(map, SqlHelper.EMPTY);
     return null;
   }
 

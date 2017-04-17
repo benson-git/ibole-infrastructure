@@ -17,7 +17,8 @@
 package com.github.ibole.infrastructure.persistence.db.mybatis;
 
 import com.github.ibole.infrastructure.persistence.db.exception.DataBaseAccessException;
-import com.github.ibole.infrastructure.persistence.pagination.model.Page;
+import com.github.ibole.infrastructure.persistence.pagination.model.PageList;
+import com.github.ibole.infrastructure.persistence.pagination.model.Pager;
 import com.sun.rowset.CachedRowSetImpl;
 
 import org.apache.ibatis.session.RowBounds;
@@ -177,21 +178,23 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
       }
   }
 
-  public Page<T> getList(String key, Object params, Page<T> page) {
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public PageList<T> getList(String key, Object params, Pager page) {
+    PageList pages = new PageList(page);
       try {
           Integer totalCounts = count(key + COUNT, params);
           // add 最大页数判断
           int pageM = maxPage(totalCounts, page.getPageSize(), page.getPageNumber());
           if (pageM > 0) {
-              page.setPageNumber(pageM);
+            pages.getPager().setPageNumber(pageM);
           } // end
           if (totalCounts != null && totalCounts.longValue() > 0) {
               List<T> list = getSqlSession().selectList(key, params,
                       new RowBounds(page.getOffset(), page.getPageSize()));
-              page.setResult(list);
-              page.setTotalCount(totalCounts.longValue());
+              pages.addAll(list);
+              pages.getPager().setTotalCount(totalCounts.longValue());
           }
-          return page;
+          return pages;
       } catch (Exception e) {
           logger.error(getClass().getName() + " getList exception and key is" + key, e);
           return null;

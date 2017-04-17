@@ -202,6 +202,11 @@
 				<artifactId>spring-context</artifactId>
 				<version>${springframework_version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${springframework_version}</version>
+            </dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
@@ -247,6 +252,12 @@
 				    <artifactId>spring-expression</artifactId>
 				    <version>${springframework_version}</version>
 			</dependency>
+            <dependency>  
+                <groupId>org.springframework</groupId>  
+                <artifactId>spring-test</artifactId>  
+                <version>${springframework_version}</version>
+                <scope>test</scope>  
+            </dependency>   
 			<dependency>
 			    <groupId>commons-configuration</groupId>
 			    <artifactId>commons-configuration</artifactId>

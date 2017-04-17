@@ -41,14 +41,6 @@ public class SearchField implements TransferObject {
   private static final long serialVersionUID = -8493268499000005405L;
   /** field name */
   private final String field;
-  
-  /**
-   * True if the individual column filter should be treated as a regular expression for advanced
-   * filtering, false if not
-   */
-  private final boolean regex;
-  /** Indicator for if a column is flagged as sortable or not on the client-side */
-  private final boolean searchable;
   /** search value. */
   private final String value;
 
@@ -56,14 +48,10 @@ public class SearchField implements TransferObject {
    * Instantiates a new Search field.
    *
    * @param field the field
-   * @param regex the regex
-   * @param searchable the searchable
    * @param value the value
    */
-  public SearchField(String field, boolean regex, boolean searchable, String value) {
+  public SearchField(String field, String value) {
     this.field = field;
-    this.regex = regex;
-    this.searchable = searchable;
     this.value = value;
   }
 
@@ -84,24 +72,6 @@ public class SearchField implements TransferObject {
   public String getField() {
     return field;
   }
-
-  /**
-   * Is regex.
-   *
-   * @return the boolean
-   */
-  public boolean isRegex() {
-    return regex;
-  }
-
-  /**
-   * Is searchable.
-   *
-   * @return the boolean
-   */
-  public boolean isSearchable() {
-    return searchable;
-  }
   
   /**
    * Returns a string representation of this {@code SearchField}. This implementation returns a
@@ -114,8 +84,6 @@ public class SearchField implements TransferObject {
   public String toString() {
     final StringBuilder sb = ToStringUtil.start("field", field);
     ToStringUtil.append(sb, "value", value);
-    ToStringUtil.append(sb, "searchable", searchable);
-    ToStringUtil.append(sb, "regex", regex);
     return ToStringUtil.end(sb);
   }
 }

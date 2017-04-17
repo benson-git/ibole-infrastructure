@@ -1,6 +1,6 @@
 package com.github.ibole.infrastructure.persistence.db.mybatis.dialect;
 
-import com.github.ibole.infrastructure.persistence.db.mybatis.pagination.SqlStringHelper;
+import com.github.ibole.infrastructure.persistence.db.mybatis.pagination.SqlHelper;
 
 /**
  * 类似hibernate的Dialect,但只精简出分页部分.
@@ -54,7 +54,7 @@ public abstract class Dialect {
    * @return count sql.
    */
   public String getNonOrderByPart(String sql) {
-    return SqlStringHelper.removeOrders(sql);
+    return SqlHelper.removeOrders(sql);
   }
 
 }

@@ -1,11 +1,7 @@
 package com.github.ibole.infrastructure.persistence.pagination.model;
 
-import org.apache.commons.collections.IteratorUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -15,13 +11,12 @@ import java.util.List;
  * @param <T> Page中记录的类型
  * 
  */
-public class Page<T> implements Serializable {
+public class Pager implements Serializable {
   private static final long serialVersionUID = 1L;
 
   // -- 分页参数 --//
   protected int pageNumber = 1;
   protected int pageSize = 10; // 默认为每页20条记录
-  protected List<T> result = Collections.emptyList(); // 用于封装结果集
   protected long totalCount = 0; // 总记录数
   protected long totalPages = 0;// 总页数
 
@@ -40,28 +35,21 @@ public class Page<T> implements Serializable {
   }
 
   // -- 构造函数 --//
-  public Page() {}
+  public Pager() {}
 
-  public Page(int pageSize) {
+  public Pager(int pageSize) {
     setPageSize(pageSize);
   }
 
-  public Page(int pageNo, int pageSize) {
+  public Pager(int pageNo, int pageSize) {
     setPageNumber(pageNo);
     setPageSize(pageSize);
   }
   
-  public Page(int pageNo, int pageSize, int totalCount) {
+  public Pager(int pageNo, int pageSize, int totalCount) {
     setPageNumber(pageNo);
     setPageSize(pageSize);
     setTotalCount(totalCount);
-  }
-  
-  public Page(int pageNo, int pageSize, int totalCount, List<T> result) {
-    setPageNumber(pageNo);
-    setPageSize(pageSize);
-    setTotalCount(totalCount);
-    setResult(result);
   }
 
   // -- 访问查询参数函数 --//
@@ -113,29 +101,7 @@ public class Page<T> implements Serializable {
     return ((pageNumber - 1) * pageSize);
   }
 
-  /**
-   * 实现Iterable接口,可以for(Object item : page)遍历使用
-   */
-  @SuppressWarnings("unchecked")
-  public Iterator<T> iterator() {
-    return result == null ? IteratorUtils.EMPTY_ITERATOR : result.iterator();
-  }
-
   // -- 访问查询结果函数 --//
-
-  /**
-   * 取得页内的记录列表.
-   */
-  public List<T> getResult() {
-    return result;
-  }
-
-  /**
-   * 设置页内的记录列表.
-   */
-  public void setResult(final List<T> result) {
-    this.result = result;
-  }
 
   /**
    * 取得总记录数, 默认值为-1.
