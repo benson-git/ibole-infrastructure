@@ -53,7 +53,7 @@ public class MapperTest {
     @Test
     public void testPagaination() throws Exception {
 
-        PagingCriteria baseCriteria = PagingCriteria.createCriteria(0, 15, 15);
+        PagingCriteria baseCriteria = PagingCriteria.createCriteria(1, 15);
         PageList<Resources> pageMyBatis = resourcesDao.selectByPage(baseCriteria);
         System.out.println(pageMyBatis.getPager());
 
@@ -61,7 +61,7 @@ public class MapperTest {
 
     @Test
     public void testPagainationSqlContainOrder() throws Exception {
-        PagingCriteria baseCriteria = PagingCriteria.createCriteria(0, 15, 15);
+      PagingCriteria baseCriteria = PagingCriteria.createCriteria(1, 15);
         PageList<Resources> pageMyBatis = resourcesDao.selectByPageOrder(baseCriteria);
         System.out.println(pageMyBatis.getPager());
 
@@ -74,7 +74,7 @@ public class MapperTest {
         sortFields.add(new SortField("name", SortDirection.DESC));
         sortFields.add(new SortField("path", SortDirection.ASC));
 
-        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSort(20, 15, 15, sortFields);
+        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSort(1, 15, sortFields);
         PageList<Resources> pageMyBatis = resourcesDao.selectByPage(baseCriteria);
         System.out.println(pageMyBatis.getPager());
     }
@@ -84,7 +84,7 @@ public class MapperTest {
         List<SearchField> searchFields = Lists.newArrayList();
         searchFields.add(new SearchField("name", "11"));
 
-        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSearch(0, 15, 15, searchFields);
+        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSearch(1, 15, searchFields);
         PageList<Resources> pageMyBatis = resourcesDao.selectByPage(baseCriteria);
         System.out.println(pageMyBatis.getPager());
     }
@@ -94,7 +94,7 @@ public class MapperTest {
         List<SearchField> searchFields = Lists.newArrayList();
         searchFields.add(new SearchField("name", "11"));
 
-        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSearch(0, 15, 15, searchFields);
+        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSearch(1, 15, searchFields);
         PageList<Resources> pageMyBatis = resourcesDao.selectByPageOrder(baseCriteria);
         System.out.println(pageMyBatis.getPager());
     }
@@ -104,7 +104,7 @@ public class MapperTest {
         List<SearchField> searchFields = Lists.newArrayList();
         searchFields.add(new SearchField("name", "11"));
 
-        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSearch(0, 15, 15, searchFields);
+        PagingCriteria baseCriteria = PagingCriteria.createCriteriaWithSearch(1, 15, searchFields);
         PageList<Resources> pageMyBatis = resourcesDao.selectByPageOrderAndWhere(baseCriteria,"aa");
         System.out.println(pageMyBatis.getPager());
 

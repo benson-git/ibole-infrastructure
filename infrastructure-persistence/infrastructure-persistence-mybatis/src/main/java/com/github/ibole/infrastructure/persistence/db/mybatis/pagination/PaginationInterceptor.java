@@ -119,27 +119,28 @@ public class PaginationInterceptor implements Interceptor {
       BoundSql newBoundSql = copyFromBoundSql(ms, boundSql, newSql);
       MappedStatement newMs = copyFromMappedStatement(ms, new BoundSqlSqlSource(newBoundSql));
       queryArgs[MAPPED_STATEMENT_INDEX] = newMs;
-      
       return new PageList((List) invocation.proceed(), new Pager(pageRequest.getPageNumber(),
-          pageRequest.getDisplaySize(), count));
+          pageRequest.getPageSize(), count));
     }
-    
+
     return invocation.proceed();
     
   }
   
-  private Integer getCount(String sql, Executor executor, MappedStatement ms, RowBounds rowBounds, BoundSql boundSql, Object parameter, Dialect dialect) throws SQLException{
+  private Integer getCount(String sql, Executor executor, MappedStatement ms, RowBounds rowBounds,
+      BoundSql boundSql, Object parameter, Dialect dialect) throws SQLException {
     Integer count = 0;
     Cache cache = ms.getCache();
-    if(cache != null && ms.isUseCache() && ms.getConfiguration().isCacheEnabled()){
-        CacheKey cacheKey = executor.createCacheKey(ms,parameter, rowBounds, boundSql);
-        count = (Integer)cache.getObject(cacheKey);
-        if(count == null){
-            count = SqlHelper.getCount(sql, ms, executor.getTransaction(),parameter,boundSql,dialect);
-            cache.putObject(cacheKey, count);
-        }
-    }else{
-        count = SqlHelper.getCount(sql, ms, executor.getTransaction(),parameter,boundSql,dialect);
+    if (cache != null && ms.isUseCache() && ms.getConfiguration().isCacheEnabled()) {
+      CacheKey cacheKey = executor.createCacheKey(ms, parameter, rowBounds, boundSql);
+      count = (Integer) cache.getObject(cacheKey);
+      if (count == null) {
+        count =
+            SqlHelper.getCount(sql, ms, executor.getTransaction(), parameter, boundSql, dialect);
+        cache.putObject(cacheKey, count);
+      }
+    } else {
+      count = SqlHelper.getCount(sql, ms, executor.getTransaction(), parameter, boundSql, dialect);
     }
     return count;
   }
@@ -150,14 +151,15 @@ public class PaginationInterceptor implements Interceptor {
    * @param rowBounds rowBounds.
    * @return rowBounds.
    */
-  private static RowBounds offsetPaging(RowBounds rowBounds, PagingCriteria pageRequest) {
-      // rowBuounds has offset.
-      if (rowBounds.getOffset() == RowBounds.NO_ROW_OFFSET) {
-          if (pageRequest != null) {
-              return new RowBounds(pageRequest.getDisplayStart(), pageRequest.getDisplaySize());
-          }
+  private RowBounds offsetPaging(RowBounds rowBounds, PagingCriteria pageRequest) {
+    // rowBuounds has offset.
+    if (rowBounds.getOffset() == RowBounds.NO_ROW_OFFSET) {
+      if (pageRequest != null) {
+        return new RowBounds(dialect.getFirst(pageRequest.getPageNumber(),
+            pageRequest.getPageSize()), pageRequest.getPageSize());
       }
-      return rowBounds;
+    }
+    return rowBounds;
   }
   
   private static String fileterSql(String sql, PagingCriteria pagingCriteria){

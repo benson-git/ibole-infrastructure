@@ -82,4 +82,12 @@ public class OracleDialect extends Dialect {
 
       return "select count(1) from (" + sql + ") tmp_count";
   }
+  
+  
+  /**
+   * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始
+   */
+  public int getFirst(int pageNumber, int pageSize){
+    return ((pageNumber - 1) * pageSize) + 1;
+  }
 }

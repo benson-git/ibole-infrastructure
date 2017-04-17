@@ -76,7 +76,7 @@ public enum PagingParametersFinder {
   }
 
   /**
-   * In the object to find whether contains <code>PaginationCriteria</code> objects.
+   * Find whether contains <code>PaginationCriteria</code> objects in the object.
    *
    * @param object parameter object.
    * @return PaginationCriteria
@@ -112,7 +112,7 @@ public enum PagingParametersFinder {
   }
 
   /**
-   * In the array to find whether it contains the <code>PaginationCriteria</code> object.
+   * Find whether it contains the <code>PaginationCriteria</code> object in the array.
    *
    * @param array the array.
    * @return PageQuery
@@ -137,7 +137,7 @@ public enum PagingParametersFinder {
   }
 
   /**
-   * In the Collection to find whether contains <code>PaginationCriteria</code> objects.
+   * Find whether contains <code>PaginationCriteria</code> objects in the Collection.
    *
    * @param collection parameter collection.
    * @return PageQuery
@@ -162,7 +162,7 @@ public enum PagingParametersFinder {
   }
 
   /**
-   * In the Map to find whether contains <code>PaginationCriteria</code> objects.
+   * Find whether contains <code>PaginationCriteria</code> objects in the map.
    *
    * @param map parameter map.
    * @return PaginationCriteria

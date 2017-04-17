@@ -34,6 +34,10 @@ public abstract class Dialect {
    * @return 总记录数的sql
    */
   public abstract String getCountString(String sql);
+  /**
+   * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始
+   */
+  public abstract int getFirst(int pageNumber, int pageSize);
 
   public String getOrderByPart(String sql) {
     String loweredString = sql.toLowerCase();

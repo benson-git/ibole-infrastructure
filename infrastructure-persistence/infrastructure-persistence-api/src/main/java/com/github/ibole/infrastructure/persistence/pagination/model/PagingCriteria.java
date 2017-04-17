@@ -36,149 +36,81 @@ import java.util.List;
 
 /**
  * <p>
- *  Paging Criteria.
+ * Paging Criteria.
  * </p>
  *
  */
-public final class PagingCriteria implements TransferObject{
+public final class PagingCriteria implements TransferObject {
 
   private static final long serialVersionUID = -3474657905505855376L;
-  /** The constant DEFAULT_CRITERIA. */
-  private static final PagingCriteria DEFAULT_CRITERIA = new PagingCriteria(0,
-      PagingCriteria.DEFAULT_SIZE, PagingCriteria.DEFAULT_SIZE);
-  /** default page size. */
   private static final int DEFAULT_SIZE = 10;
-  /** start display */
-  private final int displayStart;
-  /** disaplaySize */
-  private final int displaySize;
+  /** default page size. */
   /** sort fields */
   private final List<SortField> sortFields;
   /** search field information */
   private final List<SearchField> searchFields;
-  /** pageNumber */
-  private final int pageNumber;
+
+  private int pageNumber = 1;
+
+  private int pageSize = 10; // 默认为每页20条记录
 
   /**
    * Instantiates a new Paging criteria.
-   *
-   * @param displayStart the display start
-   * @param displaySize the display size
+   * 
    * @param pageNumber the page number
+   * @param pageSize the page size
    * @param sortFields the sort fields
    * @param searchFields the search information
    */
-  private PagingCriteria(int displayStart, int displaySize, int pageNumber,
-      List<SortField> sortFields, List<SearchField> searchFields) {
-    this.displayStart = displayStart;
-    this.displaySize = displaySize;
+  private PagingCriteria(int pageNumber, int pageSize, List<SortField> sortFields,
+      List<SearchField> searchFields) {
     this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
     this.sortFields = sortFields;
     this.searchFields = searchFields;
   }
 
   /**
    * Instantiates a new Paging criteria and not sort\search.
-   *
-   * @param displaySize the display size
-   * @param displayStart the display start
+   * 
    * @param pageNumber the page number
+   * @param pageSize the page size
    */
-  private PagingCriteria(int displaySize, int displayStart, int pageNumber) {
-    this.displaySize = displaySize;
-    this.displayStart = displayStart;
+  private PagingCriteria(int pageNumber, int pageSize) {
     this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
     this.searchFields = Lists.newArrayListWithCapacity(0);
     this.sortFields = Lists.newArrayListWithCapacity(0);
   }
 
+
+
   /**
-   * Instantiates a new Paging criteria and no search.
-   *
-   * @param displaySize the display size
-   * @param displayStart the display start
-   * @param pageNumber the page number
-   * @param sortFields the sort fields
+   * @return the pageNumber
    */
-  private PagingCriteria(int displaySize, int displayStart, int pageNumber,
-      List<SortField> sortFields) {
-    this.sortFields = sortFields;
-    this.displaySize = displaySize;
-    this.displayStart = displayStart;
+  public int getPageNumber() {
+    return pageNumber;
+  }
+
+  /**
+   * @param pageNumber the pageNumber to set
+   */
+  public void setPageNumber(int pageNumber) {
     this.pageNumber = pageNumber;
-    this.searchFields = Lists.newArrayListWithCapacity(0);
   }
 
   /**
-   * Instantiates a new Paging criteria and no sort.
-   *
-   * @param displayStart the display start
-   * @param displaySize the display size
-   * @param searchFields the search fields
-   * @param pageNumber the page number
+   * @return the pageSize
    */
-  private PagingCriteria(int displayStart, int displaySize, List<SearchField> searchFields,
-      int pageNumber) {
-    this.displayStart = displayStart;
-    this.displaySize = displaySize;
-    this.searchFields = searchFields;
-    this.pageNumber = pageNumber;
-    this.sortFields = Lists.newArrayListWithCapacity(0);
+  public int getPageSize() {
+    return pageSize;
   }
 
   /**
-   * Create criteria with all paramter.
-   *
-   * @param displayStart the display start
-   * @param displaySize the display size
-   * @param pageNumber the page number
-   * @param sortFields the sort fields
-   * @param searchFields the search fields
-   * @return the paging criteria
+   * @param pageSize the pageSize to set
    */
-  public static PagingCriteria createCriteriaWithAllParamter(int displayStart, int displaySize,
-      int pageNumber, List<SortField> sortFields, List<SearchField> searchFields) {
-    return new PagingCriteria(displayStart, displaySize, pageNumber, sortFields, searchFields);
-  }
-
-  /**
-   * Create criteria with sort.
-   *
-   * @param displayStart the display start
-   * @param displaySize the display size
-   * @param pageNumber the page number
-   * @param sortFields the sort fields
-   * @return the paging criteria
-   */
-  public static PagingCriteria createCriteriaWithSort(int displayStart, int displaySize,
-      int pageNumber, List<SortField> sortFields) {
-    return new PagingCriteria(displayStart, displaySize, pageNumber, sortFields);
-  }
-
-  /**
-   * Create criteria with search.
-   *
-   * @param displayStart the display start
-   * @param displaySize the display size
-   * @param pageNumber the page number
-   * @param searchFields the search fields
-   * @return the paging criteria
-   */
-  public static PagingCriteria createCriteriaWithSearch(int displayStart, int displaySize,
-      int pageNumber, List<SearchField> searchFields) {
-    return new PagingCriteria(displayStart, displaySize, searchFields, pageNumber);
-  }
-
-  /**
-   * Create criteria.
-   *
-   * @param displayStart the display start
-   * @param displaySize the display size
-   * @param pageNumber the page number
-   * @return the paging criteria
-   */
-  public static PagingCriteria createCriteria(int displayStart, int displaySize, int pageNumber) {
-    return new PagingCriteria(displayStart, displaySize, pageNumber);
+  public void setPageSize(int pageSize) {
+    this.pageSize = pageSize;
   }
 
   /**
@@ -187,25 +119,7 @@ public final class PagingCriteria implements TransferObject{
    * @return the paging criteria
    */
   public static PagingCriteria getDefaultCriteria() {
-    return DEFAULT_CRITERIA;
-  }
-
-  /**
-   * Gets display start.
-   *
-   * @return the display start
-   */
-  public Integer getDisplayStart() {
-    return displayStart;
-  }
-
-  /**
-   * Gets display size.
-   *
-   * @return the display size
-   */
-  public Integer getDisplaySize() {
-    return displaySize;
+    return new PagingCriteria(1, DEFAULT_SIZE);
   }
 
   /**
@@ -233,14 +147,36 @@ public final class PagingCriteria implements TransferObject{
   }
 
   /**
-   * Gets page number.
-   *
-   * @return the page number
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @return instance of PagingCriteria
    */
-  public Integer getPageNumber() {
-    return pageNumber;
+  public static PagingCriteria createCriteria(int pageNumber, int pageSize) {
+    return new PagingCriteria(pageNumber, pageSize);
   }
-  
+
+  /**
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @param searchFields the search fields information
+   * @return instance of PagingCriteria
+   */
+  public static PagingCriteria createCriteriaWithSearch(int pageNumber, int pageSize,
+      List<SearchField> searchFields) {
+    return new PagingCriteria(pageNumber, pageSize, Lists.newArrayListWithCapacity(0), searchFields);
+  }
+
+  /**
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @param sortFields the order fields information
+   * @return instance of PagingCriteria
+   */
+  public static PagingCriteria createCriteriaWithSort(int pageNumber, int pageSize,
+      List<SortField> sortFields) {
+    return new PagingCriteria(pageNumber, pageSize, sortFields, Lists.newArrayListWithCapacity(0));
+  }
+
   /**
    * Returns a string representation of this {@code PagingCriteria}. This implementation returns a
    * representation based on the value and label.
@@ -250,9 +186,8 @@ public final class PagingCriteria implements TransferObject{
   @SuppressWarnings("nls")
   @Override
   public String toString() {
-    final StringBuilder sb = ToStringUtil.start("displayStart", displayStart);
-    ToStringUtil.append(sb, "displaySize", displaySize);
-    ToStringUtil.append(sb, "pageNumber", pageNumber);
+    final StringBuilder sb = ToStringUtil.start("pageNumber", pageNumber);
+    ToStringUtil.append(sb, "pageSize", pageSize);
     ToStringUtil.append(sb, "searchFields", searchFields);
     ToStringUtil.append(sb, "sortFields", sortFields);
     return ToStringUtil.end(sb);

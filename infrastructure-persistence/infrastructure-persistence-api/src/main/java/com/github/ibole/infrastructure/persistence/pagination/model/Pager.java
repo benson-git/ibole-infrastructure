@@ -1,5 +1,7 @@
 package com.github.ibole.infrastructure.persistence.pagination.model;
 
+import com.github.ibole.infrastructure.common.utils.ToStringUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,6 +209,21 @@ public class Pager implements Serializable {
    */
   public long getMaxPage() {
     return totalCount % pageSize == 0 ? totalCount / pageSize : totalCount / pageSize + 1;// 最大页数
+  }
+  
+  /**
+   * Returns a string representation of this {@code Pager}. This implementation returns a
+   * representation based on the value and label.
+   * 
+   * @return a string representation of this {@code Pager}
+   */
+  @SuppressWarnings("nls")
+  @Override
+  public String toString() {
+    final StringBuilder sb = ToStringUtil.start("pageNumber", pageNumber);
+    ToStringUtil.append(sb, "pageSize", pageSize);
+    ToStringUtil.append(sb, "totalCount", totalCount);
+    return ToStringUtil.end(sb);
   }
 
 }

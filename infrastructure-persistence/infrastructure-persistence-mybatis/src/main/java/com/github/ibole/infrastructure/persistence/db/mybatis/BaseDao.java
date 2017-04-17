@@ -177,7 +177,8 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
           return null;
       }
   }
-
+  
+  //Notes: page.getOffset() only used for mysql
   @SuppressWarnings({"rawtypes", "unchecked"})
   public PageList<T> getList(String key, Object params, Pager page) {
     PageList pages = new PageList(page);
