@@ -33,6 +33,11 @@
         <property name="configLocation" value="classpath:/mybatis-config.xml"></property>
     </bean>
     
+    <!-- mybatis spring sqlSessionTemplate,使用时直接让spring注入即可 -->
+   <!-- <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+    </bean>-->
+    
     <!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />

@@ -22,8 +22,6 @@ import com.github.ibole.infrastructure.persistence.db.mybatis.BaseDao;
 import com.github.ibole.infrastructure.persistence.pagination.model.PageList;
 import com.github.ibole.infrastructure.persistence.pagination.model.Pager;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -43,12 +41,6 @@ import org.springframework.stereotype.Repository;
 @Component
 @Repository
 public class ResourcesNonAnnotationDao extends BaseDao<Resources> {
-
-  @Autowired  
-  public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory){  
-        
-      super.setSqlSessionFactory(sqlSessionFactory);  
-  }
   
   public PageList<Resources> selectByPageOrderAndWhere(ResourceReq req, Pager page){
     return this.getList("resourcesDao.selectListOrderAndWhere", req, page);

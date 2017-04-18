@@ -21,16 +21,12 @@ import javax.annotation.Resource;
 
 /**
  * <p>
- * .
+ * Mybatis MapperScannerConfigurer 自动扫描将Mapper接口生成代理注入到Spring.
  * </p>
- *
- * @author mumu@yfyang
- * @version 1.0 2013-09-09 2:15 PM
- * @since JDK 1.5
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:spring-test-context.xml")
-public class MapperTest {
+public class MapperAnnotationTest {
 
     @Resource
     private ResourcesDao resourcesDao;

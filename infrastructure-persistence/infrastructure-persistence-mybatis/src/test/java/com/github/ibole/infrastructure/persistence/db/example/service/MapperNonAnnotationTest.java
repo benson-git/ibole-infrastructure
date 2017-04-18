@@ -39,10 +39,12 @@ import javax.annotation.Resource;
 
 
 /**
- * @author bwang
+ * <p>
+ * 不使用Mybatis MapperScannerConfigurer 自动扫描，所以需要自己实现Dao接口.
+ * </p>
  *
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:spring-test-context.xml")
 public class MapperNonAnnotationTest {
 

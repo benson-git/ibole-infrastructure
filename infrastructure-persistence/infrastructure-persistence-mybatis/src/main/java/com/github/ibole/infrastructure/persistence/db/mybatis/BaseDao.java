@@ -23,7 +23,9 @@ import com.sun.rowset.CachedRowSetImpl;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -53,11 +55,13 @@ import javax.sql.RowSet;
  */
 public class BaseDao<T> extends SqlSessionDaoSupport {
 
-  private static final String COUNT = "_Count";
+  @Autowired  
+  public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory){  
+        
+      super.setSqlSessionFactory(sqlSessionFactory);  
+  }
   
-  //从spring注入原有的sqlSessionTemplate
-  //@Autowired
-  //private SqlSessionTemplate sqlSessionTemplate;
+  private static final String COUNT = "_Count";
 
   public int save(String key, T entity) throws DataBaseAccessException {
       try {
