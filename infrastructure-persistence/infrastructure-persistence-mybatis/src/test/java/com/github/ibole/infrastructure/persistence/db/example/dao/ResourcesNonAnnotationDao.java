@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.github.ibole.infrastructure.persistence.db.example.service;
+package com.github.ibole.infrastructure.persistence.db.example.dao;
 
 import com.github.ibole.infrastructure.persistence.db.example.domain.ResourceReq;
 import com.github.ibole.infrastructure.persistence.db.example.domain.Resources;
-import com.github.ibole.infrastructure.persistence.db.examplenon.dao.ResourcesNonAnnotationDao;
+import com.github.ibole.infrastructure.persistence.db.mybatis.BaseDao;
 import com.github.ibole.infrastructure.persistence.pagination.model.PageList;
 import com.github.ibole.infrastructure.persistence.pagination.model.Pager;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.annotation.Resource;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /*********************************************************************************************.
  * 
@@ -40,29 +35,14 @@ import javax.annotation.Resource;
 
 
 /**
- * <p>
- * 不使用Mybatis MapperScannerConfigurer 自动扫描，所以需要自己实现Dao接口.
- * </p>
+ * @author bwang
  *
  */
-@Ignore
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:spring-test-context.xml")
-public class MapperNonAnnotationTest {
-
-  @Resource
-  ResourcesNonAnnotationDao dao;
+@Component
+@Repository
+public class ResourcesNonAnnotationDao extends BaseDao<Resources> {
   
-  @Test
-  public void testPaginationMoreWhere() throws Exception {
-      Pager pager = new Pager(1,10);
-      ResourceReq req = new ResourceReq();
-      req.setName("测试数据11");
-      PageList<Resources> pageMyBatis = dao.selectByPageOrderAndWhere(req, pager);
-      System.out.println(pageMyBatis.getPager());
-      if(pageMyBatis.get(0) != null){
-        System.out.println(pageMyBatis.get(0).getId());
-      }
+  public PageList<Resources> selectByPageOrderAndWhere(ResourceReq req, Pager page){
+    return this.getList("resourcesDao.selectListOrderAndWhere", req, page);
   }
-
 }
