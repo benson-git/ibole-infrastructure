@@ -28,10 +28,11 @@ public class RedisSessionManager {
   public static final String SESSION_ID_PREFIX = SESSION_PREFIX + "RJSID_";
   public static final String SESSION_ID_COOKIE = "RSESSIONID";
   public static final int DEFAULT_MAX_INACTIVE_INTERVAL_SECONDS = 1800;
+  public static final int DEFAULT_MAX_UPDATER_INTERVAL_TIME = 500;  //ms
 
-  // Session最大更新间隔时间
+  // Session最大更新间隔时间(ms)
   private int expirationUpdateInterval;
-  // Session过期时间
+  // Session过期时间(second)
   private int sessionTimeOut;
 
   private RedisSimpleTempalte redisClient;
@@ -53,7 +54,7 @@ public class RedisSessionManager {
    * @param sessionTimeOut int
    */
   public RedisSessionManager(String host, String port, String password, int sessionTimeOut) {
-    this.expirationUpdateInterval = 300;
+    this.expirationUpdateInterval = DEFAULT_MAX_UPDATER_INTERVAL_TIME;
     this.sessionTimeOut =
         sessionTimeOut == 0 ? DEFAULT_MAX_INACTIVE_INTERVAL_SECONDS : sessionTimeOut;
 
@@ -170,7 +171,7 @@ public class RedisSessionManager {
     });
     requestEventSubject.attach(new RequestEventObserver() {
       public void completed(HttpServletRequest servletRequest, HttpServletResponse response) {
-        int updateInterval = (int) ((System.currentTimeMillis() - session.lastAccessedTime) / 1000);
+        int updateInterval = (int) (System.currentTimeMillis() - session.lastAccessedTime);
         // 如果Session是初始化的空Session则需要同步到Redis
         // 如果 Session一致 并且在最小间隔同步时间内 则不与Redis同步
         if (session.isNew == false
