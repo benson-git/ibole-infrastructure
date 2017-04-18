@@ -22,6 +22,7 @@ import com.github.ibole.infrastructure.persistence.db.examplenon.dao.ResourcesNo
 import com.github.ibole.infrastructure.persistence.pagination.model.PageList;
 import com.github.ibole.infrastructure.persistence.pagination.model.Pager;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,6 +45,7 @@ import javax.annotation.Resource;
  * </p>
  *
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:spring-test-context.xml")
 public class MapperNonAnnotationTest {

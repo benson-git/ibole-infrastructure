@@ -10,6 +10,7 @@ import com.github.ibole.infrastructure.persistence.pagination.model.SortField;
 
 import com.google.common.collect.Lists;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
  * Mybatis MapperScannerConfigurer 自动扫描将Mapper接口生成代理注入到Spring.
  * </p>
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:spring-test-context.xml")
 public class MapperAnnotationTest {
