@@ -52,7 +52,6 @@ public abstract class AbstractController {
    * @param request HttpServletRequest
    * @return value stored in session corresponding to the key
    */
-  @SuppressWarnings("unchecked")
   protected <T> T getSessionAttribute(final String key, HttpServletRequest request) {
     return null;
 

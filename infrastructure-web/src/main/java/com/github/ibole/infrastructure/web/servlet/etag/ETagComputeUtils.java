@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public abstract class ETagComputeUtils {
+  
 	public static byte[] serialize(Object obj) throws IOException {
 		byte[] byteArray = null;
 		ByteArrayOutputStream baos = null;

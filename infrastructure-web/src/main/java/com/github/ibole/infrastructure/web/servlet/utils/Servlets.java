@@ -92,7 +92,7 @@ public class Servlets {
   /**
    * 根据浏览器 If-None-Match Header, 计算Etag是否已无效.
    * 
-   * 如果Etag有效, checkIfNoneMatch返回false, 设置304 not modify status.
+   * 如果Etag有效, checkIfNoneMatchEtag返回false, 设置304 not modify status.
    * 
    * @param etag 内容的ETag.
    * @param request HttpServletRequest
@@ -106,7 +106,6 @@ public class Servlets {
       boolean conditionSatisfied = false;
       if (!"*".equals(headerValue)) {
         StringTokenizer commaTokenizer = new StringTokenizer(headerValue, ",");
-
         while (!conditionSatisfied && commaTokenizer.hasMoreTokens()) {
           String currentToken = commaTokenizer.nextToken();
           if (currentToken.trim().equals(etag)) {

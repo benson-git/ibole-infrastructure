@@ -23,6 +23,7 @@ public class AjaxResponse implements JSONAware {
 	private List<Map<String,String>> data = new ArrayList<Map<String,String>>();
 	private Map<String,String> dataMap = new HashMap<String,String>();
 	private Map<String,String> validationMessages = new HashMap<String,String>();
+	
 	public Map<String, String> getValidationMessages() {
 		return validationMessages;
 	}
