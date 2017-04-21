@@ -1,6 +1,7 @@
 package com.github.ibole.infrastructure.web.spring;
 
 import com.github.ibole.infrastructure.common.dto.PaginationData;
+import com.github.ibole.infrastructure.common.mapper.JsonMapper;
 import com.github.ibole.infrastructure.common.utils.BeanValidators;
 import com.github.ibole.infrastructure.common.utils.DateUtils;
 

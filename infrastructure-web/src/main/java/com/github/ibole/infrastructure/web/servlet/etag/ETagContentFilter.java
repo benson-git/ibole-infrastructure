@@ -21,8 +21,9 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * @author bwang
  *
- * @see org.springframework.web.filter.ShallowEtagHeaderFilter:
- * 
+ * @see {@code org.springframework.web.filter.ShallowEtagHeaderFilter}:
+ *  <pre>
+ * {@code
  * <filter>  
  *      <filter-name>etagFilter</filter-name>  
  *      <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>  
@@ -31,7 +32,8 @@ import javax.servlet.http.HttpServletResponse;
  *      <filter-name>etagFilter</filter-name>  
  *      <url-pattern>/api/*</url-pattern>  
   *  </filter-mapping>
- *
+ *   }
+ *   <pre>
  */
 public class ETagContentFilter implements Filter {
 

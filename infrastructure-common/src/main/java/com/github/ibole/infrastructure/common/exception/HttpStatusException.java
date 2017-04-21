@@ -1,14 +1,13 @@
-/**
- * 
- */
 package com.github.ibole.infrastructure.common.exception;
 
-/*********************************************************************************************.
+/*********************************************************************************************
+ * .
  * 
  * 
  * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
- * <p></p>
+ * <p>
+ * </p>
  *********************************************************************************************/
 
 
@@ -30,8 +29,8 @@ public class HttpStatusException extends Exception {
    * @param cause reason for this exception
    */
   public HttpStatusException(final int errorCode, final String msg, final Throwable cause) {
-      super(msg, cause);
-      this.errorCode = errorCode;
+    super(msg, cause);
+    this.errorCode = errorCode;
   }
 
   /**
@@ -41,8 +40,8 @@ public class HttpStatusException extends Exception {
    * @param cause reason for this exception
    */
   public HttpStatusException(final int errorCode, final Throwable cause) {
-      super(String.valueOf(errorCode), cause);
-      this.errorCode = errorCode;
+    super(String.valueOf(errorCode), cause);
+    this.errorCode = errorCode;
   }
 
   /**
@@ -52,8 +51,8 @@ public class HttpStatusException extends Exception {
    * @param msg human readable message
    */
   public HttpStatusException(final int errorCode, final String msg) {
-      super(msg);
-      this.errorCode = errorCode;
+    super(msg);
+    this.errorCode = errorCode;
   }
 
   /**
@@ -62,6 +61,6 @@ public class HttpStatusException extends Exception {
    * @return the HTTP status code
    */
   public int getErrorCode() {
-      return errorCode;
+    return errorCode;
   }
 }

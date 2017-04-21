@@ -1,4 +1,4 @@
-package com.github.ibole.infrastructure.web.spring;
+package com.github.ibole.infrastructure.common.mapper;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-/**
- * 
- * 简单封装Jackson，实现JSON String &lt;-&gt;Java Object的Mapper. 封装不同的输出风格, 使用不同的builder函数创建实例.
+/** 
+ *  简单封装Jackson，实现JSON String &lt;-&gt;Java Object的Mapper. 
+ *  封装不同的输出风格, 使用不同的builder函数创建实例.
  * 
  */
 public class JsonMapper extends ObjectMapper {
@@ -96,7 +96,7 @@ public class JsonMapper extends ObjectMapper {
   }
 
   /**
-   * 创建只输出初始值被改变的属性到Json字符串的Mapper, 最节约的存储方式，建议在内部接口中使用。
+   * 创建只输出初始值被改变的属性到Json字符串的Mapper, 最节约的存储方式，建议在内部接口中使用.
    * @return JsonMapper instance
    */
   public static JsonMapper nonDefaultMapper() {
@@ -122,9 +122,7 @@ public class JsonMapper extends ObjectMapper {
 
   /**
    * 反序列化POJO或简单Collection如List &lt;String&gt;.
-   * 
    * 如果JSON字符串为Null或"null"字符串, 返回Null. 如果JSON字符串为"[]", 返回空集合.
-   * 
    * 如需反序列化复杂Collection如List&lt;MyBean&gt;, 请使用fromJson(String,JavaType)
    * 
    * @see #fromJson(String, JavaType)
@@ -267,7 +265,11 @@ public class JsonMapper extends ObjectMapper {
   public static Object fromJsonString(String jsonString, Class<?> clazz) {
     return JsonMapper.getInstance().fromJson(jsonString, clazz);
   }
-
+  
+  /**
+   * Test purpose.
+   * @param args args
+   */
   public static void main(String[] args) {
     List<Map<String, Object>> list = Lists.newArrayList();
     Map<String, Object> map = Maps.newHashMap();

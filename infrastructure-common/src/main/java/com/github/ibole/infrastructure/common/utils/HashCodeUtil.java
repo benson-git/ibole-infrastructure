@@ -17,15 +17,14 @@ import java.util.Arrays;
  * return h;
  * </pre>
  * 
- * where {@code h} is the actual hash code value and {@code fieldA} and {@code
- * fieldB} are two significant fields to hash and combine with the actual value to produce a new
- * hash code value.
+ * <p>where {@code h} is the actual hash code value and {@code fieldA} and {@code fieldB} are two
+ * significant fields to hash and combine with the actual value to produce a new hash code value.
  * 
  */
 public final class HashCodeUtil {
 
   /** A seed value for a hash code to compute. */
-  public final static int SEED = 1;
+  public static final int SEED = 1;
 
   /*
    * Suppresses default constructor, ensuring non-instantiability
