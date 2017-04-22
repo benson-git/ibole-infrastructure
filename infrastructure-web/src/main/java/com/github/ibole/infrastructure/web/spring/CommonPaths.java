@@ -1,4 +1,4 @@
-package org.baeldung.common.client;
+package com.github.ibole.infrastructure.web.spring;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

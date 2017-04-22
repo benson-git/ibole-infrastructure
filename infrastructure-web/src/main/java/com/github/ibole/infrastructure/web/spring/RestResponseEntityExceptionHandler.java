@@ -1,11 +1,11 @@
-package org.baeldung.common.web;
+package com.github.ibole.infrastructure.web.spring;
 
-import org.apache.shiro.dao.DataAccessException;
-import org.baeldung.common.persistence.exception.MyEntityNotFoundException;
-import org.baeldung.common.web.exception.ApiError;
-import org.baeldung.common.web.exception.MyConflictException;
-import org.baeldung.common.web.exception.MyResourceNotFoundException;
-import org.baeldung.common.web.exception.ValidationErrorDTO;
+import com.github.ibole.infrastructure.common.exception.MoreThrowables;
+import com.github.ibole.infrastructure.common.exception.MyResourceNotFoundException;
+import com.github.ibole.infrastructure.common.exception.UnauthorizedException;
+import com.github.ibole.infrastructure.web.exception.ApiError;
+import com.github.ibole.infrastructure.web.exception.ValidationErrorDTO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +26,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 /**
  * 异常处理器,该类会处理所有在执行标有@RequestMapping注解的方法时发生的异常.
@@ -66,15 +67,26 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, dto, headers, HttpStatus.BAD_REQUEST, request);
     }
 
-//    @ExceptionHandler(value = { ConstraintViolationException.class, DataIntegrityViolationException.class })
-//    public final ResponseEntity<Object> handleBadRequest(final RuntimeException ex, final WebRequest request) {
-//        log.info("Bad Request: {}", ex.getLocalizedMessage());
-//        log.debug("Bad Request: ", ex);
-//
-//        final ApiError apiError = message(HttpStatus.BAD_REQUEST, ex);
-//        return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-//    }
+    @ExceptionHandler(value = { ConstraintViolationException.class, ValidationException.class })
+    public final ResponseEntity<Object> handleBadRequest(final ValidationException ex, final WebRequest request) {
+        log.info("Bad Request: {}", ex.getLocalizedMessage());
+        log.debug("Bad Request: ", ex);
 
+        final ApiError apiError = message(HttpStatus.BAD_REQUEST, ex);
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    // 401
+
+    @ExceptionHandler({ UnauthorizedException.class })
+    public ResponseEntity<Object> handleUnauthorization(final UnauthorizedException ex, final WebRequest request) {
+        logger.error("401 Status Code", ex);
+
+        final ApiError apiError = message(HttpStatus.UNAUTHORIZED, ex);
+
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }    
+    
     // 403
 
     @ExceptionHandler({ AccessDeniedException.class })
@@ -88,13 +100,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     // 404
 
-//    @ExceptionHandler({ EntityNotFoundException.class, MyEntityNotFoundException.class, MyResourceNotFoundException.class })
-//    protected ResponseEntity<Object> handleNotFound(final RuntimeException ex, final WebRequest request) {
-//        log.warn("Not Found: {}", ex.getMessage());
-//
-//        final ApiError apiError = message(HttpStatus.NOT_FOUND, ex);
-//        return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
-//    }
+    @ExceptionHandler({ MyResourceNotFoundException.class })
+    protected ResponseEntity<Object> handleNotFound(final RuntimeException ex, final WebRequest request) {
+        log.warn("Not Found: {}", ex.getMessage());
+
+        final ApiError apiError = message(HttpStatus.NOT_FOUND, ex);
+        return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
 
     // 409
 
@@ -142,9 +154,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private ApiError message(final HttpStatus httpStatus, final Exception ex) {
         final String message = ex.getMessage() == null ? ex.getClass().getSimpleName() : ex.getMessage();
-        final String devMessage = ex.getClass().getSimpleName();
-        // devMessage = ExceptionUtils.getStackTrace(ex);
-
+        final String devMessage = MoreThrowables.getRootCauseStackTraceAsString(ex);
         return new ApiError(httpStatus.value(), message, devMessage);
     }
 

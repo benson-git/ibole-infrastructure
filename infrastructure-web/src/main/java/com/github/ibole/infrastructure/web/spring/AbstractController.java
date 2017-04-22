@@ -6,13 +6,11 @@ import com.github.ibole.infrastructure.common.utils.BeanValidators;
 import com.github.ibole.infrastructure.common.utils.DateUtils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -27,7 +25,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import javax.validation.Validator;
 
 /**
@@ -204,25 +201,6 @@ public abstract class AbstractController {
     } catch (IOException e) {
       return null;
     }
-  }
-
-  /**
-   * 参数绑定异常
-   * @return error/404
-   */
-  @ExceptionHandler({BindException.class, ConstraintViolationException.class,
-      ValidationException.class})
-  public String bindException() {
-    return "error/400";
-  }
-
-  /**
-   * 授权登录异常
-   * @return error/403
-   */
-  @ExceptionHandler({AuthenticationException.class})
-  public String authenticationException() {
-    return "error/403";
   }
 
   /**

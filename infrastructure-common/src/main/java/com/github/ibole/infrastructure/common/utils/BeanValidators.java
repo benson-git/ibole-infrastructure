@@ -11,11 +11,17 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
+
 /**
- * JSR303 Validator(Hibernate Validator)工具类.
- * ConstraintViolation中包含propertyPath, message 和invalidValue等信息. 提供了各种convert方法，适合不同的i18n需求: 1.
- * List&lt;String&gt;, String内容为message 2. List&lt;String&gt;, String内容为propertyPath + separator + message
+ * JSR303 Validator工具类. ConstraintViolation中包含propertyPath, message 和invalidValue等信息.
+ * 提供了各种convert方法，适合不同的i18n需求:
+ * 
+ * <pre>
+ * 1. List&lt;String&gt;, String内容为message 
+ * 2. List&lt;String&gt;, String内容为propertyPath + separator + message
  * 3. Map&lt;propertyPath,message&gt;
+ * </pre>
+ * 
  * 
  */
 public class BeanValidators {
@@ -48,7 +54,7 @@ public class BeanValidators {
   }
 
   /**
-   * 辅助方法, 转换Set&lt;ConstraintViolation&gt;为List&lt;message&gt;
+   * 辅助方法, 转换Set&lt;ConstraintViolation&gt;为List&lt;message&gt;.
    * 
    * @param constraintViolations the set of constraint violation
    * @return the error message list

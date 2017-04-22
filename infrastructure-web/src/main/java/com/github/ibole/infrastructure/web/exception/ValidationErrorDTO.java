@@ -1,4 +1,4 @@
-package org.baeldung.common.web.exception;
+package com.github.ibole.infrastructure.web.exception;
 
 import java.util.ArrayList;
 import java.util.List;
