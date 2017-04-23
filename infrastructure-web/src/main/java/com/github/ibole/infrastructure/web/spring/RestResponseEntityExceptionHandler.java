@@ -25,8 +25,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 
 /**
  * 异常处理器,该类会处理所有在执行标有@RequestMapping注解的方法时发生的异常.
@@ -67,13 +67,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, dto, headers, HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = { ConstraintViolationException.class, ValidationException.class })
-    public final ResponseEntity<Object> handleBadRequest(final ValidationException ex, final WebRequest request) {
-        log.info("Bad Request: {}", ex.getLocalizedMessage());
-        log.debug("Bad Request: ", ex);
+    // 422
+    
+    @ExceptionHandler(value = { ConstraintViolationException.class })
+    public final ResponseEntity<Object> handleBadRequest(final ConstraintViolationException ex, final WebRequest request) {
+        logger.error("422 Status Code", ex);
+        log.debug("Violation exception: {}", ex.getLocalizedMessage());
+        
+        final ValidationErrorDTO dto = processFieldErrors(ex);
 
-        final ApiError apiError = message(HttpStatus.BAD_REQUEST, ex);
-        return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, dto, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     // 401
@@ -151,6 +154,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         return dto;
     }
+    
+    @SuppressWarnings("rawtypes")
+    private ValidationErrorDTO processFieldErrors(ConstraintViolationException e) {
+      final ValidationErrorDTO dto = new ValidationErrorDTO();
+      
+      for (ConstraintViolation violation : e.getConstraintViolations()) {
+        dto.addFieldError(violation.getPropertyPath().toString(), violation.getMessage());
+      }
+
+      return dto;
+  }
 
     private ApiError message(final HttpStatus httpStatus, final Exception ex) {
         final String message = ex.getMessage() == null ? ex.getClass().getSimpleName() : ex.getMessage();
