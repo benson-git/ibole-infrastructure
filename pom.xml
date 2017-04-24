@@ -101,7 +101,7 @@
 		<gson_version>2.3</gson_version>
 		<plexus_interpolation_version>1.22</plexus_interpolation_version>
 	    <freemarker_version>2.3.19</freemarker_version>
-		<springframework_version>4.2.6.RELEASE</springframework_version>
+		<springframework_version>4.2.8.RELEASE</springframework_version>
 		<aspectjrt_version>1.8.9</aspectjrt_version>
 		<ehcache_version>2.5.3</ehcache_version>  
 		<ehcache_web_version>2.0.4</ehcache_web_version>
