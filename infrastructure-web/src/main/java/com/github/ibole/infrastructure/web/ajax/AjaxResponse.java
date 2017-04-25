@@ -1,4 +1,4 @@
-package com.github.ibole.infrastructure.web.spring;
+package com.github.ibole.infrastructure.web.ajax;
 
 import com.alibaba.fastjson.JSONAware;
 import com.alibaba.fastjson.JSONObject;
