@@ -39,7 +39,35 @@
 			<dependency>
 				    <groupId>org.springframework</groupId>
 				    <artifactId>spring-expression</artifactId>
-			</dependency>			
+			</dependency>
+			<!-- Security -->	
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-core</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-cas</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency> 
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-web</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-ehcache</artifactId>
+            </dependency>
+            <!-- End Security-->		
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>

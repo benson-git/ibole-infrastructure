@@ -30,15 +30,7 @@
 			<dependency>      
 			    <groupId>org.bitbucket.b_c</groupId>
 			    <artifactId>jose4j</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-core</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-spring</artifactId>
-			</dependency>
+			</dependency>			
 			<dependency>
 			    <groupId>org.bouncycastle</groupId>
 			    <artifactId>bcprov-jdk15on</artifactId>
@@ -54,24 +46,6 @@
 			<dependency>
 			    <groupId>commons-io</groupId>
 			    <artifactId>commons-io</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-cas</artifactId>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-web</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-ehcache</artifactId>
 			</dependency>
 				<!-- SECURITY end -->	
   </dependencies>
