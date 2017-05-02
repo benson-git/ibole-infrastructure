@@ -44,7 +44,7 @@ public class Jose4JJwtProvider extends JwtProvider {
    * @see org.toprank.infrastructure.security.jwt.JwtProvider#createTokenGenerator()
    */
   @Override
-  public TokenAuthenticator<EllipticCurveJsonWebKey, EllipticCurveJsonWebKey> createTokenGenerator(RedisSimpleTempalte redisTemplate) {
+  public TokenAuthenticator<EllipticCurveJsonWebKey> createTokenGenerator(RedisSimpleTempalte redisTemplate) {
     //Initialized jose4j
     AlgorithmFactoryFactory.getInstance();
     return new EcTokenAuthenticator(redisTemplate);

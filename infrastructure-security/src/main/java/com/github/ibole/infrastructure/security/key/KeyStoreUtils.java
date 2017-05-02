@@ -19,9 +19,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jwk.RsaJwkGenerator;
-import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +35,12 @@ import java.security.KeyStore;
 import java.security.KeyStore.Builder;
 import java.security.KeyStore.Entry;
 import java.security.KeyStore.PasswordProtection;
-import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStore.ProtectionParameter;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -86,12 +83,15 @@ public final class KeyStoreUtils {
   public static void main(String[] args) throws Exception
        {
      
+//    Provider provider = new BouncyCastleProvider();
+//    for(Map.Entry entry : provider.entrySet())
+//        System.out.println(entry.getKey()+": "+entry.getValue());
     
     CertificateDetailsInfo info = new CertificateDetailsInfo("Alias test", "CA", "toprank", "byd",
         "SZ", "China", "gd", "10", null, null);
      
-    File file = new File("D:/work/tfs/Toprank BasePlatform Solution/toprank-infrastructure/infrastructure-security/src/main/java/cc/toprank/infrastructure/security/key/ks.cert");
-    String certPath = "D:/work/tfs/Toprank BasePlatform Solution/toprank-infrastructure/infrastructure-security/src/main/java/cc/toprank/infrastructure/security/key/client.cert";
+    File file = new File("E:/dev/repository/Personnel/ibole-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/ks.keystore");
+    String certPath = "E:/dev/repository/Personnel/ibole-infrastructure/infrastructure-security/src/main/resources/META-INF/cert/client.cert";
     
     createX509CertificateWithECDSA(info, file, "JKS", "mypassword".toCharArray(), "ECDSA-ALIAs");
     X509Certificate x509Certificate = (X509Certificate) SslCertificateUtils.getCertificate(
@@ -103,6 +103,13 @@ public final class KeyStoreUtils {
     byte[] decryptedData = CertificateCoder.decryptByPrivateKey(data.getBytes(), file.getAbsolutePath(), "ECDSA-ALIAs", "mypassword");
     CertificateCoder.sign(signData.getBytes(), file.getAbsolutePath(), "ECDSA-ALIAs", "mypassword");
     Boolean flag = CertificateCoder.verify(decryptedData, signData, certPath);
+    
+    FileInputStream is = new FileInputStream(file);
+    KeyStore ks = KeyStore.getInstance("JKS");
+    ks.load(is, "mypassword".toCharArray());
+    is.close();
+    // 取得私钥
+    PrivateKey privateKey = (PrivateKey) ks.getKey("ECDSA-ALIAs", "mypassword".toCharArray());
     
     System.out.println(CertificateCoder.decryptByPublicKey(decryptedData, certPath));
     System.out.println(flag);
@@ -361,22 +368,19 @@ public final class KeyStoreUtils {
   public static void createX509CertificateWithECDSA(CertificateDetailsInfo certDetails, File keyStoreFile, String keyStoreType, char[] password, String alias) throws KeyStoreManagerException {
 
     X509Certificate cert;
-   
+    
     try {
-
       //1.初始化密钥 
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDSA", BC);
       keyPairGenerator.initialize(256);
       KeyPair keyPair = keyPairGenerator.generateKeyPair();
       ECPublicKey ecPublicKey = (ECPublicKey)keyPair.getPublic();
       ECPrivateKey ecPrivateKey = (ECPrivateKey)keyPair.getPrivate();   
-      
       //2.执行签名
       PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(ecPrivateKey.getEncoded());
       X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(ecPublicKey.getEncoded());
       //
       // set up the keys
-      //
       PrivateKey privKey;
       PublicKey pubKey;
 

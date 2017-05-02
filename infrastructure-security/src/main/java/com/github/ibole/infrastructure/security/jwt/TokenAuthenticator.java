@@ -16,47 +16,49 @@ package com.github.ibole.infrastructure.security.jwt;
  * @author bwang (chikaiwang@hotmail.com)
  *
  */
-public interface TokenAuthenticator<S,R> {
+public interface TokenAuthenticator<K> {
 
   /**
    * Create new access token base on the claim object.
    * @param claim JwtObject
    * @param refreshToken boolean
-   * @param sender 
-   * @param receiver
+   * @param key 
    * @return generated token
    * @throws TokenParseException 
    */
-  String createAccessToken(JwtObject claim, S sender, R receiver) throws TokenParseException;
+  String createAccessToken(JwtObject claim, K key) throws TokenParseException;
   
   /**
    * Create new refresh token base on the claim object.
    * @param claim JwtObject
    * @param refreshToken boolean
-   * @param sender 
-   * @param receiver
+   * @param key 
    * @return generated token
    * @throws TokenParseException 
    */
-  String createRefreshToken(JwtObject claim, S sender, R receiver) throws TokenParseException;
+  String createRefreshToken(JwtObject claim, K key) throws TokenParseException;
+  
+  /**
+   * Revoke a refresh token base on the claim object.
+   */
+  void revokeRefreshToken(String clientId, String loginId) throws TokenParseException;
   /**
    * Renew token base on the old token.
    * @param token the old token to be renewed
    * @param ttlSeconds the time to live 
    * @param refreshToken if it is a refresh token
-   * @param sender
-   * @param receiver
+   * @param key
    * @return the new token
    * @throws TokenParseException
    */
-  String renewToken(String token, int ttlSeconds, boolean refreshToken, S sender, R receiver) throws TokenParseException;
+  String renewAccessToken(String token, int ttlSeconds, boolean refreshToken, K key) throws TokenParseException;
 
   /**
    * 验证Access Token.
    */
-  TokenStatus validAccessToken(String token, String clientId, String loginId, S sender, R receiver);
+  TokenStatus validAccessToken(String token, String clientId, String loginId, K key);
   /**
    * 验证Refresh Token.
    */
-  boolean validRefreshToken(String token, String clientId, String loginId, S sender, R receiver);
+  boolean validRefreshToken(String token, String clientId, String loginId, K key);
 }

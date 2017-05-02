@@ -27,7 +27,7 @@ public class JwtObject {
   private int ttlSeconds;
   //the subject/principal is whom the token is about
   private String subject;
-  //roles
+  //the list of role id/code
   private List<String> roles = Lists.newArrayList();
   //对PC端使用了登陆者的ip地址，对APP端使用手机串号，从而避免Token被盗用情况
   //Client identifier(Mobile: imei; PC: remoteAddr?)

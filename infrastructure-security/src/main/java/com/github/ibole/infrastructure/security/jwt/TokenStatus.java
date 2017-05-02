@@ -24,7 +24,7 @@ public final class TokenStatus {
   
   public static final TokenStatus REFRESH_TOKEN_EXPIRED = Code.REFRESH_TOKEN_EXPIRED.toStatus();
 
-  public static final TokenStatus ILLEGAL = Code.ILLEGAL.toStatus();
+  public static final TokenStatus INVALID = Code.INVALID.toStatus();
 
   public static final TokenStatus VALIDATED = Code.VALIDATED.toStatus();
 
@@ -67,9 +67,9 @@ public final class TokenStatus {
      */
     REFRESH_TOKEN_EXPIRED("REFRESH_TOKEN_EXPIRED"),
     /**
-     * The token is illegal, invalid signature and client identifier.
+     * The token is illegal, invalid signature or invalid client identifier.
      */
-    ILLEGAL("ILLEGAL"),
+    INVALID("INVALID"),
     /**
      * The token is validated.
      */

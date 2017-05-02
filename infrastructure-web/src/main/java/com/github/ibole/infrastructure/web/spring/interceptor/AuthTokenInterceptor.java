@@ -37,9 +37,9 @@ public class AuthTokenInterceptor extends HandlerInterceptorAdapter implements H
       throws Exception {
 
     response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Method", "POST, OPTIONS");
+    response.setHeader("Access-Control-Allow-Method", "GET, POST, OPTIONS");
     response.setHeader("Access-Control-Allow-Headers",
-        "Origin, accept, X-Requested-With, Content-Type, sign, token, devType");
+        "Origin, accept, X-Requested-With, Content-Type, Authorization");
 
     response.setContentType("text/json;charset=utf-8");
     response.setCharacterEncoding("UTF-8");
