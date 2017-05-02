@@ -55,6 +55,13 @@ public final class Constants {
   
   public static final String RECEIVER_JWK_PATH = "/certs/jwt/receiverJWK.json";
 
+  public static final String SYSTEM_ENCODING = "utf-8";
+  //客户端生成的消息摘要
+  public static final String STATELESS_PARAM_DIGEST = "stateless.param.digest";
+  //
+  public static final String STATELESS_PARAM_USERNAME = "stateless.param.userName";
+  public static final String WS_PARAM_PASSWORD = "ws.param.password";
+
   
   private Constants() {
     throw new IllegalAccessError("Utility class");
