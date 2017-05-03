@@ -36,7 +36,7 @@ public class DSACoder extends Coder {
   public static final String ALGORITHM = "DSA";
 
   /**
-   * 默认密钥字节数
+   * 默认密钥字节数.
    * 
    * <pre>
    * DSA 
@@ -55,7 +55,7 @@ public class DSACoder extends Coder {
   private static final String PRIVATE_KEY = "DSAPrivateKey";
 
   /**
-   * 用私钥对信息生成数字签名
+   * 用私钥对信息生成数字签名.
    * 
    * @param data
    *            加密数据
@@ -87,7 +87,7 @@ public class DSACoder extends Coder {
   }
 
   /**
-   * 校验数字签名
+   * 校验数字签名.
    * 
    * @param data
    *            加密数据
@@ -124,7 +124,7 @@ public class DSACoder extends Coder {
   }
 
   /**
-   * 生成密钥
+   * 生成密钥.
    * 
    * @param seed
    *            种子
@@ -151,7 +151,7 @@ public class DSACoder extends Coder {
   }
 
   /**
-   * 默认生成密钥
+   * 默认生成密钥.
    * 
    * @return 密钥对象
    * @throws Exception
@@ -161,7 +161,7 @@ public class DSACoder extends Coder {
   }
 
   /**
-   * 取得私钥
+   * 取得私钥.
    * 
    * @param keyMap
    * @return
@@ -175,7 +175,7 @@ public class DSACoder extends Coder {
   }
 
   /**
-   * 取得公钥
+   * 取得公钥.
    * 
    * @param keyMap
    * @return

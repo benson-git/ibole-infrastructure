@@ -1,7 +1,7 @@
 package com.github.ibole.infrastructure.security.jwt;
 
-import com.github.ibole.infrastructure.cache.redis.RedisSimpleTempalte;
 import com.github.ibole.infrastructure.common.exception.ProviderNotFoundException;
+import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
 
 import java.util.ServiceLoader;
 

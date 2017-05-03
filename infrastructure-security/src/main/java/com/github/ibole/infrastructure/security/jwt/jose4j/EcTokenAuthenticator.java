@@ -1,16 +1,37 @@
+/*
+ * Copyright 2016-2017 the original author or authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.github.ibole.infrastructure.security.jwt.jose4j;
-import com.github.ibole.infrastructure.cache.redis.RedisSimpleTempalte;
+
+import com.github.ibole.infrastructure.common.exception.MoreThrowables;
 import com.github.ibole.infrastructure.common.utils.Constants;
 import com.github.ibole.infrastructure.security.jwt.BaseTokenAuthenticator;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.RefreshTokenNotFoundException;
-import com.github.ibole.infrastructure.security.jwt.TokenParseException;
+import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
 import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
+import com.google.common.base.Preconditions;
 
+import org.jose4j.jwk.EcJwkGenerator;
 import org.jose4j.jwk.EllipticCurveJsonWebKey;
+import org.jose4j.jwk.JsonWebKey.OutputControlLevel;
+import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.keys.EllipticCurves;
 import org.jose4j.lang.JoseException;
 
 import java.util.concurrent.TimeUnit;
@@ -31,62 +52,61 @@ import java.util.concurrent.TimeUnit;
  *  Token实现类 - EllipticCurve 算法
  * 
  * @author bwang (chikaiwang@hotmail.com)
- *
+ * 
  */
-public class EcTokenAuthenticator extends BaseTokenAuthenticator<EllipticCurveJsonWebKey> {
+public class EcTokenAuthenticator extends BaseTokenAuthenticator {
+  
+  private EllipticCurveJsonWebKey ecJsonWebKey;
 
   public EcTokenAuthenticator(RedisSimpleTempalte redisTemplate) {
     super(redisTemplate);
+    try {
+      ecJsonWebKey = EcJwkGenerator.generateJwk(EllipticCurves.P256);
+      logger.debug("EC Keys: {}", ecJsonWebKey.toJson(OutputControlLevel.INCLUDE_PRIVATE));
+    } catch (JoseException e) {
+      MoreThrowables.throwIfUnchecked(e);
+    }
   }
   
   /**
    * Create Access Token.
-   * #Token存储流程（以登录为例）：
-   * Client->Server: 发送数据（用户名密码及验证码）
-   * Server->Redis: 合法：生成Token,并以loginId:token键值对存储
-   * Server->Client: 不合法：返回错误信息```
-   * #Token生成
-   * @throws TokenParseException 
    */
   @Override
-  public String createAccessToken(JwtObject claimObj, EllipticCurveJsonWebKey pSenderJwk)
-      throws TokenParseException {
+  public String createAccessToken(JwtObject claimObj)
+      throws TokenHandlingException {
+    Preconditions.checkArgument(claimObj != null, "Parameter claimObj cannot be null");
     String token = null;
     try {
       if (!Constants.ANONYMOUS_ID.equalsIgnoreCase(claimObj.getLoginId()) && !getRedisTemplate()
           .exists(getRefreshTokenKey(claimObj.getLoginId()))) {
         throw new RefreshTokenNotFoundException("Refresh token not found.");
       }
-      token = JwtUtils.createJwtWithECKey(claimObj, pSenderJwk);
+      token = JoseUtils.createJwtWithECKey(claimObj, ecJsonWebKey);
       getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.ACCESS_TOKEN, token);
     } catch (JoseException ex) {
       logger.error("Error happened when generating the jwt token.", ex);
-      throw new TokenParseException(ex);
+      throw new TokenHandlingException(ex);
     }
     return token;
   }
   
   /**
    * Create Refresh Token.
-   * #Token存储流程（以登录为例）：
-   * Client->Server: 发送数据（用户名密码及验证码）
-   * Server->Redis: 合法：生成Token,并以loginId:token键值对存储
-   * Server->Client: 不合法：返回错误信息```
-   * #Token生成
    */
   @Override
-  public String createRefreshToken(JwtObject claimObj, EllipticCurveJsonWebKey pSenderJwk) throws TokenParseException {
+  public String createRefreshToken(JwtObject claimObj) throws TokenHandlingException {
+    Preconditions.checkArgument(claimObj != null, "Parameter claimObj cannot be null");
     String token = null;
     try {
       
-      token = JwtUtils.createJwtWithECKey(claimObj, pSenderJwk);
+      token = JoseUtils.createJwtWithECKey(claimObj, ecJsonWebKey);
       getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.REFRESH_TOKEN, token);
       getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.CLIENT_ID, claimObj.getClientId());
       getRedisTemplate().expire(getRefreshTokenKey(claimObj.getLoginId()), claimObj.getTtlSeconds());
 
     } catch (JoseException ex) {
          logger.error("Error happened when generating the jwt token.", ex);
-         throw new TokenParseException(ex);
+         throw new TokenHandlingException(ex);
     }
     return token;
   } 
@@ -101,82 +121,61 @@ public class EcTokenAuthenticator extends BaseTokenAuthenticator<EllipticCurveJs
     * Server->Client: 验证Token的合法性,判断是否被篡改或者盗用，返回JSON信息```
    */
   @Override
-  public TokenStatus validAccessToken(String token, String clientId, String loginId, EllipticCurveJsonWebKey pSenderJwk) { 
+  public TokenStatus validAccessToken(String token, String clientId, String loginId) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
     TokenStatus status = TokenStatus.VALIDATED;
-    try {
-      if (!Strings.isNullOrEmpty(token)) {
-        final Stopwatch stopwatch = Stopwatch.createStarted();
-        // validate the token signature.
-        boolean validateFlag = JwtUtils.validateToken(token, clientId, loginId, pSenderJwk);
-        String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        logger.info("JwtUtils.validateToken elapsed time: {} ms", elapsedString);
-        if (validateFlag) {
-          // check if the token is expired.
-          final Stopwatch stopwatch1 = Stopwatch.createStarted();
-          status = validateTokenExpired(token, clientId, loginId, pSenderJwk);
-          String elapsedString1 = Long.toString(stopwatch1.elapsed(TimeUnit.MILLISECONDS));
-          logger.info("JwtUtils.validateTokenExpired elapsed time: {} ms", elapsedString1);
-        } else {
-          status = TokenStatus.INVALID;
-        }
-      } else {
-        status = TokenStatus.INVALID;
-      }
-    } catch (TokenParseException ex) {
-      logger.error("Invalid token '{}' for '{}:{}'.", token, loginId, clientId, ex);
-      status = TokenStatus.INVALID;
+    final Stopwatch stopwatch = Stopwatch.createStarted();
+    // validate the token signature.
+    status = JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey.getPublicKey());
+    // check if it is a anonymous access token, anonymous don't have refresh token
+    if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
+      return status;
     }
-    return status;
-  }
-  /**
-   *  Check if the refresh token is expired except for anonymous token.
-   * @param token
-   * @param clientId
-   * @param loginId
-   * @param pSenderJwk
-   * @param pReceiverJwk
-   * @return TokenStatus
-   */
-  private TokenStatus validateTokenExpired(String token, String clientId, String loginId,
-      EllipticCurveJsonWebKey pSenderJwk) {
-    TokenStatus status = TokenStatus.VALIDATED;
-    if (JwtUtils.isExpired(token, loginId, pSenderJwk)) {
-      status = TokenStatus.ACCESS_TOKEN_EXPIRED;
-      if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
-        return TokenStatus.ACCESS_TOKEN_EXPIRED;
-      }
-      String refreshToken = getRedisTemplate().hget(Constants.REFRESH_TOKEN_KEY_PREFIX + loginId,
-          Constants.REFRESH_TOKEN);
 
+    // As it is expensive to frequently check the refresh token (from redis),
+    // here we just do it when the access token is expired.
+    if (status.isExpired()) {
+      String refreshToken = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.REFRESH_TOKEN);
       // check if the refresh token is expired
       if (Strings.isNullOrEmpty(refreshToken)) {
         status = TokenStatus.REFRESH_TOKEN_EXPIRED;
-      }
-    } else {
-      // if the same login id logon in different client.
-      // Check if the both client id and login id are match with the provided token.
-      String previousClientId = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
-      if (!clientId.equals(previousClientId)) {
-        status = TokenStatus.REFRESH_TOKEN_EXPIRED;
+      } else {
+        // if the same login id logon in different client.
+        // Check if the both client id and login id are match with the provided token.
+        String previousClientId = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
+        if (!clientId.equals(previousClientId)) {
+          status = TokenStatus.INVALID;
+        }
       }
     }
+
+    if (status.isInvalid()) {
+      revokeRefreshToken(clientId, loginId);
+      return status;
+    }
+
+    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    logger.debug("JwtUtils.validateToken elapsed time: {} ms", elapsedString);
     return status;
   }
   
   @Override
-  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken,
-      EllipticCurveJsonWebKey pSenderJwk)
-      throws TokenParseException {
-
+  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken) throws TokenHandlingException {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
     String newToken;
-    JwtObject jwtObj = JwtUtils.claimsOfTokenWithoutValidation(token);
+    JwtObject jwtObj = JoseUtils.claimsOfTokenWithoutValidation(token);
     jwtObj.setTtlSeconds(ttlSeconds);
     if (refreshToken) {
-      newToken = createRefreshToken(jwtObj, pSenderJwk);
+      newToken = createRefreshToken(jwtObj);
     } else {
-      newToken = createAccessToken(jwtObj, pSenderJwk);
+      newToken = createAccessToken(jwtObj);
     }
     return newToken;
+  }
+  
+  @Override
+  public void revokeRefreshToken(String clientId, String loginId) {
+    getRedisTemplate().del(getRefreshTokenKey(loginId));
   }
   
   private String getRefreshTokenKey(String loginId) {

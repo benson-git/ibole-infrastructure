@@ -115,7 +115,7 @@
         <shiro.version>1.4.0-RC2</shiro.version>
         <jose4j_version>0.5.5</jose4j_version>
         <java_jwt_version>3.1.0</java_jwt_version>
-        <bcprov-jdk15on.version>1.55</bcprov-jdk15on.version>
+        <bcprov-jdk15on.version>1.56</bcprov-jdk15on.version>
         <validation_api_version>1.1.0.Final</validation_api_version>
         <servlet-api_version>2.5</servlet-api_version>
         <eu.bitwalker_version>1.20</eu.bitwalker_version>

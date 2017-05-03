@@ -15,6 +15,12 @@ import java.util.function.Supplier;
  *********************************************************************************************/
 
 
+/**
+ * Refer to https://github.com/werval/werval.
+ * 
+ * @author bwang
+ *
+ */
 public interface Cache {
   /**
    * Check if the Cache has an object for a given key.

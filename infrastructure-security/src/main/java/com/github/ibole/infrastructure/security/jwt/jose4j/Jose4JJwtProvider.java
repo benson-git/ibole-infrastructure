@@ -1,11 +1,10 @@
 package com.github.ibole.infrastructure.security.jwt.jose4j;
 
-import org.jose4j.jwa.AlgorithmFactoryFactory;
-import org.jose4j.jwk.EllipticCurveJsonWebKey;
-
-import com.github.ibole.infrastructure.cache.redis.RedisSimpleTempalte;
 import com.github.ibole.infrastructure.security.jwt.JwtProvider;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
+import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
+
+import org.jose4j.jwa.AlgorithmFactoryFactory;
 
 /*********************************************************************************************.
  * 
@@ -44,8 +43,8 @@ public class Jose4JJwtProvider extends JwtProvider {
    * @see org.toprank.infrastructure.security.jwt.JwtProvider#createTokenGenerator()
    */
   @Override
-  public TokenAuthenticator<EllipticCurveJsonWebKey> createTokenGenerator(RedisSimpleTempalte redisTemplate) {
-    //Initialized jose4j
+  public TokenAuthenticator createTokenGenerator(RedisSimpleTempalte redisTemplate) {
+    // Initialized jose4j
     AlgorithmFactoryFactory.getInstance();
     return new EcTokenAuthenticator(redisTemplate);
   }

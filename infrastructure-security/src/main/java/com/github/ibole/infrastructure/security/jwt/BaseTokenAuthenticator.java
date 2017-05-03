@@ -1,6 +1,6 @@
 package com.github.ibole.infrastructure.security.jwt;
 
-import com.github.ibole.infrastructure.cache.redis.RedisSimpleTempalte;
+import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +20,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for simple JWT authenticators.
  * 
- *  Create a token would be to authenticate the user via their login credentials, 
- *  and if successful return a token corresponding to that user
+ * Create a token would be to authenticate the user via their login credentials, and if successful
+ * return a token corresponding to that user
  * 
  * @author bwang (chikaiwang@hotmail.com)
  *
  * @param <S>
  * @param <R>
  */
-public class BaseTokenAuthenticator<K> implements TokenAuthenticator<K> {
+public class BaseTokenAuthenticator implements TokenAuthenticator {
 
   protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -39,28 +39,29 @@ public class BaseTokenAuthenticator<K> implements TokenAuthenticator<K> {
   }
 
   @Override
-  public String createAccessToken(JwtObject claim, K key) throws TokenParseException {
+  public String createAccessToken(JwtObject claim) throws TokenHandlingException {
     throw new UnsupportedOperationException();
   }
 
 
   @Override
-  public TokenStatus validAccessToken(String token, String clientId, String loginId, K key) {
+  public TokenStatus validAccessToken(String token, String clientId, String loginId) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public String createRefreshToken(JwtObject claim, K key) throws TokenParseException{
+  public String createRefreshToken(JwtObject claim) throws TokenHandlingException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean validRefreshToken(String token, String clientId, String loginId, K key) {
+  public boolean validRefreshToken(String token, String clientId, String loginId) {
     throw new UnsupportedOperationException();
   }
-  
+
   @Override
-  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken, K key) throws TokenParseException {
+  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken)
+      throws TokenHandlingException {
     throw new UnsupportedOperationException();
   }
 
@@ -72,11 +73,9 @@ public class BaseTokenAuthenticator<K> implements TokenAuthenticator<K> {
   }
 
   @Override
-  public void revokeRefreshToken(String clientId, String loginId)
-      throws TokenParseException {
+  public void revokeRefreshToken(String clientId, String loginId) {
     throw new UnsupportedOperationException();
   }
-
 
 
 

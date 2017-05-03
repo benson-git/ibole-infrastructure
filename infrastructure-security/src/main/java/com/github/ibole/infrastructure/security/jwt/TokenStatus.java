@@ -38,6 +38,19 @@ public final class TokenStatus {
   public Code getCode() {
     return this.code;
   }
+  
+  public boolean isInvalid() {
+    return Code.INVALID.equals(this.code);
+  }
+  
+  public boolean isValidated() {
+    return Code.VALIDATED.equals(this.code);
+  }
+  
+  public boolean isExpired() {
+    return Code.ACCESS_TOKEN_EXPIRED.equals(this.code)
+        || Code.REFRESH_TOKEN_EXPIRED.equals(this.code);
+  }
 
   @Override
   public String toString() {
