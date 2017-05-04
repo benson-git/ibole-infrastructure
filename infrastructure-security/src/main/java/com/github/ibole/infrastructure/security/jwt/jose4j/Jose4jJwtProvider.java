@@ -19,7 +19,7 @@ import org.jose4j.jwa.AlgorithmFactoryFactory;
  * @author bwang (chikaiwang@hotmail.com)
  *
  */
-public class Jose4JJwtProvider extends JwtProvider {
+public class Jose4jJwtProvider extends JwtProvider {
 
   /* (non-Javadoc)
    * @see org.toprank.infrastructure.security.jwt.JwtProvider#isAvailable()
@@ -46,7 +46,7 @@ public class Jose4JJwtProvider extends JwtProvider {
   public TokenAuthenticator createTokenGenerator(RedisSimpleTempalte redisTemplate) {
     // Initialized jose4j
     AlgorithmFactoryFactory.getInstance();
-    return new EcTokenAuthenticator(redisTemplate);
+    return new EcJose4jTokenAuthenticator(redisTemplate);
   }
 
 }

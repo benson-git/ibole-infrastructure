@@ -49,14 +49,14 @@ import java.util.concurrent.TimeUnit;
  * @author bwang
  *
  */
-public class EcTokenAuthenticator extends BaseTokenAuthenticator {
+public class EcAuth0TokenAuthenticator extends BaseTokenAuthenticator {
   private ECPublicKey ecPublicKey;
   private ECPrivateKey ecPrivateKey;
 
   /**
    * @param redisTemplate
    */
-  public EcTokenAuthenticator(RedisSimpleTempalte redisTemplate) {
+  public EcAuth0TokenAuthenticator(RedisSimpleTempalte redisTemplate) {
     super(redisTemplate);
     KeyPairGenerator keyPairGenerator;
     try {

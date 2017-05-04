@@ -42,7 +42,6 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
@@ -95,39 +94,18 @@ public class Auth0Utils {
     
     String token = createJwtWithECKey(jwt, ecPublicKey, ecPrivateKey);
 
-    //Thread.currentThread().sleep(5000);
-    
     TokenStatus status = validateToken(token, jwt.getClientId(), ecPublicKey, ecPrivateKey);
     
-    //JwtObject newjwt = claimsOfTokenWithoutValidation(token, ecPublicKey, ecPrivateKey);
-
+    //Thread.currentThread().sleep(9000);
+    
+    JwtObject newjwt = claimsOfTokenWithoutValidation(token, ecPublicKey, ecPrivateKey);
     
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    
     System.out.println("Spent: "+elapsedString);
     System.out.println(token);
     System.out.println(status);
     
-  }
-
-  public static String createJwtWithECKey(JwtObject claimObj, String secret)
-      throws TokenHandlingException {
-    checkArgument(claimObj != null, "JwtObject cannot be null!");
-    String[] roleArray = new String[claimObj.getRoles().size()];
-    claimObj.getRoles().toArray(roleArray);
-    String token = null;
-    try {
-      token =
-          JWT.create().withSubject(claimObj.getSubject()).withAudience(claimObj.getAudience())
-              .withIssuer(claimObj.getIssuer())
-              .withArrayClaim(JwtConstant.ROLE_ID, roleArray)
-              .withClaim(JwtConstant.CLIENT_ID, claimObj.getClientId())
-              .withClaim(JwtConstant.LOGIN_ID, claimObj.getLoginId())
-              .withExpiresAt(DateTime.now().plusSeconds(claimObj.getTtlSeconds()).toDate())
-              .sign(Algorithm.HMAC256(secret));
-    } catch (IllegalArgumentException | JWTCreationException | UnsupportedEncodingException ex) {
-      throw new TokenHandlingException(ex);
-    }
-    return token;
   }
   
   public static String createJwtWithECKey(JwtObject claimObj, ECPublicKey publicKey, ECPrivateKey privateKey)
@@ -194,11 +172,7 @@ public class Auth0Utils {
     
     JwtObject jwtObj = null;
     try {
-      
-      JWTVerifier verifier =
-          JWT.require(Algorithm.ECDSA256(publicKey, privateKey)).acceptExpiresAt(2).build();
-
-      DecodedJWT jwt = verifier.verify(token);
+      DecodedJWT jwt = JWT.decode(token);
       jwtObj = new JwtObject();
       if (jwt.getAudience() != null && jwt.getAudience().size() > 0) {
         jwtObj.setAudience(jwt.getAudience().get(0));
@@ -210,7 +184,7 @@ public class Auth0Utils {
       jwtObj.getRoles()
           .addAll((List<String>) jwt.getClaim(JwtConstant.ROLE_ID).asList(String.class));
 
-    } catch (IllegalArgumentException ex) {
+    } catch (JWTDecodeException ex) {
       throw new TokenHandlingException(ex);
     }
     return jwtObj;

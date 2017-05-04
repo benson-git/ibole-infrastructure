@@ -58,7 +58,7 @@ public class Auth0JwtProvider extends JwtProvider {
   @Override
   public TokenAuthenticator createTokenGenerator(RedisSimpleTempalte redisTemplate) {
    
-    return new EcTokenAuthenticator(redisTemplate);
+    return new EcAuth0TokenAuthenticator(redisTemplate);
   }
 
 }

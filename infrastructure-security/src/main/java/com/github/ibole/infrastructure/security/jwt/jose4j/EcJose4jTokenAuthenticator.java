@@ -54,11 +54,11 @@ import java.util.concurrent.TimeUnit;
  * @author bwang (chikaiwang@hotmail.com)
  * 
  */
-public class EcTokenAuthenticator extends BaseTokenAuthenticator {
+public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   
   private EllipticCurveJsonWebKey ecJsonWebKey;
 
-  public EcTokenAuthenticator(RedisSimpleTempalte redisTemplate) {
+  public EcJose4jTokenAuthenticator(RedisSimpleTempalte redisTemplate) {
     super(redisTemplate);
     try {
       ecJsonWebKey = EcJwkGenerator.generateJwk(EllipticCurves.P256);
