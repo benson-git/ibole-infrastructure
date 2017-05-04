@@ -173,7 +173,7 @@ public final class JoseUtils {
     checkArgument(claimObj != null, "Param cannot be null!");
     
     // Give the JWK a Key ID (kid): 密钥 id
-    senderJwk.setKeyId(String.valueOf(claimObj.getIssuer().hashCode()));
+    senderJwk.setKeyId(claimObj.getLoginId());
     
     // Create the Claims, which will be the content of the JWT
     NumericDate numericDate = NumericDate.now();
