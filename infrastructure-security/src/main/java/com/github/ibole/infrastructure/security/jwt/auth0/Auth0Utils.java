@@ -23,11 +23,12 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.github.ibole.infrastructure.security.jwt.BaseTokenValidationCallback;
 import com.github.ibole.infrastructure.security.jwt.JWTEncryptionPreferences;
 import com.github.ibole.infrastructure.security.jwt.JwtConstant;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
-import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+import com.github.ibole.infrastructure.security.jwt.TokenValidationCallback;
 
 import com.google.common.base.Stopwatch;
 
@@ -94,7 +95,8 @@ public class Auth0Utils {
     
     String token = createJwtWithECKey(jwt, ecPublicKey, ecPrivateKey);
 
-    TokenStatus status = validateToken(token, jwt.getClientId(), ecPublicKey, ecPrivateKey);
+    TokenValidationCallback<DecodedJWT> callback = new BaseTokenValidationCallback<DecodedJWT>();
+    validateToken(token, jwt.getClientId(), ecPublicKey, ecPrivateKey, callback);
     
     //Thread.currentThread().sleep(9000);
     
@@ -103,8 +105,8 @@ public class Auth0Utils {
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     
     System.out.println("Spent: "+elapsedString);
+    System.out.println(callback.getTokenStatus());
     System.out.println(token);
-    System.out.println(status);
     
   }
   
@@ -137,27 +139,27 @@ public class Auth0Utils {
    * 3. check if the token is expired
    * @param token String
    * @param clientId client id
+   * @param validationCallback TokenValidationCallback<JwtClaims>
    * @param publicKey the public key
    * @param privateKey the private key
-   * @return the token status
-   * @throws TokenHandlingException
    */
-  public static TokenStatus validateToken(String token, String clientId, ECPublicKey publicKey, ECPrivateKey privateKey) {
-    TokenStatus status = TokenStatus.VALIDATED;;
+  public static void validateToken(String token, String clientId, ECPublicKey publicKey,
+      ECPrivateKey privateKey, TokenValidationCallback<DecodedJWT> validationCallback) {
+    DecodedJWT jwt = null;
     try {
       JWTVerifier verifier =
           JWT.require(Algorithm.ECDSA256(publicKey, privateKey)).withClaim(JwtConstant.CLIENT_ID, clientId)
               //.acceptLeeway(1) // second
               .build();
 
-      DecodedJWT jwt = verifier.verify(token);
+      jwt = verifier.verify(token);
 
     } catch (JWTDecodeException | IllegalArgumentException e) {
-      status = TokenStatus.INVALID;
+      validationCallback.onInValid(JWT.decode(token));
     } catch (TokenExpiredException ex) {
-      status = TokenStatus.ACCESS_TOKEN_EXPIRED;
+      validationCallback.onExpired(JWT.decode(token));
     }
-    return status;
+    validationCallback.onValiated(jwt);
   }
   
   /**

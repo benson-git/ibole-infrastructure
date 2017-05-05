@@ -45,7 +45,7 @@ public class BaseTokenAuthenticator implements TokenAuthenticator {
 
 
   @Override
-  public TokenStatus validAccessToken(String token, String clientId, String loginId) {
+  public TokenStatus validAccessToken(String token, String clientId) {
     throw new UnsupportedOperationException();
   }
 
@@ -55,7 +55,7 @@ public class BaseTokenAuthenticator implements TokenAuthenticator {
   }
 
   @Override
-  public boolean validRefreshToken(String token, String clientId, String loginId) {
+  public boolean validRefreshToken(String token, String clientId) {
     throw new UnsupportedOperationException();
   }
 
@@ -73,7 +73,7 @@ public class BaseTokenAuthenticator implements TokenAuthenticator {
   }
 
   @Override
-  public void revokeRefreshToken(String clientId, String loginId) {
+  public void revokeRefreshToken(String loginId) {
     throw new UnsupportedOperationException();
   }
 

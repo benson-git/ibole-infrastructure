@@ -3,10 +3,11 @@ package com.github.ibole.infrastructure.security.jwt.jose4j;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.github.ibole.infrastructure.common.exception.GenericRuntimeException;
+import com.github.ibole.infrastructure.security.jwt.BaseTokenValidationCallback;
 import com.github.ibole.infrastructure.security.jwt.JwtConstant;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
-import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+import com.github.ibole.infrastructure.security.jwt.TokenValidationCallback;
 
 import com.google.common.base.Stopwatch;
 import com.google.gson.Gson;
@@ -82,15 +83,16 @@ public final class JoseUtils {
     String token = createJwtWithECKey(jwt, (EllipticCurveJsonWebKey) senderPublicJwk);
 
     //Thread.currentThread().sleep(4900);
+    TokenValidationCallback<JwtClaims> validationCallback = new BaseTokenValidationCallback<JwtClaims>();
     
-    TokenStatus tokenStatus = validateToken(token, jwt.getClientId(), senderPublicJwk);
+    validateToken(token, jwt.getClientId(), senderPublicJwk, validationCallback);
     
     JwtObject newjwt = claimsOfTokenWithoutValidation(token);
     
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     System.out.println("Spent: "+elapsedString);
+    System.out.println(validationCallback.getTokenStatus());
     System.out.println(token);
-    System.out.println(tokenStatus);
     
   }
   
@@ -231,37 +233,41 @@ public final class JoseUtils {
   
   /**
    * Validate Token based on the provided token.
+   * 
    * <pre>
    * 1. validate the token signature
    * 2. check if the token is for the same client identifier
    * 3. check if the token is expired
-   * @param token
-   * @param clientId
-   * @param senderJwk
-   * @return the token status
-   * @throws TokenHandlingException
+   * @param token String
+   * @param clientId String
+   * @param senderJwk PublicJsonWebKey
+   * @param validationCallback TokenValidationCallback
    */
-  public static TokenStatus validateToken(String token, String clientId, PublicJsonWebKey senderJwk) {
-    TokenStatus status = TokenStatus.VALIDATED;;
+  public static void validateToken(String token, String clientId, PublicJsonWebKey senderJwk,
+      TokenValidationCallback<JwtClaims> validationCallback) {
+    JwtClaims claims = null;
     try {
       // validate the signature
-      JwtClaims claims = validateSignature(token, senderJwk);
+      claims = validateSignature(token, senderJwk);
       if (claims == null) {
-        return TokenStatus.INVALID;
+        validationCallback.onInValid(claims);
+        return;
       }
-      // validate the client identifier 
+      // validate the client identifier
       if (!claims.getClaimValue(JwtConstant.CLIENT_ID).equals(clientId)) {
-        return TokenStatus.INVALID;
+        validationCallback.onInValid(claims);
+        return;
       }
       // validate the expiration time
       if (claims.getExpirationTime().isBefore(NumericDate.now())) {
-        status = TokenStatus.ACCESS_TOKEN_EXPIRED;
+        validationCallback.onExpired(claims);
+        return;
       }
 
     } catch (TokenHandlingException | MalformedClaimException e) {
-      status = TokenStatus.INVALID;
+      validationCallback.onError(claims);
     }
-    return status;
+    validationCallback.onValiated(claims);
   }
   
   private static JwtClaims validateSignature(String token, PublicJsonWebKey senderJwk)

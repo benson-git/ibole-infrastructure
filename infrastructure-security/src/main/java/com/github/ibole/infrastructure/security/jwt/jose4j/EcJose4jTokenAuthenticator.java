@@ -17,20 +17,24 @@ package com.github.ibole.infrastructure.security.jwt.jose4j;
 import com.github.ibole.infrastructure.common.exception.MoreThrowables;
 import com.github.ibole.infrastructure.common.utils.Constants;
 import com.github.ibole.infrastructure.security.jwt.BaseTokenAuthenticator;
+import com.github.ibole.infrastructure.security.jwt.BaseTokenValidationCallback;
+import com.github.ibole.infrastructure.security.jwt.JwtConstant;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.RefreshTokenNotFoundException;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
 import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+import com.github.ibole.infrastructure.security.jwt.TokenValidationCallback;
 import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
-import com.google.common.base.Preconditions;
 
 import org.jose4j.jwk.EcJwkGenerator;
 import org.jose4j.jwk.EllipticCurveJsonWebKey;
 import org.jose4j.jwk.JsonWebKey.OutputControlLevel;
 import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.jwt.JwtClaims;
 import org.jose4j.keys.EllipticCurves;
 import org.jose4j.lang.JoseException;
 
@@ -49,13 +53,13 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- *  Token lifecycle management (create/renew/validate/revoke).
+ * Token lifecycle management (create/renew/validate/revoke).
  * 
  * @author bwang (chikaiwang@hotmail.com)
  * 
  */
 public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
-  
+
   private EllipticCurveJsonWebKey ecJsonWebKey;
 
   public EcJose4jTokenAuthenticator(RedisSimpleTempalte redisTemplate) {
@@ -67,29 +71,29 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
       MoreThrowables.throwIfUnchecked(e);
     }
   }
-  
+
   /**
    * Create Access Token.
    */
   @Override
-  public String createAccessToken(JwtObject claimObj)
-      throws TokenHandlingException {
+  public String createAccessToken(JwtObject claimObj) throws TokenHandlingException {
     Preconditions.checkArgument(claimObj != null, "Parameter claimObj cannot be null");
     String token = null;
     try {
-      if (!Constants.ANONYMOUS_ID.equalsIgnoreCase(claimObj.getLoginId()) && !getRedisTemplate()
-          .exists(getRefreshTokenKey(claimObj.getLoginId()))) {
+      if (!Constants.ANONYMOUS_ID.equalsIgnoreCase(claimObj.getLoginId())
+          && !getRedisTemplate().exists(getRefreshTokenKey(claimObj.getLoginId()))) {
         throw new RefreshTokenNotFoundException("Refresh token not found.");
       }
       token = JoseUtils.createJwtWithECKey(claimObj, ecJsonWebKey);
-      getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.ACCESS_TOKEN, token);
+      getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.ACCESS_TOKEN,
+          token);
     } catch (JoseException ex) {
       logger.error("Error happened when generating the jwt token.", ex);
       throw new TokenHandlingException(ex);
     }
     return token;
   }
-  
+
   /**
    * Create Refresh Token.
    */
@@ -98,69 +102,87 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
     Preconditions.checkArgument(claimObj != null, "Parameter claimObj cannot be null");
     String token = null;
     try {
-      
+
       token = JoseUtils.createJwtWithECKey(claimObj, ecJsonWebKey);
-      getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.REFRESH_TOKEN, token);
-      getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.CLIENT_ID, claimObj.getClientId());
-      getRedisTemplate().expire(getRefreshTokenKey(claimObj.getLoginId()), claimObj.getTtlSeconds());
+      getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.REFRESH_TOKEN,
+          token);
+      getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.CLIENT_ID,
+          claimObj.getClientId());
+      getRedisTemplate()
+          .expire(getRefreshTokenKey(claimObj.getLoginId()), claimObj.getTtlSeconds());
 
     } catch (JoseException ex) {
-         logger.error("Error happened when generating the jwt token.", ex);
-         throw new TokenHandlingException(ex);
+      logger.error("Error happened when generating the jwt token.", ex);
+      throw new TokenHandlingException(ex);
     }
     return token;
-  } 
-  
+  }
+
   /**
-    * ##Token验证流程图：
-    * ```sequence
-    * Client->Server: 传递Token
-    * Server->Redis: 以Token为键取值
-    * Redis->Client: Token不存在，返回错误信息
-    * Redis->Server: Token存在，则以Token为键取值并返回
-    * Server->Client: 验证Token的合法性,判断是否被篡改或者盗用，返回JSON信息```
+   * 验证Token的合法性,判断是否被篡改或者盗用.
    */
   @Override
-  public TokenStatus validAccessToken(String token, String clientId, String loginId) {
+  public TokenStatus validAccessToken(String token, String clientId) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
-    TokenStatus status = TokenStatus.VALIDATED;
+
     final Stopwatch stopwatch = Stopwatch.createStarted();
+
+    TokenValidationCallback<JwtClaims> validationCallback = new BaseTokenValidationCallback<JwtClaims>() {
+          @Override
+          public void onInValid(final JwtClaims jwtClaims) {
+            if (jwtClaims != null) {
+              revokeRefreshToken(String.valueOf(jwtClaims.getClaimValue(JwtConstant.LOGIN_ID)));
+            }
+          }
+          
+          @Override
+          public void onExpired(final JwtClaims jwtClaims) {
+            String loginId = String.valueOf(jwtClaims.getClaimValue(JwtConstant.LOGIN_ID));
+            // anonymous access don't have the refresh token
+            if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
+              return;
+            }
+            // As it is expensive to frequently check the refresh token (from redis),
+            // here we just do it when the access token is expired.
+            String refreshToken =
+                getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.REFRESH_TOKEN);
+            // check if the refresh token is expired
+            if (Strings.isNullOrEmpty(refreshToken)) {
+              setTokenStatus(TokenStatus.INVALID);
+            } else {
+              // if the same login id logon in different client.
+              // Check if the both client id and login id are match with the provided token.
+              String previousClientId =
+                  getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
+              if (!clientId.equals(previousClientId)) {
+                setTokenStatus(TokenStatus.INVALID);
+              }
+            }
+          }
+
+          @Override
+          public void onError(final JwtClaims jwtClaims) {
+            // TODO: count error times per client account and then lock account if the error times
+            // over than the limitation.
+            logger.debug("Valid access token error happened for account '{}' from client '{}'",
+                jwtClaims != null ? jwtClaims.getClaimValue(JwtConstant.LOGIN_ID) : "UNKNOWN",
+                clientId);
+          }
+        };
+
     // validate the token signature.
-    status = JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey.getPublicKey());
-    // check if it is a anonymous access token, anonymous don't have refresh token
-    if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
-      return status;
-    }
-
-    // As it is expensive to frequently check the refresh token (from redis),
-    // here we just do it when the access token is expired.
-    if (status.isExpired()) {
-      String refreshToken = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.REFRESH_TOKEN);
-      // check if the refresh token is expired
-      if (Strings.isNullOrEmpty(refreshToken)) {
-        status = TokenStatus.REFRESH_TOKEN_EXPIRED;
-      } else {
-        // if the same login id logon in different client.
-        // Check if the both client id and login id are match with the provided token.
-        String previousClientId = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
-        if (!clientId.equals(previousClientId)) {
-          status = TokenStatus.INVALID;
-        }
-      }
-    }
-
-    if (status.isInvalid()) {
-      revokeRefreshToken(clientId, loginId);
-      return status;
-    }
+    JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey.getPublicKey(),
+        validationCallback);
 
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
-    logger.debug("JwtUtils.validateToken elapsed time: {} ms", elapsedString);
-    return status;
+    logger.debug("Validate token elapsed time: {} ms", elapsedString);
+
+    return validationCallback.getTokenStatus();
   }
-  
+
   @Override
-  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken) throws TokenHandlingException {
+  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken)
+      throws TokenHandlingException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
     String newToken;
     JwtObject jwtObj = JoseUtils.claimsOfTokenWithoutValidation(token);
@@ -172,14 +194,14 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
     }
     return newToken;
   }
-  
+
   @Override
-  public void revokeRefreshToken(String clientId, String loginId) {
+  public void revokeRefreshToken(String loginId) {
     getRedisTemplate().del(getRefreshTokenKey(loginId));
   }
-  
+
   private String getRefreshTokenKey(String loginId) {
     return Constants.REFRESH_TOKEN_KEY_PREFIX + loginId;
   }
-  
+
 }

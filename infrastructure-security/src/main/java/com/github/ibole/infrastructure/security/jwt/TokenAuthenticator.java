@@ -41,7 +41,7 @@ public interface TokenAuthenticator {
   /**
    * Revoke a refresh token base on the claim object.
    */
-  void revokeRefreshToken(String clientId, String loginId);
+  void revokeRefreshToken(String loginId);
 
   /**
    * Renew token base on the old token.
@@ -58,10 +58,10 @@ public interface TokenAuthenticator {
   /**
    * 验证Access Token.
    */
-  TokenStatus validAccessToken(String token, String clientId, String loginId);
+  TokenStatus validAccessToken(String token, String clientId);
 
   /**
    * 验证Refresh Token.
    */
-  boolean validRefreshToken(String token, String clientId, String loginId);
+  boolean validRefreshToken(String token, String clientId);
 }

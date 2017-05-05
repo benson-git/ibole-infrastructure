@@ -20,9 +20,7 @@ public final class TokenStatus {
   // Create the canonical list of TokenStatus instances indexed by their code values.
   private static final Map<String, TokenStatus> STATUS_MAP = buildStatusMap();
 
-  public static final TokenStatus ACCESS_TOKEN_EXPIRED = Code.ACCESS_TOKEN_EXPIRED.toStatus();
-  
-  public static final TokenStatus REFRESH_TOKEN_EXPIRED = Code.REFRESH_TOKEN_EXPIRED.toStatus();
+  public static final TokenStatus EXPIRED = Code.EXPIRED.toStatus();
 
   public static final TokenStatus INVALID = Code.INVALID.toStatus();
 
@@ -48,8 +46,7 @@ public final class TokenStatus {
   }
   
   public boolean isExpired() {
-    return Code.ACCESS_TOKEN_EXPIRED.equals(this.code)
-        || Code.REFRESH_TOKEN_EXPIRED.equals(this.code);
+    return Code.EXPIRED.equals(this.code);
   }
 
   @Override
@@ -72,13 +69,9 @@ public final class TokenStatus {
   public enum Code {
 
     /**
-     * The access token is expired.
+     * The token is expired.
      */
-    ACCESS_TOKEN_EXPIRED("ACCESS_TOKEN_EXPIRED"),
-    /**
-     * The refresh token is expired.
-     */
-    REFRESH_TOKEN_EXPIRED("REFRESH_TOKEN_EXPIRED"),
+    EXPIRED("ACCESS_TOKEN_EXPIRED"),
     /**
      * The token is illegal, invalid signature or invalid client identifier.
      */

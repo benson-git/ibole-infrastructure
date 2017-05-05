@@ -14,13 +14,17 @@
 
 package com.github.ibole.infrastructure.security.jwt.auth0;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.ibole.infrastructure.common.exception.MoreThrowables;
 import com.github.ibole.infrastructure.common.utils.Constants;
 import com.github.ibole.infrastructure.security.jwt.BaseTokenAuthenticator;
+import com.github.ibole.infrastructure.security.jwt.BaseTokenValidationCallback;
+import com.github.ibole.infrastructure.security.jwt.JwtConstant;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.RefreshTokenNotFoundException;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
 import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+import com.github.ibole.infrastructure.security.jwt.TokenValidationCallback;
 import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
 
 import com.google.common.base.Preconditions;
@@ -114,42 +118,61 @@ public class EcAuth0TokenAuthenticator extends BaseTokenAuthenticator {
     * Server->Client: 验证Token的合法性,判断是否被篡改或者盗用，返回JSON信息```
    */
   @Override
-  public TokenStatus validAccessToken(String token, String clientId, String loginId) {
+  public TokenStatus validAccessToken(String token, String clientId) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
-    TokenStatus status = TokenStatus.VALIDATED;
+
     final Stopwatch stopwatch = Stopwatch.createStarted();
+
+    TokenValidationCallback<DecodedJWT> validationCallback = new BaseTokenValidationCallback<DecodedJWT>() {
+          @Override
+          public void onInValid(final DecodedJWT claim) {
+            if (claim != null) {
+              revokeRefreshToken(claim.getClaim(JwtConstant.LOGIN_ID).asString());
+            }
+          }
+          
+          @Override
+          public void onExpired(final DecodedJWT claim) {
+            String loginId = claim.getClaim(JwtConstant.LOGIN_ID).asString();
+            // anonymous access don't have the refresh token
+            if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
+              return;
+            }
+            // As it is expensive to frequently check the refresh token (from redis),
+            // here we just do it when the access token is expired.
+            String refreshToken =
+                getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.REFRESH_TOKEN);
+            // check if the refresh token is expired
+            if (Strings.isNullOrEmpty(refreshToken)) {
+              setTokenStatus(TokenStatus.INVALID);
+            } else {
+              // if the same login id logon in different client.
+              // Check if the both client id and login id are match with the provided token.
+              String previousClientId =
+                  getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
+              if (!clientId.equals(previousClientId)) {
+                setTokenStatus(TokenStatus.INVALID);
+              }
+            }
+          }
+
+          @Override
+          public void onError(final DecodedJWT claim) {
+            // TODO: count error times per client account and then lock account if the error times
+            // over than the limitation.
+            logger.debug("Valid access token error happened for account '{}' from client '{}'",
+                claim != null ? claim.getClaim(JwtConstant.LOGIN_ID).asString() : "UNKNOWN",
+                clientId);
+          }
+        };
+
     // validate the token signature.
-    status = Auth0Utils.validateToken(token, clientId, ecPublicKey, ecPrivateKey);
-    // check if it is a anonymous access token, anonymous don't have refresh token
-    if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
-      return status;
-    }
-
-    // As it is expensive to frequently check the refresh token (from redis),
-    // here we just do it when the access token is expired.
-    if (status.isExpired()) {
-      String refreshToken = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.REFRESH_TOKEN);
-      // check if the refresh token is expired
-      if (Strings.isNullOrEmpty(refreshToken)) {
-        status = TokenStatus.REFRESH_TOKEN_EXPIRED;
-      } else {
-        // if the same login id logon in different client.
-        // Check if the both client id and login id are match with the provided token.
-        String previousClientId = getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
-        if (!clientId.equals(previousClientId)) {
-          status = TokenStatus.INVALID;
-        }
-      }
-    }
-
-    if (status.isInvalid()) {
-      revokeRefreshToken(clientId, loginId);
-      return status;
-    }
+    Auth0Utils.validateToken(token, clientId, ecPublicKey, ecPrivateKey, validationCallback);
 
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
-    logger.debug("JwtUtils.validateToken elapsed time: {} ms", elapsedString);
-    return status;
+    logger.debug("Validate token elapsed time: {} ms", elapsedString);
+
+    return validationCallback.getTokenStatus();
   }
   
   @Override
@@ -167,7 +190,7 @@ public class EcAuth0TokenAuthenticator extends BaseTokenAuthenticator {
   }
   
   @Override
-  public void revokeRefreshToken(String clientId, String loginId) {
+  public void revokeRefreshToken(String loginId) {
     getRedisTemplate().del(getRefreshTokenKey(loginId));
   }
   
