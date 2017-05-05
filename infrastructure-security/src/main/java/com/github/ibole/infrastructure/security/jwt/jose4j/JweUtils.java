@@ -82,14 +82,14 @@ public final class JweUtils {
     final Stopwatch stopwatch = Stopwatch.createStarted();
     
     String token = createJwtWithECKey(jwt, (EllipticCurveJsonWebKey) senderJwk, (EllipticCurveJsonWebKey) receiverJwk);
-
+    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     //Thread.currentThread().sleep(4900);
     
     TokenStatus tokenStatus = validateToken(token, jwt.getClientId(),senderJwk, receiverJwk);
     
     JwtObject newjwt = claimsOfTokenWithoutValidation(token, receiverJwk);
     
-    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+
     System.out.println("Spent: "+elapsedString);
     System.out.println(token);
     System.out.println(tokenStatus);
@@ -178,11 +178,9 @@ public final class JweUtils {
    */
   public static String createJwtWithECKey(JwtObject claimObj, EllipticCurveJsonWebKey senderJwk, EllipticCurveJsonWebKey receiverJwk) throws JoseException{
     checkArgument(claimObj != null, "Param cannot be null!");
- 
     // Give the JWK a Key ID (kid): 密钥 id
     senderJwk.setKeyId(claimObj.getLoginId());
-    receiverJwk.setKeyId(claimObj.getLoginId());
-    
+    receiverJwk.setKeyId(claimObj.getLoginId());    
     // Create the Claims, which will be the content of the JWT
     NumericDate numericDate = NumericDate.now();
     numericDate.addSeconds(claimObj.getTtlSeconds());
@@ -199,55 +197,41 @@ public final class JweUtils {
     claims.setClaim(JwtConstant.LOGIN_ID, claimObj.getLoginId());
     //multi-valued claims work too and will end up as a JSON array
     claims.setStringListClaim(JwtConstant.ROLE_ID, claimObj.getRoles());
-
     // A JWT is a JWS and/or a JWE with JSON claims as the payload.
     // In this example it is a JWS nested inside a JWE
     // So we first create a JsonWebSignature object.
     JsonWebSignature jws = new JsonWebSignature();
-
     // The payload of the JWS is JSON content of the JWT Claims
     jws.setPayload(claims.toJson());
-
     // The JWT is signed using the sender's private key
     jws.setKey(senderJwk.getPrivateKey());
-
     // Set the Key ID (kid) header.
     jws.setKeyIdHeaderValue(senderJwk.getKeyId());
-
     // Set the signature algorithm on the JWT/JWS that will integrity protect the claims
-    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256);
-
+    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256);   
     // Sign the JWS and produce the compact serialization, which will be the inner JWT/JWS
     // representation, which is a string consisting of three dot ('.') separated
     // base64url-encoded parts in the form Header.Payload.Signature
     String innerJwt = jws.getCompactSerialization();
-
     // The outer JWT is a JWE
     JsonWebEncryption jwe = new JsonWebEncryption();
-
     // The output of the ECDH-ES key agreement will encrypt a randomly generated content encryption key
     jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.ECDH_ES_A128KW);
-
     // The content encryption key is used to encrypt the payload
     // with a composite AES-CBC / HMAC SHA2 encryption algorithm
     String encAlg = ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256;
     jwe.setEncryptionMethodHeaderParameter(encAlg);
-
     // We encrypt to the receiver using their public key
     jwe.setKey(receiverJwk.getPublicKey());
     jwe.setKeyIdHeaderValue(receiverJwk.getKeyId());
-
     // A nested JWT requires that the cty (Content Type) header be set to "JWT" in the outer JWT
     //在使用嵌套签名或加密时，这个头部参数必须存在；在这种情况下，它的值必须是 "JWT"，来表明这是一个在 JWT 中嵌套的 JWT。
     jwe.setContentTypeHeaderValue("JWT");
-
     // The inner JWT is the payload of the outer JWT
     jwe.setPayload(innerJwt);
-
     // Produce the JWE compact serialization, which is the complete JWT/JWE representation,
     // which is a string consisting of five dot ('.') separated
     // base64url-encoded parts in the form Header.EncryptedKey.IV.Ciphertext.AuthenticationTag
-
     return jwe.getCompactSerialization();
   }
   

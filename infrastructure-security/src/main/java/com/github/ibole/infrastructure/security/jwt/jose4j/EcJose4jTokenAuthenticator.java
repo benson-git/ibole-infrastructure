@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- *  Token实现类 - EllipticCurve 算法
+ *  Token lifecycle management (create/renew/validate/revoke).
  * 
  * @author bwang (chikaiwang@hotmail.com)
  * 

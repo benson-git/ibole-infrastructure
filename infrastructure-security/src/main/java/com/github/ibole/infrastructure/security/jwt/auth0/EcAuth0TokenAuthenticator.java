@@ -46,6 +46,8 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ * Token lifecycle management (create/renew/validate/revoke).
+ *  
  * @author bwang
  *
  */
