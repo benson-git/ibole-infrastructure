@@ -119,7 +119,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   }
 
   /**
-   * 验证Token的合法性,判断是否被篡改或者盗用.
+   * 验证Access Token的合法性,判断是否被篡改或者盗用.
    */
   @Override
   public TokenStatus validAccessToken(String token, String clientId) {
@@ -127,16 +127,19 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
 
     final Stopwatch stopwatch = Stopwatch.createStarted();
 
-    TokenValidationCallback<JwtClaims> validationCallback = new BaseTokenValidationCallback<JwtClaims>() {
+    TokenValidationCallback<JwtClaims> validationCallback =
+        new BaseTokenValidationCallback<JwtClaims>() {
           @Override
           public void onInValid(final JwtClaims jwtClaims) {
-            if (jwtClaims != null) {
-              revokeRefreshToken(String.valueOf(jwtClaims.getClaimValue(JwtConstant.LOGIN_ID)));
-            }
+            super.onInValid(jwtClaims);
+            // TODO: calculates the number of consecutive failures to validate token. lock the
+            // account
+            // if the failed number over than the limitation.
           }
-          
+
           @Override
           public void onExpired(final JwtClaims jwtClaims) {
+            super.onExpired(jwtClaims);
             String loginId = String.valueOf(jwtClaims.getClaimValue(JwtConstant.LOGIN_ID));
             // anonymous access don't have the refresh token
             if (Constants.ANONYMOUS_ID.equalsIgnoreCase(loginId)) {
@@ -162,9 +165,82 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
 
           @Override
           public void onError(final JwtClaims jwtClaims) {
+            super.onError(jwtClaims);
+            // TODO: calculates the number of consecutive failures to validate the same token. lock
+            // the account
+            // if the failed number over than the limitation.
+            logger.debug("Valid access token error happened for account '{}' from client '{}'",
+                jwtClaims != null ? jwtClaims.getClaimValue(JwtConstant.LOGIN_ID) : "UNKNOWN",
+                clientId);
+          }
+        };
+
+    // validate the token signature.
+    JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey.getPublicKey(),
+        validationCallback);
+
+    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    logger.debug("Validate token elapsed time: {} ms", elapsedString);
+
+    return validationCallback.getTokenStatus();
+  }
+
+  /**
+   * 验证Refresh Token的合法性,判断是否被篡改或者盗用.
+   */
+  @Override
+  public TokenStatus validRefreshToken(String token, String clientId) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
+
+    final Stopwatch stopwatch = Stopwatch.createStarted();
+
+    TokenValidationCallback<JwtClaims> validationCallback =
+        new BaseTokenValidationCallback<JwtClaims>() {
+          @Override
+          public void onInValid(final JwtClaims jwtClaims) {
+            super.onInValid(jwtClaims);
+            // TODO: calculates the number of consecutive failures to validate the same token. lock
+            // the account
+            // if the failed number over than the limitation.
+            // if (jwtClaims != null) {
+            // revokeRefreshToken(String.valueOf(jwtClaims.getClaimValue(JwtConstant.LOGIN_ID)));
+            // }
+          }
+
+          @Override
+          public void onValiated(final JwtClaims jwtClaims) {
+            super.onValiated(jwtClaims);
+            String loginId = String.valueOf(jwtClaims.getClaimValue(JwtConstant.LOGIN_ID));
+            String refreshToken =
+                getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.REFRESH_TOKEN);
+            // check if the refresh token is expired
+            if (Strings.isNullOrEmpty(refreshToken)) {
+              setTokenStatus(TokenStatus.EXPIRED);
+              return;
+            } else {
+              // if the same login id logon in different client.
+              // Check if the both client id and login id are match with the provided token.
+              String previousClientId =
+                  getRedisTemplate().hget(getRefreshTokenKey(loginId), Constants.CLIENT_ID);
+              if (!clientId.equals(previousClientId)) {
+                setTokenStatus(TokenStatus.INVALID);
+                return;
+              }
+              
+              if(!token.equals(refreshToken)) {
+                setTokenStatus(TokenStatus.INVALID);
+                return;
+              }
+            }
+            
+          }
+
+          @Override
+          public void onError(final JwtClaims jwtClaims) {
+            super.onError(jwtClaims);
             // TODO: count error times per client account and then lock account if the error times
             // over than the limitation.
-            logger.debug("Valid access token error happened for account '{}' from client '{}'",
+            logger.debug("Valid refresh token error happened for account '{}' from client '{}'",
                 jwtClaims != null ? jwtClaims.getClaimValue(JwtConstant.LOGIN_ID) : "UNKNOWN",
                 clientId);
           }

@@ -87,7 +87,7 @@ public final class JoseUtils {
     
     validateToken(token, jwt.getClientId(), senderPublicJwk, validationCallback);
     
-    JwtObject newjwt = claimsOfTokenWithoutValidation(token);
+    claimsOfTokenWithoutValidation(token);
     
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     System.out.println("Spent: "+elapsedString);

@@ -45,7 +45,8 @@ public class ErrorReporter {
 
   public static final ErrorReporter FUNCTION = GeneralErrorCode.FUNCTION.toStatus();
   
-  public static final ErrorReporter PERMISSION_DENIED = GeneralErrorCode.PERMISSION_DENIED.toStatus();
+  public static final ErrorReporter PERMISSION_DENIED = GeneralErrorCode.PERMISSION_DENIED
+      .toStatus();
 
   public static final ErrorReporter UNAUTHENTICATED = GeneralErrorCode.UNAUTHENTICATED.toStatus();
 
@@ -136,6 +137,10 @@ public class ErrorReporter {
     return this.code;
   }
   
+  /**
+   * Build to ErrorDetails.
+   * @return the error details ErrorDetails
+   */
   public ErrorDetails toErrorDetails() {
 
     Builder builder = ErrorDetails.newBuilder().setGeneralCode(this.code.value);
@@ -162,7 +167,7 @@ public class ErrorReporter {
     return this.specificErrorMsg;
   }
   
-  public Throwable getCause(){
+  public Throwable getCause() {
     return this.cause;
   }
 
@@ -203,8 +208,7 @@ public class ErrorReporter {
   /**
    * Returns a hash code for this {@code ErrorStatus}.
    * 
-   * <p>
-   * This implementation is consistent with {@code equals}.
+   * <p>This implementation is consistent with {@code equals}.
    * 
    * @return a hash code for this {@code ErrorStatus}
    * @see #equals(Object)
@@ -222,8 +226,8 @@ public class ErrorReporter {
     for (GeneralErrorCode code : GeneralErrorCode.values()) {
       ErrorReporter replaced = canonicalizer.put(code.value(), new ErrorReporter(code));
       if (replaced != null) {
-        throw new IllegalStateException(
-            "Code value duplication between " + replaced.getGeneralCode().name() + " & " + code.name());
+        throw new IllegalStateException("Code value duplication between "
+            + replaced.getGeneralCode().name() + " & " + code.name());
       }
     }
     return canonicalizer;

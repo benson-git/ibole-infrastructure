@@ -63,5 +63,5 @@ public interface TokenAuthenticator {
   /**
    * 验证Refresh Token.
    */
-  boolean validRefreshToken(String token, String clientId);
+  TokenStatus validRefreshToken(String token, String clientId);
 }

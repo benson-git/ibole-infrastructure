@@ -55,7 +55,7 @@ public class BaseTokenAuthenticator implements TokenAuthenticator {
   }
 
   @Override
-  public boolean validRefreshToken(String token, String clientId) {
+  public TokenStatus validRefreshToken(String token, String clientId) {
     throw new UnsupportedOperationException();
   }
 
