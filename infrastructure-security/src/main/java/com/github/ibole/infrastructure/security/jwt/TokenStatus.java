@@ -71,7 +71,7 @@ public final class TokenStatus {
     /**
      * The token is expired.
      */
-    EXPIRED("ACCESS_TOKEN_EXPIRED"),
+    EXPIRED("EXPIRED"),
     /**
      * The token is illegal, invalid signature or invalid client identifier.
      */

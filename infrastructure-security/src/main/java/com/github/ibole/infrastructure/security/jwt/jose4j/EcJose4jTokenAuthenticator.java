@@ -257,19 +257,15 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   }
 
   @Override
-  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken)
+  public String renewAccessToken(String refreshToken, int ttlSeconds)
       throws TokenHandlingException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "Token cannot be null");
     String newToken;
-    JwtObject jwtObj = JoseUtils.claimsOfTokenWithoutValidation(token);
+    JwtObject jwtObj = JoseUtils.claimsOfTokenWithoutValidation(refreshToken);
     jwtObj.setTtlSeconds(ttlSeconds);
-    if (refreshToken) {
-      newToken = createRefreshToken(jwtObj);
-    } else {
-      newToken = createAccessToken(jwtObj);
-    }
+    newToken = createAccessToken(jwtObj);
     return newToken;
-  }
+  }  
 
   @Override
   public void revokeRefreshToken(String loginId) {

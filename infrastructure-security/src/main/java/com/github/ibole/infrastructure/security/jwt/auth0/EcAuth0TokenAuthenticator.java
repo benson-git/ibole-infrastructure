@@ -176,16 +176,12 @@ public class EcAuth0TokenAuthenticator extends BaseTokenAuthenticator {
   }
   
   @Override
-  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken) throws TokenHandlingException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token cannot be null");
+  public String renewAccessToken(String refreshToken, int ttlSeconds) throws TokenHandlingException {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "Token cannot be null");
     String newToken;
-    JwtObject jwtObj = Auth0Utils.claimsOfTokenWithoutValidation(token, ecPublicKey, ecPrivateKey);
+    JwtObject jwtObj = Auth0Utils.claimsOfTokenWithoutValidation(refreshToken, ecPublicKey, ecPrivateKey);
     jwtObj.setTtlSeconds(ttlSeconds);
-    if (refreshToken) {
-      newToken = createRefreshToken(jwtObj);
-    } else {
-      newToken = createAccessToken(jwtObj);
-    }
+    newToken = createAccessToken(jwtObj);
     return newToken;
   }
   

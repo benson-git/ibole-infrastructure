@@ -60,7 +60,7 @@ public class BaseTokenAuthenticator implements TokenAuthenticator {
   }
 
   @Override
-  public String renewAccessToken(String token, int ttlSeconds, boolean refreshToken)
+  public String renewAccessToken(String refreshToken, int ttlSeconds)
       throws TokenHandlingException {
     throw new UnsupportedOperationException();
   }

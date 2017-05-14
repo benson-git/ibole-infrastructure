@@ -44,15 +44,14 @@ public interface TokenAuthenticator {
   void revokeRefreshToken(String loginId);
 
   /**
-   * Renew token base on the old token.
+   * Renew token base on the pri token.
    * 
-   * @param token the old token to be renewed
+   * @param refresh token the provided refresh to renew an access token
    * @param ttlSeconds the time to live
-   * @param refreshToken if it is a refresh token
    * @return the new token
    * @throws TokenHandlingException
    */
-  String renewAccessToken(String token, int ttlSeconds, boolean refreshToken)
+  String renewAccessToken(String refreshToken, int ttlSeconds)
       throws TokenHandlingException;
 
   /**
