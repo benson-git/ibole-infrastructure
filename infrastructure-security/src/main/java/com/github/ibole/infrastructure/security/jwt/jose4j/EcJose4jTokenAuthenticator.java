@@ -38,6 +38,7 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.keys.EllipticCurves;
 import org.jose4j.lang.JoseException;
 
+import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
 /*********************************************************************************************
@@ -60,14 +61,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
 
-  private EllipticCurveJsonWebKey ecJsonWebKey;
+  private PublicJsonWebKey ecJsonWebKey;
 
   public EcJose4jTokenAuthenticator(RedisSimpleTempalte redisTemplate) {
     super(redisTemplate);
     try {
+      ecJsonWebKey = JoseUtils
+          .toJsonWebKey(getClass().getResource(Constants.SENDER_JWK_PATH).toURI().getPath());
       ecJsonWebKey = EcJwkGenerator.generateJwk(EllipticCurves.P256);
       logger.debug("EC Keys: {}", ecJsonWebKey.toJson(OutputControlLevel.INCLUDE_PRIVATE));
-    } catch (JoseException e) {
+    } catch (JoseException | URISyntaxException e) {
       MoreThrowables.throwIfUnchecked(e);
     }
   }
@@ -84,7 +87,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
           && !getRedisTemplate().exists(getRefreshTokenKey(claimObj.getLoginId()))) {
         throw new RefreshTokenNotFoundException("Refresh token not found.");
       }
-      token = JoseUtils.createJwtWithECKey(claimObj, ecJsonWebKey);
+      token = JoseUtils.createJwtWithECKey(claimObj, (EllipticCurveJsonWebKey) ecJsonWebKey);
       getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.ACCESS_TOKEN,
           token);
     } catch (JoseException ex) {
@@ -103,7 +106,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
     String token = null;
     try {
 
-      token = JoseUtils.createJwtWithECKey(claimObj, ecJsonWebKey);
+      token = JoseUtils.createJwtWithECKey(claimObj, (EllipticCurveJsonWebKey) ecJsonWebKey);
       getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.REFRESH_TOKEN,
           token);
       getRedisTemplate().hset(getRefreshTokenKey(claimObj.getLoginId()), Constants.CLIENT_ID,

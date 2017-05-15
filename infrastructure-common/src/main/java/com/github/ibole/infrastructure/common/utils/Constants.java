@@ -51,9 +51,9 @@ public final class Constants {
   
   public static final String ACCESS_TOKEN_TTL = "auth.accessToken.ttl";
   
-  public static final String SENDER_JWK_PATH = "/certs/jwt/senderJWK.json";
+  public static final String SENDER_JWK_PATH = "/certs/jwt/senderKey.json";
   
-  public static final String RECEIVER_JWK_PATH = "/certs/jwt/receiverJWK.json";
+  public static final String RECEIVER_JWK_PATH = "/certs/jwt/receiverKey.json";
 
   public static final String SYSTEM_ENCODING = "utf-8";
   //客户端生成的消息摘要

@@ -64,7 +64,7 @@ public final class JoseUtils {
   
   public static void main(String[] args) throws Exception{
     
-    String key = "d:/senderJWK.json";
+    String key = "d:/senderKey.json";
     JwtObject jwt = new JwtObject();
     jwt.setAudience("audience");
     jwt.setClientId("clientId");
