@@ -51,7 +51,7 @@ public final class Constants {
   
   public static final String ACCESS_TOKEN_TTL = "auth.accessToken.ttl";
   
-  public static final String SENDER_JWK_PATH = "/certs/jwt/senderKey.json";
+  public static final String SENDER_JWK_PATH = "/META-INF/certs/jwt/senderKey.json";
   
   public static final String RECEIVER_JWK_PATH = "/certs/jwt/receiverKey.json";
 
