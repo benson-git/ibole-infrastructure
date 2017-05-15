@@ -30,12 +30,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 
-import org.jose4j.jwk.EcJwkGenerator;
 import org.jose4j.jwk.EllipticCurveJsonWebKey;
 import org.jose4j.jwk.JsonWebKey.OutputControlLevel;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwt.JwtClaims;
-import org.jose4j.keys.EllipticCurves;
 import org.jose4j.lang.JoseException;
 
 import java.net.URISyntaxException;
@@ -68,15 +66,15 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
     try {
       ecJsonWebKey = JoseUtils
           .toJsonWebKey(getClass().getResource(Constants.SENDER_JWK_PATH).toURI().getPath());
-      ecJsonWebKey = EcJwkGenerator.generateJwk(EllipticCurves.P256);
       logger.debug("EC Keys: {}", ecJsonWebKey.toJson(OutputControlLevel.INCLUDE_PRIVATE));
-    } catch (JoseException | URISyntaxException e) {
+    } catch (URISyntaxException e) {
       MoreThrowables.throwIfUnchecked(e);
     }
   }
 
   /**
    * Create Access Token.
+   * 
    */
   @Override
   public String createAccessToken(JwtObject claimObj) throws TokenHandlingException {
@@ -179,8 +177,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
         };
 
     // validate the token signature.
-    JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey.getPublicKey(),
-        validationCallback);
+    JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey, validationCallback);
 
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     logger.debug("Validate token elapsed time: {} ms", elapsedString);
@@ -250,8 +247,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
         };
 
     // validate the token signature.
-    JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey.getPublicKey(),
-        validationCallback);
+    JoseUtils.validateToken(token, clientId, (PublicJsonWebKey) ecJsonWebKey, validationCallback);
 
     String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
     logger.debug("Validate token elapsed time: {} ms", elapsedString);
