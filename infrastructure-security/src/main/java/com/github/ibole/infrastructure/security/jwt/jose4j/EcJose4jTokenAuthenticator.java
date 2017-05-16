@@ -79,6 +79,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   @Override
   public String createAccessToken(JwtObject claimObj) throws TokenHandlingException {
     Preconditions.checkArgument(claimObj != null, "Parameter claimObj cannot be null");
+    final Stopwatch stopwatch = Stopwatch.createStarted();
     String token = null;
     try {
       if (!Constants.ANONYMOUS_ID.equalsIgnoreCase(claimObj.getLoginId())
@@ -92,6 +93,8 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
       logger.error("Error happened when generating the jwt token.", ex);
       throw new TokenHandlingException(ex);
     }
+    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    logger.debug("Create access token elapsed time: {} ms", elapsedString);
     return token;
   }
 
@@ -101,6 +104,7 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   @Override
   public String createRefreshToken(JwtObject claimObj) throws TokenHandlingException {
     Preconditions.checkArgument(claimObj != null, "Parameter claimObj cannot be null");
+    final Stopwatch stopwatch = Stopwatch.createStarted();
     String token = null;
     try {
 
@@ -116,6 +120,8 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
       logger.error("Error happened when generating the jwt token.", ex);
       throw new TokenHandlingException(ex);
     }
+    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    logger.debug("Create refresh token elapsed time: {} ms", elapsedString);
     return token;
   }
 
@@ -259,10 +265,15 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   public String renewAccessToken(String refreshToken, int ttlSeconds)
       throws TokenHandlingException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "Token cannot be null");
+    final Stopwatch stopwatch = Stopwatch.createStarted();
+    
     String newToken;
     JwtObject jwtObj = JoseUtils.claimsOfTokenWithoutValidation(refreshToken);
     jwtObj.setTtlSeconds(ttlSeconds);
     newToken = createAccessToken(jwtObj);
+    
+    String elapsedString = Long.toString(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    logger.debug("Renew token elapsed time: {} ms", elapsedString);
     return newToken;
   }  
 

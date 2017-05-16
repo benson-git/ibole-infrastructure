@@ -24,14 +24,13 @@ public class AppTest
     @Test
     public void testApp() throws UnsupportedEncodingException
     {
-        String token = "eyJpc3MiOm51bGwsImF1ZCI6InRlc3QiLCJleHAiOjE0OTQ0Mzg5ODEsImp0aSI6IkZWUDFoWUNRWG02VHJTQkQwdU1RdkEiLCJpYXQiOjE0OTQ0MzUzODEsIm5iZiI6MTQ5NDQzNTMyMSwic3ViIjpudWxsLCJjbGllbnRJZCI6IjA6MDowOjA6MDowOjA6MSIsImxvZ2luSWQiOiJ0ZXN0Iiwicm9sZXMiOltdfQ";
-        
+        String token = "eyJpc3MiOm51bGwsImF1ZCI6ImQiLCJleHAiOjE0OTQ5NDYzNzUsImp0aSI6IjV3LWVTU2dUNFNCSGZNaE42U0JFRFEiLCJpYXQiOjE0OTQ5NDYyNTUsIm5iZiI6MTQ5NDk0NjE5NSwic3ViIjpudWxsLCJjbGllbnRJZCI6IjEyNy4wLjAuMSIsImxvZ2luSWQiOiJkIiwicm9sZXMiOltdfQ";
         String decoded = new String(Base64.decodeBase64(token), "UTF-8");
         System.out.println(decoded);
-        Date date = new Date(1494438494*1000L);
+        Date date = new Date(1494946375*1000L);
         System.out.println(date);
         NumericDate numericDate = NumericDate.now();
-        numericDate.addSeconds(60);
+        numericDate.addSeconds(0);
         System.out.println(numericDate.toString());
    
     }
