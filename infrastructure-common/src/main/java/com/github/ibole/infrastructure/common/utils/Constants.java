@@ -61,6 +61,13 @@ public final class Constants {
   //
   public static final String STATELESS_PARAM_USERNAME = "stateless.param.userName";
   public static final String WS_PARAM_PASSWORD = "ws.param.password";
+  //Http Authorization header: Authorization: <type> <credentials>
+  //<type> - Allows to distinguish between different auth mechanisms that the backend may support, 
+  //by just parsing the Authorization header.
+  //E.g. Baisc for username/password pair; Bearer for OAuth 2.0 and JWt.
+  //"Authorization: Bearer <token>" proposed format, refer to https://jwt.io/introduction/
+  public static final String HEADER_AUTH_NAME = "Authorization";
+  public static final String HEADER_AUTH_PREFIX = "Bearer ";
 
   
   private Constants() {

@@ -181,11 +181,13 @@ public final class JoseUtils {
     NumericDate numericDate = NumericDate.now();
     numericDate.addSeconds(claimObj.getTtlSeconds());
     JwtClaims claims = new JwtClaims();
+    //claims.setJwtId(UUID.randomUUID().toString());
+    // a unique identifier for the token
+    claims.setGeneratedJwtId();
+    claims.setIssuedAtToNow();
     claims.setIssuer(claimObj.getIssuer()); 
     claims.setAudience(claimObj.getAudience()); 
-    claims.setExpirationTime(numericDate);
-    // a unique identifier for the token
-    claims.setGeneratedJwtId(); 
+    claims.setExpirationTime(numericDate); 
     claims.setIssuedAtToNow(); 
     claims.setNotBeforeMinutesInThePast(1);
     claims.setSubject(claimObj.getSubject()); 
@@ -299,11 +301,11 @@ public final class JoseUtils {
   @SuppressWarnings("unchecked")
   public static JwtObject claimsOfTokenWithoutValidation(String token) throws TokenHandlingException {
     
-    JwtObject jwtObj = null;
+    JwtObject jwtObj = JwtObject.getEmpty();
     try {
 
       JwtContext jwtctx = parseJwt(token);
-      jwtObj = new JwtObject();
+      jwtObj.setJwtId(jwtctx.getJwtClaims().getJwtId());
       if (jwtctx.getJwtClaims().getAudience() != null
           && jwtctx.getJwtClaims().getAudience().size() > 0) {
         jwtObj.setAudience(jwtctx.getJwtClaims().getAudience().get(0));

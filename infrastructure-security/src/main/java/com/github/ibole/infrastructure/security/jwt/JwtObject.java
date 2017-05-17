@@ -19,6 +19,8 @@ import java.util.List;
  *
  */
 public class JwtObject {
+  //jwt unique key
+  private String jwtId;
   //who creates the token and signs it
   private String issuer;
   //to whom the token is intended to be sent.
@@ -35,6 +37,19 @@ public class JwtObject {
   //carry user login id
   private String loginId;
   
+  
+  /**
+   * @return the jwtId
+   */
+  public String getJwtId() {
+    return jwtId;
+  }
+  /**
+   * @param jwtId the jwtId to set
+   */
+  public void setJwtId(String jwtId) {
+    this.jwtId = jwtId;
+  }
   /**
    * @return the issuer
    */
@@ -121,4 +136,7 @@ public class JwtObject {
     this.loginId = loginId;
   }
   
+  public static JwtObject getEmpty() {
+    return new JwtObject();
+  }
 }
