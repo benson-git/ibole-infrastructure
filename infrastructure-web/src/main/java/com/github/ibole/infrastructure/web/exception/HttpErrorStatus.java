@@ -31,8 +31,6 @@ package com.github.ibole.infrastructure.web.exception;
  *
  */
 
-import java.util.HashMap;
-import java.util.Map;
 
 /*********************************************************************************************
  * .
@@ -47,9 +45,6 @@ import java.util.Map;
 
 
 public final class HttpErrorStatus {
-
-  // Create the canonical list of HttpErrorStatus instances indexed by their code values.
-  private static final Map<String, HttpErrorStatus> STATUS_MAP = buildStatusMap();
 
   public static final HttpErrorStatus ACCOUNT_EXPIRED = Code.ACCOUNT_EXPIRED.toStatus();
 
@@ -81,21 +76,8 @@ public final class HttpErrorStatus {
     StringBuilder errorData = new StringBuilder();
     errorData.append("{").append("\"errors\"").append(":").append("[{").append("\"code\"")
         .append(":").append(getCode().value).append(",").append("\"message\"").append(":")
-        .append(getCode().getMessage()).append("}]}");
+        .append("\"").append(getCode().getMessage()).append("\"").append("}]}");
     return errorData.toString();
-  }
-
-  private static Map<String, HttpErrorStatus> buildStatusMap() {
-    Map<String, HttpErrorStatus> canonicalizer = new HashMap<String, HttpErrorStatus>();
-    for (Code code : Code.values()) {
-      HttpErrorStatus replaced =
-          canonicalizer.put(String.valueOf(code.value()), new HttpErrorStatus(code));
-      if (replaced != null) {
-        throw new IllegalStateException("Code value duplication between "
-            + replaced.getCode().name() + " & " + code.name());
-      }
-    }
-    return canonicalizer;
   }
 
   public enum Code {
@@ -142,7 +124,7 @@ public final class HttpErrorStatus {
     }
 
     public HttpErrorStatus toStatus() {
-      return STATUS_MAP.get(value);
+      return new HttpErrorStatus(this);
     }
 
   }
