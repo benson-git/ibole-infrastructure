@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro;
+package com.github.ibole.infrastructure.web.spring;
 
 import com.alibaba.fastjson.JSONArray;
 import com.github.ibole.infrastructure.common.utils.Constants;
@@ -22,7 +22,6 @@ import com.github.ibole.infrastructure.web.exception.HttpErrorStatus;
 
 import com.google.common.base.Strings;
 
-import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -51,10 +50,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class WsWebUtil {
 
-  public static long resolveEmployeeId(HttpServletRequest request) {
-    return Long.valueOf(request.getParameter(Constants.STATELESS_PARAM_USERNAME));
-  }
-
   public static <T> T resolveParamJsonToObject(HttpServletRequest request, String parameter,
       Class<T> clazz) {
     return JsonUtils.fromJson(request.getParameter(parameter), clazz);
@@ -79,10 +74,11 @@ public class WsWebUtil {
   
   public static void customServletReponse(ServletResponse response, HttpStatus httpStatus,
       HttpErrorStatus customErrorStatus) throws IOException {
-    HttpServletResponse httpResponse = WebUtils.toHttp(response);
+    HttpServletResponse httpResponse =  (HttpServletResponse) response;
     httpResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
     httpResponse.setStatus(httpStatus.value());
     httpResponse.setHeader(httpStatus.value() + "", httpStatus.getReasonPhrase());
     httpResponse.getWriter().write(customErrorStatus.toJson());
   }
+ 
 }

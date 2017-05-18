@@ -15,6 +15,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.beans.PropertyEditorSupport;
@@ -237,5 +239,19 @@ public abstract class AbstractController {
       // }
     });
   }
+  
+  /**
+   * 获取当前请求对象
+   * 
+   * @return HttpServletRequest HttpServletRequest
+   */
+  public static HttpServletRequest getRequest() {
+    try {
+      return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    } catch (Exception e) {
+      return null;
+    }
+  }
+  
 
 }

@@ -22,8 +22,8 @@ import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
 import com.github.ibole.infrastructure.security.jwt.jose4j.JoseUtils;
 import com.github.ibole.infrastructure.web.exception.AuthenticationServiceException;
 import com.github.ibole.infrastructure.web.exception.HttpErrorStatus;
+import com.github.ibole.infrastructure.web.spring.WsWebUtil;
 import com.github.ibole.infrastructure.web.spring.shiro.StatelessToken;
-import com.github.ibole.infrastructure.web.spring.shiro.WsWebUtil;
 
 import com.google.common.base.Strings;
 
