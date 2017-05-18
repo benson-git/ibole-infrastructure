@@ -78,5 +78,11 @@ public class BaseTokenAuthenticator implements TokenAuthenticator {
   }
 
 
+  @Override
+  public JwtObject parseTokenWithoutValidation(String token) throws TokenHandlingException {
+    throw new UnsupportedOperationException();
+  }
+
+
 
 }

@@ -281,6 +281,11 @@ public class EcJose4jTokenAuthenticator extends BaseTokenAuthenticator {
   public void revokeRefreshToken(String loginId) {
     getRedisTemplate().del(getRefreshTokenKey(loginId));
   }
+  
+  @Override
+  public JwtObject parseTokenWithoutValidation(String token) throws TokenHandlingException {
+    return JoseUtils.claimsOfTokenWithoutValidation(token);
+  }
 
   private String getRefreshTokenKey(String loginId) {
     return Constants.REFRESH_TOKEN_KEY_PREFIX + loginId;

@@ -63,4 +63,13 @@ public interface TokenAuthenticator {
    * 验证Refresh Token.
    */
   TokenStatus validRefreshToken(String token, String clientId);
+  
+  /**
+   * Parse token and convert it to JwtObject without validation.
+   * @param token the token to parse
+   * @throws TokenHandlingException error happen when parsing the token.
+   * @return the instance of JwtObject
+   */
+  JwtObject parseTokenWithoutValidation(String token) throws TokenHandlingException;
+  
 }

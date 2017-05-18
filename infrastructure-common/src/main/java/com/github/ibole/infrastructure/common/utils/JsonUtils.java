@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Map;
 
 public class JsonUtils {
   
@@ -236,6 +237,19 @@ public class JsonUtils {
    * @return 给定的 {@code JSON} 字符串表示的指定的类型对象.
    */
   public static <T> T fromJson(String json, TypeToken<T> token, String datePattern) {
+    return fromJson(json, token.getType(), datePattern);
+  }
+  
+  /**
+   * 将给定的 {@code JSON} 字符串转换成指定的类型对象.
+   * 
+   * @param <T> 要转换的目标类型.
+   * @param json 给定的 {@code JSON} 字符串.
+   * @param token {@code java.lang.reflect.Type} 的类型指示类对象.
+   * @param datePattern 日期格式模式.
+   * @return 给定的 {@code JSON} 字符串表示的指定的类型对象.
+   */
+  public static <T> T fromJson(String json, Type token, String datePattern) {
     if (isEmpty(json)) {
       return null;
     }
@@ -245,9 +259,9 @@ public class JsonUtils {
     }
     Gson gson = builder.create();
     try {
-      return gson.fromJson(json, token.getType());
+      return gson.fromJson(json, token);
     } catch (Exception ex) {
-      log.error(json + " 无法转换为 " + token.getRawType().getName() + " 对象!", ex);
+      log.error(json + " 无法转换为 " + token.getTypeName() + " 对象!", ex);
       return null;
     }
   }
@@ -262,6 +276,19 @@ public class JsonUtils {
    */
   public static <T> T fromJson(String json, TypeToken<T> token) {
     return fromJson(json, token, null);
+  }
+  
+  /**
+   * Covert to Map from json string.
+   * 
+   * @param json String
+   * @return Map from json 
+   */
+  public static <K, V> Map<K, V> fromJson(String json) {
+
+    Map<K, V> map = fromJson(json, new TypeToken<Map<K, V>>() {});
+
+    return map;
   }
 
   /**
@@ -302,6 +329,12 @@ public class JsonUtils {
     return fromJson(json, clazz, null);
   }
 
+  /**
+   * Check if the string is empty or null.
+   * 
+   * @param inStr String
+   * @return true if it is empty or null
+   */
   public static boolean isEmpty(String inStr) {
     boolean reTag = false;
     if (inStr == null || "".equals(inStr)) {
