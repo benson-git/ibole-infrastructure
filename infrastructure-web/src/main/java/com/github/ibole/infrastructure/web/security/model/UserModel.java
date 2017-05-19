@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.ibole.infrastructure.web.model;
+package com.github.ibole.infrastructure.web.security.model;
 
 import javax.validation.constraints.NotNull;
 

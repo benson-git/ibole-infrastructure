@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.ibole.infrastructure.web.model;
-
-import javax.validation.constraints.NotNull;
+package com.github.ibole.infrastructure.web.security.model;
 
 /*********************************************************************************************.
  * 
@@ -28,71 +26,41 @@ import javax.validation.constraints.NotNull;
 
 
 /**
- * UserModel login information, only use for login case.
- * 
  * @author bwang
  *
  */
-public class LoginRequest {
+public class TokenRenewRequest {
 
-  @NotNull(message="{username.not.empty}") 
-  private String username;
-  @NotNull(message="{password.not.empty}")
-  private String password;
-  //nullable for the login from PC side, notnull for Mobile.
   private String clientId;
   
-  public LoginRequest() {
-    //do nothing
-  }
-  /**
-   * 
-   * @param username String
-   * @param password String
-   * @param clientId String
-   */
-  public LoginRequest(String username, String password, String clientId) {
-    this.username = username;
-    this.password = password;
-    this.clientId = clientId;
-  }
-  
-  /**
-   * @return the username
-   */
-  public String getUsername() {
-    return username;
-  }
-  /**
-   * @param username the username to set
-   */
-  public void setUsername(String username) {
-    this.username = username;
-  }
-  /**
-   * @return the password
-   */
-  public String getPassword() {
-    return password;
-  }
-  /**
-   * @param password the password to set
-   */
-  public void setPassword(String password) {
-    this.password = password;
-  }
+  private String refreshToken;
+
   /**
    * @return the clientId
    */
   public String getClientId() {
     return clientId;
   }
+
   /**
    * @param clientId the clientId to set
    */
   public void setClientId(String clientId) {
     this.clientId = clientId;
   }
-  
+
+  /**
+   * @return the refreshToken
+   */
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  /**
+   * @param refreshToken the refreshToken to set
+   */
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
   
 }

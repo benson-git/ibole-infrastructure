@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.ibole.infrastructure.web.model;
+package com.github.ibole.infrastructure.web.security.model;
+
+
 
 /*********************************************************************************************.
  * 
@@ -26,41 +28,67 @@ package com.github.ibole.infrastructure.web.model;
 
 
 /**
+ * Carry the token information of login result.
+ * 
  * @author bwang
  *
  */
-public class TokenRenewRequest {
-
-  private String clientId;
+public class LoginResponse {
   
+  //login successfully: true, otherwise is false
+  private boolean authenticated;
   private String refreshToken;
-
+  private String accessToken;
+  //token status or errorMessage
+  private String errorMessage;
+  
   /**
-   * @return the clientId
+   * @return the authenticated
    */
-  public String getClientId() {
-    return clientId;
+  public boolean isAuthenticated() {
+    return authenticated;
   }
-
   /**
-   * @param clientId the clientId to set
+   * @param authenticated the authenticated to set
    */
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
+  public void setAuthenticated(boolean authenticated) {
+    this.authenticated = authenticated;
   }
-
   /**
    * @return the refreshToken
    */
   public String getRefreshToken() {
     return refreshToken;
   }
-
   /**
    * @param refreshToken the refreshToken to set
    */
   public void setRefreshToken(String refreshToken) {
     this.refreshToken = refreshToken;
+  }
+  /**
+   * @return the accessToken
+   */
+  public String getAccessToken() {
+    return accessToken;
+  }
+  /**
+   * @param accessToken the accessToken to set
+   */
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
+  /**
+   * @return the errorMessage
+   */
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+  /**
+   * @param errorMessage the errorMessage to set
+   */
+  public void setErrorMessage(String description) {
+    this.errorMessage = description;
   }
   
 }

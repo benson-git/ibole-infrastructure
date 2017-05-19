@@ -12,15 +12,16 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro;
+package com.github.ibole.infrastructure.web.security.spring.shiro.config;
 
 import com.github.ibole.infrastructure.security.jwt.JwtProvider;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
-import com.github.ibole.infrastructure.web.spring.shiro.filter.RolesAuthorizationFilter;
-import com.github.ibole.infrastructure.web.spring.shiro.filter.StatelessAuthFilter;
-import com.github.ibole.infrastructure.web.spring.shiro.realm.FormRealm;
-import com.github.ibole.infrastructure.web.spring.shiro.realm.StatelessRealm;
+import com.github.ibole.infrastructure.web.security.spring.shiro.WsUserService;
+import com.github.ibole.infrastructure.web.security.spring.shiro.filter.RolesAuthorizationFilter;
+import com.github.ibole.infrastructure.web.security.spring.shiro.filter.StatelessAuthFilter;
+import com.github.ibole.infrastructure.web.security.spring.shiro.realm.FormRealm;
+import com.github.ibole.infrastructure.web.security.spring.shiro.realm.StatelessRealm;
 
 import com.google.common.collect.Lists;
 

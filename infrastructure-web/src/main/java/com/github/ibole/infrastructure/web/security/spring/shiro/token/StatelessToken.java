@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro;
+package com.github.ibole.infrastructure.web.security.spring.shiro.token;
 
 import org.apache.shiro.authc.AuthenticationToken;
 

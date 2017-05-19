@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro;
+package com.github.ibole.infrastructure.web.security.spring.shiro;
 
-import com.github.ibole.infrastructure.web.model.UserModel;
+import com.github.ibole.infrastructure.web.security.model.UserModel;
 
 import com.google.common.base.Strings;
 

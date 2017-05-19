@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro.filter;
+package com.github.ibole.infrastructure.web.security.spring.shiro.filter;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authz.AuthorizationFilter;

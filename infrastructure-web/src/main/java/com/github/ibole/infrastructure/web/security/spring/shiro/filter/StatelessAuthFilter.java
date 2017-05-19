@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro.filter;
+package com.github.ibole.infrastructure.web.security.spring.shiro.filter;
 
 import com.github.ibole.infrastructure.common.utils.Constants;
 import com.github.ibole.infrastructure.common.utils.JsonUtils;
@@ -22,8 +22,8 @@ import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
 import com.github.ibole.infrastructure.security.jwt.jose4j.JoseUtils;
 import com.github.ibole.infrastructure.web.exception.AuthenticationServiceException;
 import com.github.ibole.infrastructure.web.exception.HttpErrorStatus;
+import com.github.ibole.infrastructure.web.security.spring.shiro.token.StatelessToken;
 import com.github.ibole.infrastructure.web.spring.WsWebUtil;
-import com.github.ibole.infrastructure.web.spring.shiro.StatelessToken;
 
 import com.google.common.base.Strings;
 

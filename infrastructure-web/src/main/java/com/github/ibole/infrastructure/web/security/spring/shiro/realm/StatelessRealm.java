@@ -12,15 +12,15 @@
  * the License.
  */
 
-package com.github.ibole.infrastructure.web.spring.shiro.realm;
+package com.github.ibole.infrastructure.web.security.spring.shiro.realm;
 
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.security.jwt.TokenStatus;
 import com.github.ibole.infrastructure.web.exception.AuthenticationServiceException;
 import com.github.ibole.infrastructure.web.exception.HttpErrorStatus;
-import com.github.ibole.infrastructure.web.model.UserModel;
-import com.github.ibole.infrastructure.web.spring.shiro.StatelessToken;
-import com.github.ibole.infrastructure.web.spring.shiro.WsUserService;
+import com.github.ibole.infrastructure.web.security.model.UserModel;
+import com.github.ibole.infrastructure.web.security.spring.shiro.WsUserService;
+import com.github.ibole.infrastructure.web.security.spring.shiro.token.StatelessToken;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;

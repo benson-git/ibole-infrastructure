@@ -1,4 +1,4 @@
-package com.github.ibole.infrastructure.web.tags;
+package com.github.ibole.infrastructure.web.security.spring.shiro.tag;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.tags.PermissionTag;
