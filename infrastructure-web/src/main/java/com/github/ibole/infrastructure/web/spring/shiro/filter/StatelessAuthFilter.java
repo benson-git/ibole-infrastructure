@@ -100,6 +100,17 @@ public class StatelessAuthFilter extends AuthenticatingFilter {
     super.setLoginUrl(loginUrl);
     this.appliedPaths.put(getLoginUrl(), null);
   }
+  
+  public StatelessToken createStatelessToken(String token) {
+    try {
+      JwtObject jwtObj = tokenMgr.parseTokenWithoutValidation(token);
+      StatelessToken statelessToken =
+          new StatelessToken(token, jwtObj.getLoginId(), jwtObj.getClientId());
+      return statelessToken;
+    } catch (TokenHandlingException ex) {
+      throw new AuthenticationException(ex);
+    }
+  }
 
   @Override
   protected boolean onAccessDenied(ServletRequest request, ServletResponse response)
@@ -178,7 +189,7 @@ public class StatelessAuthFilter extends AuthenticatingFilter {
       ServletRequest request, ServletResponse response) {
 
     try {
-      WsWebUtil.customServletReponse(response, HttpStatus.UNAUTHORIZED,
+      WsWebUtil.supportCustomError(response, HttpStatus.UNAUTHORIZED,
           HttpErrorStatus.ACCOUNT_INVALID);
     } catch (IOException e1) {
       return false;
@@ -192,17 +203,6 @@ public class StatelessAuthFilter extends AuthenticatingFilter {
     return authzHeader != null;
   }
 
-  public StatelessToken createStatelessToken(String token) {
-    try {
-      JwtObject jwtObj = tokenMgr.parseTokenWithoutValidation(token);
-      StatelessToken statelessToken =
-          new StatelessToken(token, jwtObj.getLoginId(), jwtObj.getClientId());
-      return statelessToken;
-    } catch (TokenHandlingException ex) {
-      throw new AuthenticationException(ex);
-    }
-  }
-
   protected String getAuthzHeader(ServletRequest request) {
     HttpServletRequest httpRequest = WebUtils.toHttp(request);
     return httpRequest.getHeader(Constants.HEADER_AUTH_NAME);
@@ -210,7 +210,7 @@ public class StatelessAuthFilter extends AuthenticatingFilter {
 
   private void onLoginFail(ServletResponse response, HttpStatus httpStatus,
       HttpErrorStatus customErrorStatus) throws IOException {
-    WsWebUtil.customServletReponse(response, httpStatus, customErrorStatus);
+    WsWebUtil.supportCustomError(response, httpStatus, customErrorStatus);
   }
 
 }

@@ -72,7 +72,7 @@ public class WsWebUtil {
         authentications.length());
   }
   
-  public static void customServletReponse(ServletResponse response, HttpStatus httpStatus,
+  public static void supportCustomError(ServletResponse response, HttpStatus httpStatus,
       HttpErrorStatus customErrorStatus) throws IOException {
     HttpServletResponse httpResponse =  (HttpServletResponse) response;
     httpResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
@@ -80,5 +80,18 @@ public class WsWebUtil {
     httpResponse.setHeader(httpStatus.value() + "", httpStatus.getReasonPhrase());
     httpResponse.getWriter().write(customErrorStatus.toJson());
   }
- 
+  
+  /**
+   * Response support CORS (Cross-Origin Resource Sharing).
+   * @param response ServletResponse
+   */
+  public static void supportCORS(ServletResponse response) {
+    HttpServletResponse httpResponse =  (HttpServletResponse) response;
+    httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+    httpResponse.setHeader("Access-Control-Allow-Method", "GET, POST, OPTIONS");
+    httpResponse.setHeader("Access-Control-Allow-Headers",
+        "Origin, accept, X-Requested-With, Content-Type, Authorization");
+    httpResponse.setContentType("text/json;charset=utf-8");
+    httpResponse.setCharacterEncoding("UTF-8");
+  }
 }
