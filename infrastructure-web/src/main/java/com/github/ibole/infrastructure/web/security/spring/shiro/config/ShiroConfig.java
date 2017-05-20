@@ -114,6 +114,7 @@ public class ShiroConfig {
   public Realm getStatelessRealm() {  
     StatelessRealm statelessRealm = new StatelessRealm();
     statelessRealm.setCachingEnabled(false);
+    statelessRealm.setCachingEnabled(false);
     // realm.setCacheManager(getEhCacheManager());
     return statelessRealm;
   }
@@ -121,6 +122,7 @@ public class ShiroConfig {
   @Bean
   public Realm getFormRealm() {
     FormRealm formRealm = new FormRealm();
+    formRealm.setCachingEnabled(false);
     formRealm.setCachingEnabled(false);
     return formRealm;
   }
