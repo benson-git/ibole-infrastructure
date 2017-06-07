@@ -86,11 +86,11 @@
 	</profiles>
 	<properties>
 		<!-- Common libs -->
-		<slf4j_log4j12_version>1.7.5</slf4j_log4j12_version>
+		<slf4j_log4j12_version>1.7.22</slf4j_log4j12_version>
 		<commons-configuration_version>1.10</commons-configuration_version>
 		<commons_logging_api_version>1.1</commons_logging_api_version>
-		<commons-beanutils_version>1.8.3</commons-beanutils_version>
-        <commons-collections_version>3.2.1</commons-collections_version>
+		<commons-beanutils_version>1.9.3</commons-beanutils_version>
+        <commons-collections_version>3.2.2</commons-collections_version>
         <commons-io_version>2.5</commons-io_version>
         <commons-lang3_version>3.4</commons-lang3_version>
         <commons-codec.version>1.9</commons-codec.version>
@@ -98,13 +98,12 @@
 		<protobuf_java_version>3.2.0</protobuf_java_version>
 		<guava_version>19.0</guava_version>
 		<google_zxing_version>3.2.1</google_zxing_version>
-		<gson_version>2.3</gson_version>
+		<gson_version>2.7</gson_version>
 		<plexus_interpolation_version>1.22</plexus_interpolation_version>
 	    <freemarker_version>2.3.19</freemarker_version>
 		<springframework_version>4.2.8.RELEASE</springframework_version>
 		<aspectjrt_version>1.8.9</aspectjrt_version>
-		<ehcache_version>2.5.3</ehcache_version>  
-		<ehcache_web_version>2.0.4</ehcache_web_version>
+		<ehcache_version>2.6.11</ehcache_version>
         <jedis_versionn>2.9.0</jedis_versionn>
         <kryo_version>3.0.3</kryo_version>
         <javakaffee_kryo_version>0.38</javakaffee_kryo_version>
@@ -153,6 +152,7 @@
 		<java_source_version>1.8</java_source_version>
 		<java_target_version>1.8</java_target_version>
 		<java_complianceLevel_version>1.7</java_complianceLevel_version>
+		<maven_enforcer_plugin_version>1.4.1</maven_enforcer_plugin_version>
 		<maven_source_plugin_version>3.0.0</maven_source_plugin_version>
 		<maven_javadoc_plugin_version>2.10.4</maven_javadoc_plugin_version>
 		<maven_jar_plugin_version>2.6</maven_jar_plugin_version>
@@ -300,11 +300,6 @@
 			    <groupId>net.sf.ehcache</groupId>
 			    <artifactId>ehcache-core</artifactId>
 				<version>${ehcache_version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sf.ehcache</groupId>  
-				<artifactId>ehcache-web</artifactId>  
-				<version>${ehcache_web_version}</version>
 			</dependency>
 			<dependency>
 				 <groupId>redis.clients</groupId>
@@ -592,6 +587,23 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce</id>
+						<configuration>
+							<rules>
+								<requireUpperBoundDeps/>
+							</rules>
+						</configuration>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
@@ -674,6 +686,11 @@
 
 		<pluginManagement>
 			<plugins>
+				<plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${maven_enforcer_plugin_version}</version>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
