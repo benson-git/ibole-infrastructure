@@ -85,22 +85,22 @@ public final class HttpErrorStatus {
     /**
      * The token is expired.
      */
-    ACCOUNT_EXPIRED(34, "account.expired"),
+    ACCOUNT_EXPIRED(1034, "account.expired"),
 
     /**
      * The token is invalid.
      */
-    ACCOUNT_INVALID(35, "account.invalid"),
+    ACCOUNT_INVALID(1035, "account.invalid"),
 
     /**
      * The token is not found.
      */
-    ACCOUNT_NOT_FOUND(36, "account.notfound"),
+    ACCOUNT_NOT_FOUND(1036, "account.notfound"),
 
     /**
      * The token is locked.
      */
-    ACCOUNT_LOCKED(37, "account.locked");
+    ACCOUNT_LOCKED(1037, "account.locked");
 
 
     private final int value;

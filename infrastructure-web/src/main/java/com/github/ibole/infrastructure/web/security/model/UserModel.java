@@ -16,6 +16,7 @@
 
 package com.github.ibole.infrastructure.web.security.model;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
 /*********************************************************************************************.
@@ -42,7 +43,7 @@ public class UserModel {
   private String firstName;
   
   private String lastName;
-  
+  @AssertTrue(message="{locked.not.true}")
   private boolean locked;
 
   public UserModel() {}

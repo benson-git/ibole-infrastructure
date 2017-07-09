@@ -191,7 +191,7 @@ public class ShiroConfig {
     // filterChainDefinitionMap.put("/users/**", "user," + ANY_ROLES + "[system,general]");
     // 例子/admins/user/**=rest[user],根据请求的方法，相当于/admins/user/**=perms[user:method] ,
     // 其中method为post，get，delete等。
-    filterChainDefinitionMap.put("/api/v1/users/**", STATELESS_AUTHC + "," + REST + "[user]");
+    //filterChainDefinitionMap.put("/api/v1/users/**", STATELESS_AUTHC + "," + REST + "[user]");
     shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
   }
 

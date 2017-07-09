@@ -2,23 +2,31 @@ package com.github.ibole.infrastructure.web.exception;
 
 public class FieldErrorDTO {
 
-    private final String field;
+  private final String field;
 
-    private final String message;
+  private final String message;
 
-    public FieldErrorDTO(final String field, final String message) {
-        this.field = field;
-        this.message = message;
-    }
+  public FieldErrorDTO(final String field, final String message) {
+    this.field = field;
+    this.message = message;
+  }
 
-    // API
+  // API
 
-    public String getField() {
-        return field;
-    }
+  public String getField() {
+    return field;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
+
+  @Override
+  public final String toString() {
+    final StringBuilder builder = new StringBuilder();
+    builder.append("FieldError [field=").append(field).append(", message=").append(message)
+        .append("]");
+    return builder.toString();
+  }
 
 }

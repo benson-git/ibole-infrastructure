@@ -1,91 +1,55 @@
+/*
+ * Copyright 2016-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.github.ibole.infrastructure.web.exception;
 
+/*********************************************************************************************.
+ * 
+ * 
+ * <p>Copyright 2016, iBole Inc. All rights reserved.
+ * 
+ * <p></p>
+ *********************************************************************************************/
+
+
+/**
+ * @author bwang
+ *
+ */
 public class ApiError {
 
-    private int status;
-    private String message;
-    private String developerMessage;
+  private ErrorMessage errors;
+  
+  public ApiError(ErrorMessage errors) {
+    this.errors = errors;
+  }
 
-    public ApiError(final int status, final String message, final String developerMessage) {
-        super();
+  /**
+   * @return the errors
+   */
+  public ErrorMessage getErrors() {
+    return errors;
+  }
 
-        this.status = status;
-        this.message = message;
-        this.developerMessage = developerMessage;
-    }
-
-    //
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(final int status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-    public String getDeveloperMessage() {
-        return developerMessage;
-    }
-
-    public void setDeveloperMessage(final String developerMessage) {
-        this.developerMessage = developerMessage;
-    }
-
-    //
-
-    @Override
-    public final int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((developerMessage == null) ? 0 : developerMessage.hashCode());
-        result = prime * result + ((message == null) ? 0 : message.hashCode());
-        result = prime * result + status;
-        return result;
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ApiError other = (ApiError) obj;
-        if (developerMessage == null) {
-            if (other.developerMessage != null) {
-                return false;
-            }
-        } else if (!developerMessage.equals(other.developerMessage)) {
-            return false;
-        }
-        if (message == null) {
-            if (other.message != null) {
-                return false;
-            }
-        } else if (!message.equals(other.message)) {
-            return false;
-        }
-        return status == other.status;
-    }
-
-    @Override
-    public final String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("ApiError [status=").append(status).append(", message=").append(message).append(", developerMessage=").append(developerMessage).append("]");
-        return builder.toString();
-    }
-
+  /**
+   * @param errors the errors to set
+   */
+  public void setErrors(ErrorMessage errors) {
+    this.errors = errors;
+  }
+  
+  
 }
